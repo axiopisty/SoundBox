@@ -29,8 +29,6 @@ public class GroovesharkArtist extends Artist implements Serializable {
 
   private String _songVerified;
 
-  private String _artistName;
-
   private String _albumID;
 
   private String _trackNum;
@@ -79,10 +77,10 @@ public class GroovesharkArtist extends Artist implements Serializable {
 
   private String _tsAdded;
 
-  public GroovesharkArtist(String id, String name) {
-        this._artistName = name;
-        this._artistID = id;
-  }
+    GroovesharkArtist(String artistID, String artistName) {
+        this._artistID = artistID;
+        setArtistName(artistName);
+    }
 
   /**
    * @return the _rank
@@ -208,20 +206,6 @@ public class GroovesharkArtist extends Artist implements Serializable {
    */
   public void setSongVerified(String songVerified) {
         this._songVerified = songVerified;
-  }
-
-  /**
-   * @return the _artistName
-   */
-  public String getArtistName() {
-        return _artistName;
-  }
-
-  /**
-   * @param artistName the _artistName to set
-   */
-  public void setArtistName(String artistName) {
-        this._artistName = artistName;
   }
 
   /**

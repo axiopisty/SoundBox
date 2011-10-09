@@ -1,13 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainFrame.java
- *
- * Created on Sep 23, 2011, 10:49:36 AM
- */
 package org.dyndns.soundi.soundbox.core.gui;
 
 import java.awt.event.ActionEvent;

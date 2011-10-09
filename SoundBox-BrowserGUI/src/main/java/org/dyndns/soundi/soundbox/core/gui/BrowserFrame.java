@@ -43,9 +43,14 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
 
     private final BundleContext cx;
     Set portals;
+    /**
+     * 
+     */
     protected final JFrame browser = this;
 
-    /** Creates new form MainFrame */
+    /** Creates new form MainFrame
+     * @param cx 
+     */
     public BrowserFrame(BundleContext cx) {
         this.cx = cx;
         portals = new HashSet<IPortal>();
@@ -354,6 +359,10 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * 
+     * @param event
+     */
     @Override
     public void handleEvent(Event event) {
         

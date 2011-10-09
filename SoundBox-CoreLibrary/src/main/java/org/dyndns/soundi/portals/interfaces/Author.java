@@ -1,14 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.dyndns.soundi.portals.interfaces;
 
 /**
- *
+ * This is the class where some informations about the autor of the plugin is 
+ * stored. For example, first name, last name...
+ * 
+ * @version 0.0.1
  * @author oli
  */
 public class Author {
-    private String firstName;
-    private String lastName;
+    
 }

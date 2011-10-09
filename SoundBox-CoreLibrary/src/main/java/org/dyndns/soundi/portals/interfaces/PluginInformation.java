@@ -1,11 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.dyndns.soundi.portals.interfaces;
 
 /**
- *
+ * This is the class which contains all informations about a specific plugin.
+ * 
+ * @version 0.0.1
  * @author oli
  */
 public class PluginInformation {
@@ -13,6 +11,12 @@ public class PluginInformation {
     private Author author;
     private License license;
     
+    /**
+     * 
+     * @param pluginName
+     * @param author
+     * @param license
+     */
     public PluginInformation(String pluginName, Author author, License license)
     {
         this.pluginName = pluginName;

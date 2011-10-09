@@ -12,19 +12,46 @@ import java.io.Serializable;
  */
 public abstract class Song implements Serializable {
 
+    /**
+     * 
+     */
     protected String _songName = "";
+    /**
+     * 
+     */
     protected String _id = "";
+    /**
+     * 
+     */
     protected Artist _artist;
+    /**
+     * 
+     */
     protected String _albumName = "";
     /**
      * the size
      */
     protected long _contentLength;
+    /**
+     * 
+     */
     protected int _timeInSeconds;
 
+    /**
+     * 
+     */
     public Song() {
     }
 
+    /**
+     * 
+     * @param id
+     * @param songName
+     * @param artist
+     * @param albumName
+     * @param albumID
+     * @param timeInSeconds
+     */
     public Song(String id, String songName, Artist artist, String albumName, String albumID, int timeInSeconds) {
         this._songName = songName;
         this._id = id;
@@ -97,7 +124,7 @@ public abstract class Song implements Serializable {
     }
 
     /**
-     * @param length the _length to set
+     * @param timeInSeconds 
      */
     public void setLength(int timeInSeconds) {
         this._timeInSeconds = timeInSeconds;
@@ -124,6 +151,10 @@ public abstract class Song implements Serializable {
         this._timeInSeconds = timeInSeconds;
     }
 
+    /**
+     * 
+     * @return
+     */
     public abstract String getAlbumID();
 
     

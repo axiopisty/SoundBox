@@ -121,6 +121,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         }
     }
 
+    /**
+     * This method sends the stream to the PlayerEngine for playback.
+     * @param is The InputStream from the song that should be played.
+     */
     private void play(InputStream is) {
         byte[] b = new byte[4096];
         try {

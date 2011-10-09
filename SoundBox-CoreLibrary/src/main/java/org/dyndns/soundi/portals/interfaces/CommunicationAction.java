@@ -12,6 +12,9 @@ public enum CommunicationAction {
 
     //TODO split requests and responses for better understanding/division on what is what
     //req:
+    /**
+     * 
+     */
     SEARCHSONGFORBROWSER {
 
         @Override
@@ -20,6 +23,9 @@ public enum CommunicationAction {
         }
     },
     //resp:
+    /**
+     * 
+     */
     FOUNDSONG {
 
         @Override
@@ -28,6 +34,9 @@ public enum CommunicationAction {
         }
     },
     //req:
+    /**
+     * 
+     */
     ADDSONGTODOWNLOADQUEUE {
 
         @Override
@@ -36,6 +45,9 @@ public enum CommunicationAction {
         }
     },
     //req:
+    /**
+     * 
+     */
     ADDSONGSTOPLAYERQUEUE {
 
         @Override
@@ -44,6 +56,9 @@ public enum CommunicationAction {
         }
     },
     //req:
+    /**
+     * 
+     */
     STARTPLAYERFROMSONG {
 
         @Override
@@ -52,6 +67,9 @@ public enum CommunicationAction {
         }
     },
     //req:
+    /**
+     * 
+     */
     GETSTREAMFROMSONG {
 
         @Override
@@ -60,6 +78,9 @@ public enum CommunicationAction {
         }
     },
     //resp:
+    /**
+     * 
+     */
     STREAMFROMSONG {
 
         @Override
@@ -67,6 +88,9 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/gui/player/STREAMFROMSONG";
         }
     },
+    /**
+     * 
+     */
     SETBROWSERVISIBLE {
 
         @Override
@@ -74,6 +98,9 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/SETBROWSERVISIBLE";
         }
     },
+    /**
+     * 
+     */
     SETBROWSERINVISIBLE {
 
         @Override
@@ -81,6 +108,9 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/SETBROWSERINVISIBLE";
         }
     },
+    /**
+     * 
+     */
     SETDOWNLOADERVISIBLE {
 
         @Override
@@ -88,6 +118,9 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/SETDOWNLOADERVISIBLE";
         }
     },
+    /**
+     * 
+     */
     SETDOWNLOADERINVISIBLE {
 
         @Override
@@ -95,6 +128,9 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/SETDOWNLOADERINVISIBLE";
         }
     },
+    /**
+     * 
+     */
     SETPLAYERVISIBLE {
 
         @Override
@@ -102,11 +138,18 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/SETPLAYERVISIBLE";
         }
     },
+    /**
+     * 
+     */
     SETPLAYERINVISIBLE {
 
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/SETPLAYERINVISIBLE";
         }
-    }
-,   ADDSONGSTODOWNLOADENGINE}
+    },
+    /**
+     * 
+     */
+    ADDSONGSTODOWNLOADENGINE
+}

@@ -1,13 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.dyndns.soundi.portals.interfaces;
 
 /**
- *
+ * This is the class that represents the license of the plugin.
+ * 
+ * @version 0.0.1
  * @author oli
  */
 public class License {
+    /**
+     * The text of the license.
+     */
     private String licenseText;
 }

@@ -14,7 +14,7 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(final BundleContext context) throws Exception {
-        // TODO add activation code here
+        
         IBrowserGui gui = (IBrowserGui) new BrowserFrame(context);
         context.registerService(IBrowserGui.class.getName(), gui, null);
         System.out.println("Standard Gui (Browser) registered.");

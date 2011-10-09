@@ -10,19 +10,30 @@ package org.dyndns.soundi.portals.interfaces;
  */
 public enum State {
 
+    /**
+     * 
+     */
     INITIALIZED {
 
         @Override
         public String toString() {
             return "Initialized";
         }
-    }, ACTIVATED {
+    },
+    /**
+     * 
+     */
+    ACTIVATED {
 
         @Override
         public String toString() {
             return "Activated";
         }
-    }, DEACTIVATED {
+    },
+    /**
+     * 
+     */
+    DEACTIVATED {
 
         @Override
         public String toString() {

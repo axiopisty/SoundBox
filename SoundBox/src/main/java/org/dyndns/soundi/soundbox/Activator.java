@@ -8,19 +8,23 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-import org.osgi.service.event.EventHandler;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 
-public class Activator implements BundleActivator, EventHandler {
+/**
+ * This is the main class which must be the first one that gets called - as osgi
+ * bundle of course. This class provides the updater, the showGui call, and the
+ * exit function of the application.
+ * 
+ * @version 0.0.1
+ * @author oli
+ */
+
+public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-
-        //register the soundbox to _all_ events, we use it as debugging facility
-        //TODO: nothing will get logged because null is not accepted - fix this!
-        context.registerService(EventHandler.class.getName(), this, null);
 
         ServiceReference ref = context.getServiceReference(LogReaderService.class.getName());
         if (ref != null) {
@@ -28,7 +32,9 @@ public class Activator implements BundleActivator, EventHandler {
             reader.addLogListener(new Logger());
         }
 
-        //set the browser to visible
+        //todo: call the updater ... but at least code it :>
+        
+        //set the browser visible
         ref = context.getServiceReference(EventAdmin.class.getName());
         EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
         Map crap = new Hashtable(); //only neccessary because there's no constructor like Event(String topic, null); :/
@@ -48,11 +54,8 @@ public class Activator implements BundleActivator, EventHandler {
 
     @Override
     public void stop(BundleContext context) throws Exception {
-        // TODO add deactivation code here
+        // maybe there should be an CommunicationAction.MAINAPPCLOSED message
+        // so that a nice "close" of the application can be made...
     }
 
-    @Override
-    public void handleEvent(Event event) {
-        System.out.println("Retrieved event: " + event.getTopic());
-    }
 }

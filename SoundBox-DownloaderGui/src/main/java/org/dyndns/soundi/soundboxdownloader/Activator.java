@@ -1,6 +1,6 @@
 package org.dyndns.soundi.soundboxdownloader;
 
-import java.beans.EventHandler;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
@@ -8,6 +8,7 @@ import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 public class Activator implements BundleActivator {
 

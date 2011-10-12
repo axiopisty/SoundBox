@@ -147,4 +147,8 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    public void handleEvent(Event event) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

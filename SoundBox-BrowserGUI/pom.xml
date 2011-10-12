@@ -21,11 +21,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>SoundBox-CoreLibrary</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.osgi.eventadmin</artifactId>
             <version>1</version>
@@ -39,6 +34,12 @@
             <groupId>org.osgi.tracker</groupId>
             <artifactId>org.apache.felix.tracker</artifactId>
             <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dyndns.soundi</groupId>
+            <artifactId>SoundBox-CoreLibrary</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>bundle</type>
         </dependency>
     </dependencies>
 

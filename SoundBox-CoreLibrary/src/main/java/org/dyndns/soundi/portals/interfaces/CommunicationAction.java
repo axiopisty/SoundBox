@@ -11,6 +11,10 @@ package org.dyndns.soundi.portals.interfaces;
 public enum CommunicationAction {
 
     //TODO split requests and responses for better understanding/division on what is what
+    // please use the sender as string and not the one who should be informed
+    // eg. use "soundbox/gui/browser/SEARCHSONG" when the browser sends a notification
+    // that a song should be searched, and NOT "soundbox/gui/portals" because the
+    // portals search for that song...
     //req:
     /**
      * 
@@ -151,5 +155,24 @@ public enum CommunicationAction {
     /**
      * 
      */
-    ADDSONGSTODOWNLOADENGINE
+    ADDSONGSTODOWNLOADENGINE {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/browser/ADDSONGSTODOWNLOADENGINE";
+        }
+        
+    }, REGISTERPORTAL {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/pluginregistry/REGISTERPORTAL";
+        }
+    }, UNREGISTERPORTAL {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/pluginregistry/UNREGISTERPORTAL";
+        }
+    }
 }

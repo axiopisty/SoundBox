@@ -48,6 +48,9 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         pluginListener();
     }
 
+    /**
+     * TODO: this method should be in the soundbox, not in the gui!!
+     */
     private void pluginListener() {
         new Thread() {
 

@@ -1,1 +1,1 @@
-3: FrameworkEvent STARTED
+3: BundleEvent INSTALLED

@@ -1,16 +1,10 @@
 package org.dyndns.soundi.soundbox;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.logging.Level;
-import org.dyndns.soundi.gui.interfaces.IBrowserGui;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
+import java.util.Scanner;
 import org.dyndns.soundi.portals.interfaces.PortalRegistry;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 import org.osgi.service.log.LogReaderService;
 
 /**
@@ -31,6 +25,9 @@ public class Activator implements BundleActivator {
         SoundBox box = new SoundBox(context);
         box.init();
         box.start();
+
+        
+
         
         ServiceReference ref = context.getServiceReference(LogReaderService.class.getName());
         if (ref != null) {

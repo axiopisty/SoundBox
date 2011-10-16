@@ -1,1 +1,1 @@
-3: BundleEvent INSTALLED
+3: BundleEvent STARTED

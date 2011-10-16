@@ -25,6 +25,12 @@
             <artifactId>SoundBox-CoreLibrary</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>apache.felix.logger</artifactId>
+                    <groupId>apache.felix.logger</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

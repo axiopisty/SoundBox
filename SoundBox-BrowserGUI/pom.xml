@@ -26,20 +26,25 @@
             <version>1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.felix.logger</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi.tracker</groupId>
-            <artifactId>org.apache.felix.tracker</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
             <groupId>org.dyndns.soundi</groupId>
             <artifactId>SoundBox-CoreLibrary</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>bundle</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>apache.felix.logger</artifactId>
+                    <groupId>apache.felix.logger</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>felix.eventadmin</artifactId>
+                    <groupId>org.apache</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>JamendoPlugin</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

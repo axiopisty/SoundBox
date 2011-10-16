@@ -10,7 +10,6 @@ import org.osgi.service.event.EventHandler;
  */
 public abstract class IPortal implements EventHandler {
  
-    private PluginInformation infos;
     private State state = State.DEACTIVATED;
     
     /**
@@ -44,16 +43,12 @@ public abstract class IPortal implements EventHandler {
     /**
      * @return the infos
      */
-    public PluginInformation getInfos() {
-        return infos;
-    }
+    public abstract PluginInformation getInfos();
 
     /**
      * @param infos the infos to set
      */
-    public void setInfos(PluginInformation infos) {
-        this.infos = infos;
-    }
+    public abstract void setInfos(PluginInformation infos);
 
     /**
      * @return the state

@@ -21,8 +21,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>apache.felix.logger</groupId>
-            <artifactId>apache.felix.logger</artifactId>
+            <groupId>org.apache</groupId>
+            <artifactId>felix.eventadmin</artifactId>
             <version>1</version>
         </dependency>
     </dependencies>

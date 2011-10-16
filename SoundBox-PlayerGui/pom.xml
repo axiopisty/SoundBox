@@ -24,6 +24,17 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>SoundBox-CoreLibrary</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>apache.felix.logger</artifactId>
+                    <groupId>apache.felix.logger</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache</groupId>
+            <artifactId>felix.eventadmin</artifactId>
+            <version>1</version>
         </dependency>
     </dependencies>
 

@@ -9,6 +9,10 @@ package org.dyndns.soundi.portals.interfaces;
 public class Artist {
     private String artistName;
 
+    public Artist(String artistName) {
+        this.artistName = artistName;
+    }
+
     /** Get the artist name of this artist.
      * @return the artist name
      */

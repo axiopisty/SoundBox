@@ -4,8 +4,8 @@
  */
 package org.dyndns.soundi.jamendoplugin;
 
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,6 +26,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Filter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -39,6 +40,7 @@ public class JamendoPlugin extends IPortal {
     private String _version = "0.0.0";
     private BundleContext cx;
     PluginInformation infos;
+    private Date lastTimeCommandSend;
 
     public JamendoPlugin(BundleContext cx) {
         this.cx = cx;
@@ -53,7 +55,7 @@ public class JamendoPlugin extends IPortal {
 
     @Override
     public Object searchSong(String searchString) {
-        String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name/track/plain/track_album+album_artist?order=searchweight_desc&n=20&searchquery=" + searchString;
+        String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name/track/json/track_album+album_artist?order=searchweight_desc&n=20&searchquery=" + searchString;
         HttpGet get = new HttpGet(link);
         DefaultHttpClient client = new DefaultHttpClient();
         Map l = new Hashtable<Object, Object>();
@@ -68,13 +70,14 @@ public class JamendoPlugin extends IPortal {
         }
         JSONArray songs = (JSONArray) obj;
         Iterator iter = songs.iterator();
+        JSONObject rawSong = null;
         while (iter.hasNext()) {
             try {
-                obj1 = parser.parse(iter.next().toString());
+                 rawSong = (JSONObject) parser.parse(iter.next().toString());
             } catch (Exception ex) {
                 Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            JSONObject rawSong = (JSONObject) obj1;
+             
             Song song = new JamendoSong(rawSong);
             songArrayList.add(song);
         }
@@ -110,8 +113,11 @@ public class JamendoPlugin extends IPortal {
 
     @Override
     public void handleEvent(Event event) {
-        System.out.println("retrieved event: " + event.getTopic());
-        System.out.println("contenct: " + event.toString());
+        
+        if(event.getTopic().equals(CommunicationAction.SEARCHSONGFORBROWSER.toString()))
+        {
+            searchSong(event.getProperty("songTitle").toString());
+        }
     }
 
     private String getVersion() {

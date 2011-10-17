@@ -4,7 +4,9 @@
  */
 package org.dyndns.soundi.jamendoplugin;
 
+import org.dyndns.soundi.portals.interfaces.Artist;
 import org.dyndns.soundi.portals.interfaces.Song;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -12,8 +14,13 @@ import org.dyndns.soundi.portals.interfaces.Song;
  */
 public class JamendoSong extends Song {
 
-    JamendoSong(Object obj) {
-        System.out.println("debug");
+    JamendoSong(JSONObject obj) {
+        this._id = obj.get("id").toString();
+        String artistName = obj.get("artist_name").toString();
+        this._artist = new Artist(artistName);
+        String songName = obj.get("name").toString();
+        this._songName = songName;
+        this._albumName = obj.get("album_name").toString();
     }
 
     @Override

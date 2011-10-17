@@ -17,4 +17,20 @@ public class License {
      * The text of the license.
      */
     private String licenseText;
+
+    /**
+     * This method returns the license Text.
+     * @return the licenseText of this license.
+     */
+    public String getLicenseText() {
+        return licenseText;
+    }
+
+    /**
+     * This method sets the license text of this license.
+     * @param licenseText the licenseText to set
+     */
+    public void setLicenseText(String licenseText) {
+        this.licenseText = licenseText;
+    }
 }

@@ -1,44 +1,43 @@
-/**
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.dyndns.soundi.portals.interfaces;
 
 import java.io.Serializable;
 
 /**
+ * This is the class which contains all informations about a specific plugin.
  * 
+ * @version 0.0.1
  * @author oli
  */
+
 public abstract class Song implements Serializable {
 
     /**
-     * 
+     * The name of the song.
      */
     protected String _songName = "";
     /**
-     * 
+     * The ID of this song. Mostly used for the portals to unique identify a song.
      */
     protected String _id = "";
     /**
-     * 
+     * The artist of this song.
      */
     protected Artist _artist;
     /**
-     * 
+     * The name of the album of this song.
      */
     protected String _albumName = "";
     /**
-     * the size
+     * The size of this song in byte.
      */
     protected long _contentLength;
     /**
-     * 
+     * The time in seconds of this song.
      */
     protected int _timeInSeconds;
 
     /**
-     * 
+     * Default constructor.
      */
     public Song() {
     }

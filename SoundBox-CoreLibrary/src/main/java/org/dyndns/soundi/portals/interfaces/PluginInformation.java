@@ -12,10 +12,10 @@ public class PluginInformation {
     private License license;
     
     /**
-     * 
-     * @param pluginName
-     * @param author
-     * @param license
+     * The constructor of the PluginInformation class, contained in the plugin.
+     * @param pluginName The name of the plugin (this is shown in the default UI)
+     * @param author The author class (forename, lastname).
+     * @param license The license for that plugin.
      */
     public PluginInformation(String pluginName, Author author, License license)
     {
@@ -25,20 +25,23 @@ public class PluginInformation {
     }
 
     /**
-     * @return the pluginName
+     * This method returns the plugin name.
+     * @return the plugin name 
      */
     public String getPluginName() {
         return pluginName;
     }
 
     /**
-     * @param pluginName the pluginName to set
+     * This method sets the plugin name.
+     * @param pluginName the plugin name to set
      */
     public void setPluginName(String pluginName) {
         this.pluginName = pluginName;
     }
 
     /**
+     * This method returns the author of the plugin.
      * @return the author
      */
     public Author getAuthor() {
@@ -46,6 +49,7 @@ public class PluginInformation {
     }
 
     /**
+     * This method sets the author of the plugin.
      * @param author the author to set
      */
     public void setAuthor(Author author) {
@@ -53,13 +57,15 @@ public class PluginInformation {
     }
 
     /**
-     * @return the license
+     * This method returns the license of the plugin.
+     * @return the license of this plugin.
      */
     public License getLicense() {
         return license;
     }
 
     /**
+     * This method sets the license of the plugin.
      * @param license the license to set
      */
     public void setLicense(License license) {

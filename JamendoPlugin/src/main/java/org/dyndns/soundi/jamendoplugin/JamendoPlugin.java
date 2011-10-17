@@ -75,7 +75,7 @@ public class JamendoPlugin extends IPortal {
                 Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
             }
             JSONObject rawSong = (JSONObject) obj1;
-            Song song = new JamendoSong(obj);
+            Song song = new JamendoSong(rawSong);
             songArrayList.add(song);
         }
 

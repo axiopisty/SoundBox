@@ -134,7 +134,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
                 Song s = (Song) jTable1.getValueAt(i, 4);
                 properties.put("song", s);
             }
-            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGSTODOWNLOADENGINE.toString(), properties);
+            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -3,7 +3,7 @@ package org.dyndns.soundi.portals.interfaces;
 import java.io.Serializable;
 
 /**
- * This is the class which contains all informations about a specific plugin.
+ * This is the class which contains all informations about a specific song.
  * 
  * @version 0.0.1
  * @author oli
@@ -43,13 +43,13 @@ public abstract class Song implements Serializable {
     }
 
     /**
-     * 
-     * @param id
-     * @param songName
-     * @param artist
-     * @param albumName
-     * @param albumID
-     * @param timeInSeconds
+     * Constructor
+     * @param id The id, mostly used by portals to identify this unique song.
+     * @param songName The song name.
+     * @param artist The artist.
+     * @param albumName The album name.
+     * @param albumID The album id, mostly used by portals to identify unique albums.
+     * @param timeInSeconds The time in seconds (or 0 if unknown)
      */
     public Song(String id, String songName, Artist artist, String albumName, String albumID, int timeInSeconds) {
         this._songName = songName;
@@ -60,28 +60,32 @@ public abstract class Song implements Serializable {
     }
 
     /**
-     * @return the _songName
+     * This method returns the song name
+     * @return the song name
      */
     public String getSongName() {
         return _songName;
     }
 
     /**
-     * @param songName the _songName to set
+     * This method sets the song name
+     * @param songName the song name to set
      */
     public void setSongName(String songName) {
         this._songName = songName;
     }
 
     /**
-     * @return the _id
+     * This method returns the ID of this song
+     * @return the id of this song
      */
     public String getId() {
         return _id;
     }
 
     /**
-     * @param id the _id to set
+     * This method sets the ID of this song
+     * @param id The ID to set
      */
     public void setId(String id) {
         this._id = id;

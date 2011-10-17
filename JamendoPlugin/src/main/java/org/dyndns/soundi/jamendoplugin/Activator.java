@@ -11,6 +11,7 @@ import org.osgi.service.event.EventHandler;
 
 public class Activator implements BundleActivator {
 
+    @Override
     public void start(BundleContext context) throws Exception {
         // register the plugin to the osgi framework
         JamendoPlugin plugin = new JamendoPlugin(context);
@@ -29,6 +30,7 @@ public class Activator implements BundleActivator {
         context.registerService(EventHandler.class.getName(), plugin, props);
     }
 
+    @Override
     public void stop(BundleContext context) throws Exception {
         // TODO add deactivation code here
     }

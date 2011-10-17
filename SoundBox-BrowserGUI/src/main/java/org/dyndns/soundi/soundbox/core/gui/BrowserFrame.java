@@ -191,7 +191,7 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -213,6 +213,11 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         jScrollPane2.setViewportView(jTable1);
 
         jButton2.setText("Download");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Add to Player");
 
@@ -310,6 +315,20 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
 
         }
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
+            ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+
+            if (ref != null) {
+                EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+                Dictionary properties = new Hashtable();
+                properties.put("song", s);
+                Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
+                eventAdmin.sendEvent(reportGeneratedEvent);
+            }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu configurationMenu;
     private javax.swing.JButton jButton1;
@@ -375,7 +394,7 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
      */
     @Override
     public void handleEvent(Event event) {
-        
+
         if (event.getTopic().equals(CommunicationAction.SETBROWSERVISIBLE.toString())) {
             setVisible(true);
         } else if (event.getTopic().equals(CommunicationAction.FOUNDSONG.toString())) {
@@ -393,7 +412,17 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
 
     private void addSongToTable(Song s) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.addRow(new Object[]{s.getSongName(), s.getArtist().getArtistName(), s.getAlbumName(), s.getTimeInSeconds(), s});
+        int minutes = 0, seconds = 0;
+        String duration;
+        minutes = s.getTimeInSeconds() / 60;
+        seconds = s.getTimeInSeconds() % 60;
+        duration = "" + minutes + ":";
+        if (seconds < 9) {
+            duration += "0";
+        }
+        duration += "" + seconds + " minutes";
+
+        model.addRow(new Object[]{s.getSongName(), s.getArtist().getArtistName(), s.getAlbumName(), duration, s});
         //TODO as model is a reference, im pretty sure thats not neccessary...
         jTable1.setModel(model);
     }

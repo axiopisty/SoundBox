@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -27,7 +25,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Filter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -56,7 +53,7 @@ public class JamendoPlugin extends IPortal {
 
     @Override
     public Object searchSong(String searchString) {
-        String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString;
+        String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name+duration/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString;
         HttpGet get = new HttpGet(link);
         DefaultHttpClient client = new DefaultHttpClient();
         Map l = new Hashtable<Object, Object>();

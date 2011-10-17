@@ -21,6 +21,7 @@ public class JamendoSong extends Song {
         String songName = obj.get("name").toString();
         this._songName = songName;
         this._albumName = obj.get("album_name").toString();
+        this._timeInSeconds = Integer.parseInt(obj.get("duration").toString());
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -48,23 +49,27 @@ public class JamendoPlugin extends IPortal {
 
     @Override
     public boolean init() {
-        setInfos(new PluginInformation("Jamendo Plugin " + _version, new Author("Oliver", "Zemann"), new License("lgpl 1.0")));
+        setInfos(new PluginInformation("Jamendo Plugin " + _version, new Author("Oliver", "Zemann"), new License("LGPL 1.0")));
         System.out.println("Initialized Jamendo Plugin " + getVersion());
         return true;
     }
 
     @Override
     public Object searchSong(String searchString) {
-        String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name/track/json/track_album+album_artist?order=searchweight_desc&n=20&searchquery=" + searchString;
+        String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString;
         HttpGet get = new HttpGet(link);
         DefaultHttpClient client = new DefaultHttpClient();
         Map l = new Hashtable<Object, Object>();
         ArrayList songArrayList = new ArrayList();
         JSONParser parser = new JSONParser();
-        Object obj1 = null;
         Object obj = null;
         try {
-            obj = parser.parse(EntityUtils.toString(client.execute(get).getEntity()));
+            HttpEntity entity = client.execute(get).getEntity();
+            String entityAsString = EntityUtils.toString(entity);
+            if(entityAsString.isEmpty())
+                // something went wrong...
+                return null;
+            obj = parser.parse(entityAsString);
         } catch (Exception ex) {
             Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -95,20 +100,13 @@ public class JamendoPlugin extends IPortal {
 
     @Override
     public void showPluginInformation() {
-        JFrame frame = new JFrame("Some nice frame..");
-        JLabel label = new JLabel("some text...");
-        JLabel label2 = new JLabel("author: " + infos.getAuthor().getForename() + " " + infos.getAuthor().getLastname());
-        JLabel label3 = new JLabel("Plugin Name: " + infos.getPluginName());
-        frame.add(label);
-        frame.add(label2);
-        frame.add(label3);
-        frame.pack();
-        frame.setVisible(true);
+        new PluginInformationFrame(this).setVisible(true);
     }
 
     @Override
     public void showConfig() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ConfigurationFrame frame = new ConfigurationFrame();
+        frame.setVisible(true);
     }
 
     @Override

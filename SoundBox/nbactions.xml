@@ -9,6 +9,9 @@
         <activatedProfiles>
             <activatedProfile>run-on-felix</activatedProfile>
         </activatedProfiles>
+        <properties>
+                <felix.config.properties>file:conf/config.properties</felix.config.properties>
+            </properties>
     </action>
     <action>
         <actionName>debug</actionName>

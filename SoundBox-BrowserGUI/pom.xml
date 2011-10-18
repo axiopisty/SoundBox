@@ -41,11 +41,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>JamendoPlugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -58,7 +53,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.dyndns.soundi.soundboxbrowsergui.Activator</Bundle-Activator>
-                        <Export-Package>org.dyndns.soundi.soundbox.core.gui</Export-Package>
+                        <Export-Package></Export-Package>
                         <Private-Package>org.dyndns.soundi.soundbox.core.gui.*,org.dyndns.soundi.soundboxbrowsergui.*</Private-Package>
                     </instructions>
                 </configuration>

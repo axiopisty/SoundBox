@@ -1,6 +1,7 @@
 package org.dyndns.soundi.soundbox;
 
 import java.util.Scanner;
+import java.util.logging.Level;
 import org.dyndns.soundi.portals.interfaces.PortalRegistry;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -26,7 +27,19 @@ public class Activator implements BundleActivator {
         box.init();
         box.start();
 
-        
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    Thread.currentThread().sleep(1000);
+                } catch (InterruptedException ex) {
+                    java.util.logging.Logger.getLogger(Activator.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("sleeping");
+            }
+        }.start();
 
         
         ServiceReference ref = context.getServiceReference(LogReaderService.class.getName());

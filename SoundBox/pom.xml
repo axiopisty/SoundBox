@@ -49,11 +49,6 @@
             <artifactId>org.apache.felix.fileinstall</artifactId>
             <version>3.1.10</version>
         </dependency>
-        <dependency>
-            <groupId>commons.logging</groupId>
-            <artifactId>commons.logging</artifactId>
-            <version>1</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -132,7 +127,7 @@
                                         <propertyfile file="${project.build.directory}/config.properties">
                                             <entry key="felix.auto.start" value="${bundles} file:modules/${project.build.finalName}.jar"/>
                                             <entry key="org.osgi.framework.bootdelegation" value="*"/>
-                                            <entry key="felix.log.level" value="4"/>
+                                            <entry key="felix.log.level" value="0"/>
                                         </propertyfile>
                                         <copy file="${maven.dependency.org.apache.felix.org.apache.felix.main.jar.path}" tofile="${project.build.directory}/felix.jar"/>
                                     </target>
@@ -194,7 +189,7 @@
                                 <propertyfile file="${project.build.directory}/run.properties">
                                     <entry key="felix.auto.start" value="${urls}"/>
                                     <entry key="felix.auto.deploy.action" value="install,start"/>
-                                    <entry key="felix.log.level" value="4"/>
+                                    <entry key="felix.log.level" value="0"/>
                                     <entry key="org.osgi.framework.storage" value="${project.build.directory}${file.separator}felix-cache"/>
                                     <entry key="org.osgi.framework.bootdelegation" value="*"/>
                                     

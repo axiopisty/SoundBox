@@ -3,6 +3,7 @@ package org.dyndns.soundi.soundbox;
 import java.util.Scanner;
 import java.util.logging.Level;
 import org.dyndns.soundi.portals.interfaces.PortalRegistry;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -19,19 +20,23 @@ import org.osgi.service.log.LogReaderService;
 public class Activator implements BundleActivator {
 
     private PortalRegistry portalRegistry;
-    
+
     @Override
     public void start(final BundleContext context) throws Exception {
+
+
+
 
         SoundBox box = new SoundBox(context);
         box.init();
         box.start();
 
-        new Thread()
-        {
+
+
+        new Thread() {
+
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     Thread.currentThread().sleep(1000);
                 } catch (InterruptedException ex) {
@@ -41,7 +46,7 @@ public class Activator implements BundleActivator {
             }
         }.start();
 
-        
+
         ServiceReference ref = context.getServiceReference(LogReaderService.class.getName());
         if (ref != null) {
             LogReaderService reader = (LogReaderService) context.getService(ref);
@@ -50,7 +55,7 @@ public class Activator implements BundleActivator {
 
         //todo: call the updater ... but at least code it :>
 
-        
+
 
         //get the logger, thats where the debugging infos will go to...
         /*ServiceTracker logServiceTracker = new ServiceTracker(context, org.osgi.service.log.LogService.class.getName(), null);

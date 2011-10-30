@@ -37,15 +37,23 @@
             <version>1</version>
         </dependency>
         <dependency>
-            <groupId>org.dyndns.soundi</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jsonsimple</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>bundle</type>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
+            <groupId>pax.logging</groupId>
+            <artifactId>pax.logging</artifactId>
+            <version>1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <artifactId>felix.eventadmin</artifactId>
+            <groupId>org.apache</groupId>
+            <type>jar</type>
+            <version>1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -59,6 +67,8 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.dyndns.soundi.jamendoplugin.Activator</Bundle-Activator>
+                        <Export-Package></Export-Package>
+                        <Private-Package>org.dyndns.soundi.jamendoplugin.*</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

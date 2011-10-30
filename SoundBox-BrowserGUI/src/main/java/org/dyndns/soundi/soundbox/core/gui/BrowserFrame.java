@@ -1,7 +1,10 @@
 package org.dyndns.soundi.soundbox.core.gui;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashSet;
@@ -19,6 +22,7 @@ import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.dyndns.soundi.soundboxbrowsergui.Activator;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -34,18 +38,71 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
     private final BundleContext cx;
     Set portals;
     /**
-     * 
+     *
      */
     protected final JFrame browser = this;
 
-    /** Creates new form MainFrame
-     * @param cx 
+    /**
+     * Creates new form MainFrame
+     *
+     * @param cx
      */
-    public BrowserFrame(BundleContext cx) {
+    public BrowserFrame(final BundleContext cx) {
         this.cx = cx;
         portals = new HashSet<IPortal>();
+        Bundle[] bundles = cx.getBundles();
+
         initComponents();
         pluginListener();
+
+    }
+
+    private void addPortalToGui(final IPortal portal) {
+        JMenu submenu = new JMenu(portal.getInfos().getPluginName());
+
+        final JCheckBoxMenuItem item;
+        item = new JCheckBoxMenuItem(portal.getState().toString(),
+                portal.getState().toString().equals(org.dyndns.soundi.portals.interfaces.State.ACTIVATED.toString()) ? true : false);
+
+        item.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (portal.getState()) {
+                    case ACTIVATED:
+                        portal.setState(org.dyndns.soundi.portals.interfaces.State.DEACTIVATED);
+                        break;
+                    case DEACTIVATED:
+                        portal.setState(org.dyndns.soundi.portals.interfaces.State.ACTIVATED);
+                        break;
+                    default:
+                        portal.setState(org.dyndns.soundi.portals.interfaces.State.DEACTIVATED);
+                        break;
+                }
+                item.setText(portal.getState().toString());
+            }
+        });
+
+        JMenuItem configItem = new JMenuItem(portal.getInfos().getPluginName() + " configuration");
+        JMenuItem aboutItem = new JMenuItem("About " + portal.getInfos().getPluginName());
+        configItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                portal.showConfig();
+            }
+        });
+        aboutItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                portal.showPluginInformation();
+            }
+        });
+        submenu.add(configItem);
+        submenu.add(aboutItem);
+        submenu.add(item);
+        configurationMenu.add(submenu);
     }
 
     /**
@@ -65,70 +122,32 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
 
                     ServiceReference[] references = null;
                     try {
+                        //fetch all portals
                         references = cx.getServiceReferences(IPortal.class.getName(), null);
                     } catch (InvalidSyntaxException ex) {
                         Logger.getLogger(Activator.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
+                    //if we found at least one...
                     if (references != null) {
+                        //loop through it/them
                         for (ServiceReference reference : references) {
+                            //cast it to an instance so we can use it (fetch informations from it)
                             final IPortal portal = (IPortal) cx.getService(reference);
+                            //check if it is listed in our portals list
                             if (!portals.contains(portal)) {
+                                //if not, call init() on the portals implemented interface
                                 System.out.println("Registered new portal (" + portal.getInfos().getPluginName() + ")!");
                                 if (portal.getState() == org.dyndns.soundi.portals.interfaces.State.ACTIVATED) {
                                     portal.init();
                                 }
-
-                                JMenu submenu = new JMenu(portal.getInfos().getPluginName());
-
-                                final JCheckBoxMenuItem item;
-
-
-                                item = new JCheckBoxMenuItem(portal.getState().toString(),
-                                        portal.getState().toString().equals(org.dyndns.soundi.portals.interfaces.State.ACTIVATED.toString()) ? true : false);
-
-                                item.addActionListener(new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        switch (portal.getState()) {
-                                            case ACTIVATED:
-                                                portal.setState(org.dyndns.soundi.portals.interfaces.State.DEACTIVATED);
-                                                break;
-                                            case DEACTIVATED:
-                                                portal.setState(org.dyndns.soundi.portals.interfaces.State.ACTIVATED);
-                                                break;
-                                            default:
-                                                portal.setState(org.dyndns.soundi.portals.interfaces.State.DEACTIVATED);
-                                                break;
-                                        }
-                                        item.setText(portal.getState().toString());
-                                    }
-                                });
-
-
-                                JMenuItem configItem = new JMenuItem(portal.getInfos().getPluginName() + " configuration");
-                                JMenuItem aboutItem = new JMenuItem("About " + portal.getInfos().getPluginName());
-                                configItem.addActionListener(new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        portal.showConfig();
-                                    }
-                                });
-                                aboutItem.addActionListener(new ActionListener() {
-
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        portal.showPluginInformation();
-                                    }
-                                });
-                                submenu.add(configItem);
-                                submenu.add(aboutItem);
-                                submenu.add(item);
-                                configurationMenu.add(submenu);
-
+                                addPortalToGui(portal);
                                 portals.add(portal);
-
+                            }
+                            //check if a portal has been removed 
+                            if (portals.size() != references.length) {
+                                //something changed... as we already registered every new portal, it must be a deletion 
+                                System.out.println("a plugin has been removed!");
                             }
                         }
                     }
@@ -137,10 +156,10 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         }.start();
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -162,6 +181,9 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         jMenu2 = new javax.swing.JMenu();
         configurationMenu = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         jLabel1.setText("Keyword");
 
@@ -231,6 +253,21 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         jMenuBar1.add(configurationMenu);
 
         jMenu3.setText("Help");
+
+        jMenuItem1.setText("Online Help");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem1);
+
+        jMenuItem3.setText("Help");
+        jMenu3.add(jMenuItem3);
+
+        jMenuItem2.setText("About");
+        jMenu3.add(jMenuItem2);
+
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
@@ -242,21 +279,22 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
@@ -318,17 +356,34 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
-            ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
 
-            if (ref != null) {
-                EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-                Dictionary properties = new Hashtable();
-                properties.put("song", s);
-                Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
-                eventAdmin.sendEvent(reportGeneratedEvent);
-            }
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+            properties.put("song", s);
+            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check 
+        // whether the API is supported by this particular 
+        // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+            if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("http://soundbox.origo.ethz.ch/forum"));
+                } catch (Exception ex) {
+                    Logger.getLogger(BrowserFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu configurationMenu;
     private javax.swing.JButton jButton1;
@@ -340,6 +395,9 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -389,7 +447,7 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
     }
 
     /**
-     * 
+     *
      * @param event
      */
     @Override

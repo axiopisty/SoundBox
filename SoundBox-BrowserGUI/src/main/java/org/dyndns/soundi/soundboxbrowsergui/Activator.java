@@ -16,6 +16,7 @@ public class Activator implements BundleActivator {
     public void start(final BundleContext context) throws Exception {
         
         IBrowserGui gui = (IBrowserGui) new BrowserFrame(context);
+        context.getBundles();
         context.registerService(IBrowserGui.class.getName(), gui, null);
         System.out.println("Standard Gui (Browser) registered.");
         

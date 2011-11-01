@@ -6,6 +6,7 @@ package org.dyndns.soundi.jamendoplugin;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class JamendoPlugin extends IPortal {
         String link = "http://api.jamendo.com/get2/id+name+album_name+artist_name+duration/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString;
         HttpGet get = new HttpGet(link);
         DefaultHttpClient client = new DefaultHttpClient();
-        Map l = new Hashtable<Object, Object>();
+        Dictionary l = new Hashtable<Object, Object>();
         ArrayList songArrayList = new ArrayList();
         JSONParser parser = new JSONParser();
         Object obj = null;
@@ -90,6 +91,7 @@ public class JamendoPlugin extends IPortal {
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Event reportGeneratedEvent = new Event(CommunicationAction.FOUNDSONG.toString(), l);
+            
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
         return null;

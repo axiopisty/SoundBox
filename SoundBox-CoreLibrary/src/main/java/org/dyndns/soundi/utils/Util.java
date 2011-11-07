@@ -8,7 +8,7 @@ package org.dyndns.soundi.utils;
  *
  * @author oli
  */
-public final class Util {
+public class Util {
 
     public static enum Component {
 

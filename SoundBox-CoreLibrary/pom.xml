@@ -47,8 +47,8 @@
                 </configuration>-->
                 <configuration>
                     <instructions>
-                        <Export-Package>org.dyndns.soundi.gui.interfaces,org.dyndns.soundi.portals.interfaces</Export-Package>
-                        <Private-Package>org.dyndns.soundi.gui.interfaces.*,org.dyndns.soundi.portals.interfaces.*</Private-Package>
+                        <Export-Package>org.dyndns.soundi.gui.interfaces,org.dyndns.soundi.portals.interfaces,org.dyndns.soundi.utils</Export-Package>
+                        <Private-Package>org.dyndns.soundi.gui.interfaces.*,org.dyndns.soundi.portals.interfaces.*,org.dyndns.soundi.utils.*</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

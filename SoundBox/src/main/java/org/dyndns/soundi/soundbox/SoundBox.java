@@ -4,12 +4,19 @@
  */
 package org.dyndns.soundi.soundbox;
 
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
+import org.dyndns.soundi.utils.Util;
+import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
@@ -28,6 +35,16 @@ public class SoundBox {
     }
 
     void init() {
+        
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet("http://www.google.de");
+        try {
+            HttpResponse execute = client.execute(get);
+            execute.getEntity().getContent().close();
+        } catch (Exception ex) {
+            Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
         new Thread() {
 
             @Override
@@ -56,6 +73,7 @@ public class SoundBox {
                         java.util.logging.Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     ref = context.getServiceReference(IBrowserGui.class.getName());
+                    Util.sendMessage(Component.CORE, "waiting for the gui registration...");
                 }
                 //last but not least, send it
                 eventAdmin.sendEvent(reportGeneratedEvent);

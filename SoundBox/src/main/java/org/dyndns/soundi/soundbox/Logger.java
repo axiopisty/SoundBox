@@ -3,20 +3,20 @@
  * and open the template in the editor.
  */
 package org.dyndns.soundi.soundbox;
-
+/*
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogListener;
-
+*/
 /**
  *
  * @author oli
  */
-public class Logger implements LogListener {
-
+public class Logger {//implements LogListener {
+/*
     @Override
     public void logged(LogEntry le) {
         File file = new File("log.txt");
@@ -29,4 +29,4 @@ public class Logger implements LogListener {
         writer.append("" + le.getLevel() + ": " + le.getMessage() + System.getProperty("line.separator"));
         writer.close();
     }
-}
+}*/}

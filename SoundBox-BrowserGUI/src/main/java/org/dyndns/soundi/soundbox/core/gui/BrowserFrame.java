@@ -32,9 +32,10 @@ import org.osgi.service.event.EventAdmin;
  *
  * @author oli
  */
-public class BrowserFrame extends JFrame implements IBrowserGui {
+public final class BrowserFrame extends JFrame implements IBrowserGui {
 
     private final BundleContext cx;
+    private boolean initialized = false;
     Set portals;
     /**
      *
@@ -52,6 +53,7 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
         Bundle[] bundles = cx.getBundles();
 
         initComponents();
+        display();
         pluginListener();
 
     }
@@ -150,9 +152,21 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
                             }
                         }
                     }
+
+                    if (references == null && portals.size() == 1) //there's still one portal registered, but it has been removed
+                    {
+                        IPortal portal = (IPortal) portals.iterator().next();
+                        removePortalFromGui(portal);
+                        System.out.println("Plugin " + portals.iterator().next());
+                        portals.clear();
+                    }
                 }
             }
         }.start();
+    }
+
+    private void removePortalFromGui(IPortal portal) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /**
@@ -418,6 +432,10 @@ public class BrowserFrame extends JFrame implements IBrowserGui {
 
     @Override
     public void display() {
+        if (!initialized) {
+            initComponents();
+            initialized = true;
+        }
         this.setVisible(true);
         System.out.println("display set to visible!");
     }

@@ -24,13 +24,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>SoundBox-CoreLibrary</artifactId>
             <version>${project.version}</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>apache.felix.logger</artifactId>
-                    <groupId>apache.felix.logger</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
@@ -45,6 +38,15 @@
                     <instructions>
                         <Bundle-Activator>org.dyndns.soundi.soundboxdownloadengine.Activator</Bundle-Activator>
                     </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>

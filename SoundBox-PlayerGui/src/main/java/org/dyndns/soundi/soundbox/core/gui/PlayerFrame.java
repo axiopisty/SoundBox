@@ -18,9 +18,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
-import org.dyndns.soundi.gui.interfaces.PlayerEngine;
+import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
+import org.dyndns.soundi.utils.Util;
+import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
@@ -32,13 +34,15 @@ import org.osgi.service.event.EventAdmin;
  */
 public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
-    private BundleContext cx;
-    private PlayerEngine playerEngine;
+    private BundleContext cx = null;
+    private IPlayerEngine playerEngine = null;
+
     /** Creates new form MainFrame */
-    public PlayerFrame(BundleContext cx, PlayerEngine playerEngine) {
+    public PlayerFrame(BundleContext cx) {
         this.cx = cx;
-        this.playerEngine = playerEngine;
         initComponents();
+        setVisible(true);
+        initPlayerEngine();
     }
 
     /** This method is called from within the constructor to
@@ -52,10 +56,12 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("play");
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -94,6 +100,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         });
         jScrollPane2.setViewportView(jTable1);
 
+        jButton2.setText("pause");
+
+        jButton3.setText("stop");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,7 +113,11 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addGap(118, 118, 118)
+                        .addComponent(jButton2)
+                        .addGap(93, 93, 93)
+                        .addComponent(jButton3)
+                        .addGap(392, 392, 392))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
                         .addGap(89, 89, 89))))
@@ -114,7 +128,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -124,9 +141,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
 
          if (evt.getClickCount() >= 2) {             Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());              if (ref != null) {                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);                 Dictionary properties = new Hashtable();                 properties.put("song", s);                 Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);                 eventAdmin.sendEvent(reportGeneratedEvent);             }         }     }//GEN-LAST:event_jTable1MouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
@@ -146,7 +164,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         model.addRow(new Object[]{s.getSongName(), s.getArtist().getArtistName(), s.getAlbumName(), duration, s});
         model.fireTableDataChanged();
     }
-    
+
     @Override
     public void handleEvent(Event event) {
 
@@ -162,9 +180,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 Event reportGeneratedEvent = new Event(CommunicationAction.GETSTREAMFROMSONG.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
-        }
-
-        else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONG.toString())) {
+        } else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONG.toString())) {
             InputStream is = (InputStream) event.getProperty("stream");
             play(is);
         }
@@ -175,13 +191,21 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
      * @param is The InputStream from the song that should be played.
      */
     private void play(InputStream is) {
-        byte[] b = new byte[4096];
-        try {
-            while (is.read(b) != -1) {
-                System.out.println(b);
+        playerEngine.play(is);
+    }
+
+    private void initPlayerEngine() {
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+        ref = cx.getServiceReference(IPlayerEngine.class.getName());
+        while (ref == null) {
+            try {
+                Thread.currentThread().sleep(1000);
+            } catch (InterruptedException ex) {
+                java.util.logging.Logger.getLogger(PlayerFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(PlayerFrame.class.getName()).log(Level.SEVERE, null, ex);
+            ref = cx.getServiceReference(IPlayerEngine.class.getName());
+            Util.sendMessage(Component.PLAYER, "waiting for a player engine...");
         }
+        playerEngine = (IPlayerEngine) cx.getService(ref);
     }
 }

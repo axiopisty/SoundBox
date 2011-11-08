@@ -103,7 +103,7 @@
                                         <propertyfile file="${project.build.directory}/config.properties">
                                             <entry key="felix.auto.start" value="${bundles} file:modules/${project.build.finalName}.jar"/>
                                             <entry key="org.osgi.framework.bootdelegation" value="*"/>
-                                            <entry key="felix.log.level" value="4"/>
+                                            <entry key="felix.log.level" value="0"/>
                                             <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                         </propertyfile>
                                         <copy file="${maven.dependency.org.apache.felix.org.apache.felix.main.jar.path}" tofile="${project.build.directory}/felix.jar"/>
@@ -166,7 +166,7 @@
                                 <propertyfile file="${project.build.directory}/run.properties">
                                     <entry key="felix.auto.start" value="${urls}"/>
                                     <entry key="felix.auto.deploy.action" value="install,start"/>
-                                    <entry key="felix.log.level" value="4"/>
+                                    <entry key="felix.log.level" value="0"/>
                                     <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                     <entry key="org.osgi.framework.storage" value="${project.build.directory}${file.separator}felix-cache"/>
                                     <entry key="org.osgi.framework.bootdelegation" value="*"/>

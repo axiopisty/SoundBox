@@ -12,7 +12,7 @@ public class Util {
 
     public static enum Component {
 
-        CORE, BROWSER, PLAYER, EVENTADMIN, DOWNLOADER, DOWNLOADQUEUE, PLAYERQUEUE, UNSPECIFIED
+        CORE, BROWSER, PLAYER, PLAYERENGINE, EVENTADMIN, DOWNLOADER, DOWNLOADQUEUE, DOWNLOADENGINE, PLAYERQUEUE, UNSPECIFIED
     }
     
     public static void sendMessage(Component comp, String message)

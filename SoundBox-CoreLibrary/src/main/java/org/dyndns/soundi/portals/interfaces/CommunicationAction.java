@@ -3,7 +3,7 @@ package org.dyndns.soundi.portals.interfaces;
 /**
  * This is the class (enum) where the communication fields are declared.
  * You must use them for communication with the soundbox and its bundles.
- * 
+ *
  * @version 0.0.1
  * @author oli
  */
@@ -26,7 +26,6 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/gui/browser/SEARCHSONG";
         }
     },
-    
     /**
      * This request is send when the user hits "search" in the UI and the combo-
      * box is changed to search only for albums.
@@ -38,9 +37,8 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/gui/browser/SEARCHALBUM";
         }
     },
-    
     /**
-     * This request is send when the user hits "search" in the UI and the 
+     * This request is send when the user hits "search" in the UI and the
      * combobox is set to artist in the browser gui.
      */
     SEARCHARTISTFORBROWSER {
@@ -50,7 +48,6 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/gui/browser/SEARCHARTIST";
         }
     },
-    
     /**
      * This response is send from the portals when a song is found (or many songs).
      * Note: this is a list of songs, not only one song, in the payload of this event.
@@ -97,7 +94,7 @@ public enum CommunicationAction {
         }
     },
     /**
-     * This is a request (usually for a specific portal) that a stream from a 
+     * This is a request (usually for a specific portal) that a stream from a
      * specific song is requests. The song must be in the payload.
      * (TODO: document the event api and its payloads).
      */
@@ -200,6 +197,32 @@ public enum CommunicationAction {
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/pluginregistry/UNREGISTERPORTAL";
+        }
+    },
+    PLAYSONGFROMBROWSER {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/browser/PLAYSONG";
+        }
+    },
+    PLAYSONGFROMPLAYER {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/player/PLAYSONG";
+        }
+    },
+    //must be from the player
+    PAUSESONG {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/player/PAUSESONG";
+        }
+    },
+    //must be from the player
+    STOPSONG {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/player/STOPSONG";
         }
     }
 }

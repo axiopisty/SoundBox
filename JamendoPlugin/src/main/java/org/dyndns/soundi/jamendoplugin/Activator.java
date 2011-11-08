@@ -16,8 +16,7 @@ public class Activator implements BundleActivator {
         // register the plugin to the osgi framework
         JamendoPlugin plugin = new JamendoPlugin(context);
         plugin.init();
-        context.registerService(IPortal.class.getName(), plugin, null);
-
+        
         // now add it to the notification list if someone enters something in the browser, as we want to retrieve events 
         // regarding to portal plugins
         String[] topics = new String[]{
@@ -27,7 +26,7 @@ public class Activator implements BundleActivator {
         Dictionary props = new Hashtable();
         props.put(EventConstants.EVENT_TOPIC, topics);
         //uncomment the next line to activate the plugin, disabled for testing
-        context.registerService(EventHandler.class.getName(), plugin, props);
+        context.registerService(IPortal.class.getName(), plugin, props);
     }
 
     @Override

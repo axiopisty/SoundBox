@@ -53,25 +53,11 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         portals = new HashSet<IPortal>();
         Bundle[] bundles = cx.getBundles();
 
-        initComponents();
-        
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                int i = 0;
-                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                while (i < 10) {
-                    
-                    Object rowData[] = new Object[]{i, "b", "c", null};
-                    model.addRow(rowData);
-                    i++;
-                }
-                //jTable1.setModel(model);
-            }
-        });
-
-        
+        if (!initialized) {
+            initComponents();
+            initialized = true;
+        }
+ 
         display();
         pluginListener();
 
@@ -244,8 +230,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"hello world", "asdf", "asdf", "asdf", null},
-                {"246", "3567", "asdf", "asdf", null}
+
             },
             new String [] {
                 "Songname", "Artist", "Album", "Length", "RawSong"
@@ -266,7 +251,14 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setCellSelectionEnabled(false);
+        jTable1.setDoubleBuffered(true);
+        jTable1.setMaximumSize(new java.awt.Dimension(375, 32));
+        jTable1.setMinimumSize(new java.awt.Dimension(375, 32));
         jTable1.setOpaque(false);
+        jTable1.setRowSelectionAllowed(true);
+        jTable1.setShowHorizontalLines(false);
+        jTable1.setShowVerticalLines(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -510,14 +502,11 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 @Override
                 public void run() {
                     DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                    for (int i = 0; i < model.getRowCount(); i++) {
-                        model.removeRow(i);
-                    }
-                    jTable1.setModel(model);
+                    model.setRowCount(0);
+
                     ArrayList<Song> l = (ArrayList) event.getProperty("songList");
                     for (Song s : l) {
-                        addSongToTable(s);
-                        return;
+                        addSongToTable(s);                      
                     }
                 }
             });

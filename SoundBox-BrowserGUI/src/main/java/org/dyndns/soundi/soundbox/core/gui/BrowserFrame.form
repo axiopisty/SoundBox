@@ -200,26 +200,15 @@
           <Properties>
             <Property name="autoCreateRowSorter" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="5" rowCount="2">
-                <Column editable="false" title="Songname" type="java.lang.String">
-                  <Data value="hello world"/>
-                  <Data value="246"/>
-                </Column>
-                <Column editable="false" title="Artist" type="java.lang.String">
-                  <Data value="asdf"/>
-                  <Data value="3567"/>
-                </Column>
-                <Column editable="false" title="Album" type="java.lang.String">
-                  <Data value="asdf"/>
-                  <Data value="asdf"/>
-                </Column>
-                <Column editable="false" title="Length" type="java.lang.String">
-                  <Data value="asdf"/>
-                  <Data value="asdf"/>
-                </Column>
+              <Table columnCount="5" rowCount="0">
+                <Column editable="false" title="Songname" type="java.lang.String"/>
+                <Column editable="false" title="Artist" type="java.lang.String"/>
+                <Column editable="false" title="Album" type="java.lang.String"/>
+                <Column editable="false" title="Length" type="java.lang.String"/>
                 <Column editable="false" title="RawSong" type="java.lang.Object"/>
               </Table>
             </Property>
+            <Property name="cellSelectionEnabled" type="boolean" value="false"/>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -249,7 +238,17 @@
                 </Column>
               </TableColumnModel>
             </Property>
+            <Property name="doubleBuffered" type="boolean" value="true"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[375, 32]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[375, 32]"/>
+            </Property>
             <Property name="opaque" type="boolean" value="false"/>
+            <Property name="rowSelectionAllowed" type="boolean" value="true"/>
+            <Property name="showHorizontalLines" type="boolean" value="false"/>
+            <Property name="showVerticalLines" type="boolean" value="false"/>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>

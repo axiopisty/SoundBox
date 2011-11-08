@@ -101,7 +101,6 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     @Override
     public void handleEvent(Event event) {
 
-        setVisible(true);
         if (event.getTopic().equals(CommunicationAction.STARTPLAYERFROMSONG.toString())) {
             Song s = (Song) event.getProperty("song");
             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
@@ -115,7 +114,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             }
         }
 
-        if (event.getTopic().equals(CommunicationAction.STREAMFROMSONG.toString())) {
+        else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONG.toString())) {
             InputStream is = (InputStream) event.getProperty("stream");
             play(is);
         }

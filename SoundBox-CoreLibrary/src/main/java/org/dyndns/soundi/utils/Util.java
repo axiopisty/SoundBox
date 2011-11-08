@@ -19,4 +19,9 @@ public class Util {
     {
         System.out.println("["+comp.toString()+"]: " + message);
     }
+    
+    public static void sendMessage(Class clazz, String message)
+    {
+        System.out.println("[" + clazz.getSimpleName() + "]: " + message);
+    }
 }

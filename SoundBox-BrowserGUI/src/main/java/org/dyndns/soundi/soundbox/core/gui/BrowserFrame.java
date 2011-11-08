@@ -22,6 +22,8 @@ import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.dyndns.soundi.soundboxbrowsergui.Activator;
+import org.dyndns.soundi.utils.Util;
+import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -363,8 +365,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("button hit: " + jTextField1.getText());
-
+        Util.sendMessage(Component.BROWSER, "Searching for `" + jTextField1.getText() + "`");
         searchSong(jTextField1.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -381,7 +382,6 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
-
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -466,7 +466,15 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
     @Override
     public void searchArtist(String artist) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+            properties.put("artistName", artist);
+            Event reportGeneratedEvent = new Event(CommunicationAction.SEARCHARTISTFORBROWSER.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
     }
 
     @Override
@@ -484,7 +492,15 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
     @Override
     public void searchAlbum(String album) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+            properties.put("albumTitle", album);
+            Event reportGeneratedEvent = new Event(CommunicationAction.SEARCHALBUMFORBROWSER.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
     }
 
     /**
@@ -525,11 +541,8 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         }
         duration += "" + seconds + " minutes";
 
-        //jTable1.
         model.addRow(new Object[]{s.getSongName(), s.getArtist().getArtistName(), s.getAlbumName(), duration, s});
         model.fireTableDataChanged();
-
-        //TODO as model is a reference, im pretty sure thats not neccessary...
 
     }
 }

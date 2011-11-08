@@ -4,8 +4,11 @@
  */
 package org.dyndns.soundi.jamendoplugin;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
@@ -20,6 +23,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.dyndns.soundi.portals.interfaces.*;
+import org.dyndns.soundi.utils.Util;
+import org.dyndns.soundi.utils.Util.Component;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,13 +51,13 @@ public class JamendoPlugin extends IPortal {
     @Override
     public boolean init() {
         setInfos(new PluginInformation("Jamendo Plugin " + _version, new Author("Oliver", "Zemann"), new License("LGPL 1.0")));
-        System.out.println("Initialized Jamendo Plugin " + getVersion());
+        Util.sendMessage(this.getClass(), "Initialized Jamendo Plugin");
         return true;
     }
 
     @Override
     public Object searchSong(String searchString) {
-    
+
         URI link = null;
         try {
             link = new URI("http://api.jamendo.com/get2/id+name+album_name+artist_name+duration/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString);
@@ -99,7 +104,7 @@ public class JamendoPlugin extends IPortal {
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Event reportGeneratedEvent = new Event(CommunicationAction.FOUNDSONG.toString(), l);
-            
+
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
         return null;
@@ -121,6 +126,12 @@ public class JamendoPlugin extends IPortal {
 
         if (event.getTopic().equals(CommunicationAction.SEARCHSONGFORBROWSER.toString())) {
             searchSong(event.getProperty("songTitle").toString());
+        } else if (event.getTopic().equals(CommunicationAction.SEARCHALBUMFORBROWSER.toString())) {
+            searchAlbum(event.getProperty("albumTitle").toString());
+        } else if (event.getTopic().equals(CommunicationAction.SEARCHARTISTFORBROWSER.toString())) {
+            searchArtist(event.getProperty("artistName").toString());
+        } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONG.toString())) {
+            getStreamFromSong((JamendoSong) event.getProperty("song"));
         }
     }
 
@@ -136,5 +147,35 @@ public class JamendoPlugin extends IPortal {
     @Override
     public void setInfos(PluginInformation infos) {
         this.infos = infos;
+    }
+
+    private void searchAlbum(String toString) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void searchArtist(String toString) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void getStreamFromSong(JamendoSong jamendoSong) {
+        URL streamLink = null;
+        try {
+            streamLink = new URL("http://api.jamendo.com/get2/stream/track/redirect/?id=" + jamendoSong.getId() + "&streamencoding=mp31");
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+            try {
+                properties.put("stream", streamLink.openStream());
+            } catch (IOException ex) {
+                Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Event reportGeneratedEvent = new Event(CommunicationAction.STREAMFROMSONG.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
     }
 }

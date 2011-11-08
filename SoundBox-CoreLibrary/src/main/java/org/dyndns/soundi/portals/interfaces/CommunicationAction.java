@@ -26,6 +26,31 @@ public enum CommunicationAction {
             return "org/dyndns/soundi/soundbox/gui/browser/SEARCHSONG";
         }
     },
+    
+    /**
+     * This request is send when the user hits "search" in the UI and the combo-
+     * box is changed to search only for albums.
+     */
+    SEARCHALBUMFORBROWSER {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHALBUM";
+        }
+    },
+    
+    /**
+     * This request is send when the user hits "search" in the UI and the 
+     * combobox is set to artist in the browser gui.
+     */
+    SEARCHARTISTFORBROWSER {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHARTIST";
+        }
+    },
+    
     /**
      * This response is send from the portals when a song is found (or many songs).
      * Note: this is a list of songs, not only one song, in the payload of this event.

@@ -57,7 +57,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             initComponents();
             initialized = true;
         }
- 
+
         display();
         pluginListener();
 
@@ -205,10 +205,10 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
         jLabel1.setText("Keyword");
 
-        jTextField1.setText("dire");
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextField1KeyPressed(evt);
+        jTextField1.setText("Enter a keyword...");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextField1MouseClicked(evt);
             }
         });
 
@@ -251,12 +251,10 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCellSelectionEnabled(false);
         jTable1.setDoubleBuffered(true);
         jTable1.setMaximumSize(new java.awt.Dimension(375, 32));
         jTable1.setMinimumSize(new java.awt.Dimension(375, 32));
         jTable1.setOpaque(false);
-        jTable1.setRowSelectionAllowed(true);
         jTable1.setShowHorizontalLines(false);
         jTable1.setShowVerticalLines(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -415,12 +413,14 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                     Logger.getLogger(BrowserFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-    }
-        private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-            // TODO add your handling code here:
-            System.out.println(jTextField1.getText());
-    }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        // TODO add your handling code here:
+        jTextField1.setText("");
+    }//GEN-LAST:event_jTextField1MouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu configurationMenu;
     private javax.swing.JButton jButton1;
@@ -506,7 +506,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
                     ArrayList<Song> l = (ArrayList) event.getProperty("songList");
                     for (Song s : l) {
-                        addSongToTable(s);                      
+                        addSongToTable(s);
                     }
                 }
             });

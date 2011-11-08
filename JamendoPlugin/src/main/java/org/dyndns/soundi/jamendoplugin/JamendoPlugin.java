@@ -4,18 +4,14 @@
  */
 package org.dyndns.soundi.jamendoplugin;
 
-<<<<<<< .mine
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
-=======
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Map;
->>>>>>> .r37
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpEntity;
@@ -56,17 +52,7 @@ public class JamendoPlugin extends IPortal {
 
     @Override
     public Object searchSong(String searchString) {
-
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-        } catch (Exception ex) {
-            System.out.println(ex.getLocalizedMessage());
-        }
-        // Prepare a request object
-        HttpGet httpget = new HttpGet("http://www.google.org/");
-
-       
-
+    
         URI link = null;
         try {
             link = new URI("http://api.jamendo.com/get2/id+name+album_name+artist_name+duration/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString);

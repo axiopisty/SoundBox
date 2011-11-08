@@ -82,7 +82,7 @@
                               <Component id="jButton1" min="-2" pref="84" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jScrollPane1" pref="701" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" pref="707" max="32767" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jProgressBar1" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -93,7 +93,7 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane2" pref="718" max="32767" attributes="0"/>
+              <Component id="jScrollPane2" pref="756" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Component id="jButton2" max="32767" attributes="1"/>
@@ -142,8 +142,11 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextField1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Search for..."/>
+        <Property name="text" type="java.lang.String" value="dire"/>
       </Properties>
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextField1KeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
@@ -195,12 +198,25 @@
       <SubComponents>
         <Component class="javax.swing.JTable" name="jTable1">
           <Properties>
+            <Property name="autoCreateRowSorter" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="5" rowCount="0">
-                <Column editable="false" title="Songname" type="java.lang.String"/>
-                <Column editable="false" title="Artist" type="java.lang.String"/>
-                <Column editable="false" title="Album" type="java.lang.String"/>
-                <Column editable="false" title="Length" type="java.lang.String"/>
+              <Table columnCount="5" rowCount="2">
+                <Column editable="false" title="Songname" type="java.lang.String">
+                  <Data value="hello world"/>
+                  <Data value="246"/>
+                </Column>
+                <Column editable="false" title="Artist" type="java.lang.String">
+                  <Data value="asdf"/>
+                  <Data value="3567"/>
+                </Column>
+                <Column editable="false" title="Album" type="java.lang.String">
+                  <Data value="asdf"/>
+                  <Data value="asdf"/>
+                </Column>
+                <Column editable="false" title="Length" type="java.lang.String">
+                  <Data value="asdf"/>
+                  <Data value="asdf"/>
+                </Column>
                 <Column editable="false" title="RawSong" type="java.lang.Object"/>
               </Table>
             </Property>
@@ -233,6 +249,7 @@
                 </Column>
               </TableColumnModel>
             </Property>
+            <Property name="opaque" type="boolean" value="false"/>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>

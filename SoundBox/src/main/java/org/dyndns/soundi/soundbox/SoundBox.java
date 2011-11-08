@@ -4,15 +4,10 @@
  */
 package org.dyndns.soundi.soundbox;
 
-import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.utils.Util;
@@ -35,15 +30,7 @@ public class SoundBox {
     }
 
     void init() {
-        
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet get = new HttpGet("http://www.google.de");
-        try {
-            HttpResponse execute = client.execute(get);
-            execute.getEntity().getContent().close();
-        } catch (Exception ex) {
-            Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+       
         
         new Thread() {
 

@@ -1,6 +1,5 @@
 package org.dyndns.soundi.soundbox;
 
-import java.util.logging.Level;
 import org.dyndns.soundi.portals.interfaces.PortalRegistry;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

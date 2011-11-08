@@ -15,6 +15,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -53,6 +54,24 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         Bundle[] bundles = cx.getBundles();
 
         initComponents();
+        
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                int i = 0;
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                while (i < 10) {
+                    
+                    Object rowData[] = new Object[]{i, "b", "c", null};
+                    model.addRow(rowData);
+                    i++;
+                }
+                //jTable1.setModel(model);
+            }
+        });
+
+        
         display();
         pluginListener();
 
@@ -200,7 +219,12 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
         jLabel1.setText("Keyword");
 
-        jTextField1.setText("Search for...");
+        jTextField1.setText("dire");
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
 
         jButton1.setText("Go!");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -217,9 +241,11 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Song", "Artist", "Album" }));
 
+        jTable1.setAutoCreateRowSorter(true);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {"hello world", "asdf", "asdf", "asdf", null},
+                {"246", "3567", "asdf", "asdf", null}
             },
             new String [] {
                 "Songname", "Artist", "Album", "Length", "RawSong"
@@ -240,6 +266,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setOpaque(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -292,7 +319,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 835, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 873, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -304,13 +331,13 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 756, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -347,6 +374,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         System.out.println("button hit: " + jTextField1.getText());
+
         searchSong(jTextField1.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -397,6 +425,10 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     }
+        private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+            // TODO add your handling code here:
+            System.out.println(jTextField1.getText());
+    }//GEN-LAST:event_jTextField1KeyPressed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu configurationMenu;
     private javax.swing.JButton jButton1;
@@ -468,20 +500,27 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
      * @param event
      */
     @Override
-    public void handleEvent(Event event) {
+    public void handleEvent(final Event event) {
 
         if (event.getTopic().equals(CommunicationAction.SETBROWSERVISIBLE.toString())) {
             setVisible(true);
         } else if (event.getTopic().equals(CommunicationAction.FOUNDSONG.toString())) {
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            for (int i = 0; i < model.getRowCount(); i++) {
-                model.removeRow(i);
-            }
-            jTable1.setModel(model);
-            ArrayList<Song> l = (ArrayList) event.getProperty("songList");
-            for (Song s : l) {
-                addSongToTable(s);
-            }
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                    for (int i = 0; i < model.getRowCount(); i++) {
+                        model.removeRow(i);
+                    }
+                    jTable1.setModel(model);
+                    ArrayList<Song> l = (ArrayList) event.getProperty("songList");
+                    for (Song s : l) {
+                        addSongToTable(s);
+                        return;
+                    }
+                }
+            });
         }
     }
 
@@ -497,8 +536,11 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         }
         duration += "" + seconds + " minutes";
 
+        //jTable1.
         model.addRow(new Object[]{s.getSongName(), s.getArtist().getArtistName(), s.getAlbumName(), duration, s});
+        model.fireTableDataChanged();
+
         //TODO as model is a reference, im pretty sure thats not neccessary...
-        jTable1.setModel(model);
+
     }
 }

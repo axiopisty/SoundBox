@@ -10,12 +10,10 @@
  */
 package org.dyndns.soundi.soundbox.core.gui;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
@@ -195,17 +193,24 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     }
 
     private void initPlayerEngine() {
-        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
-        ref = cx.getServiceReference(IPlayerEngine.class.getName());
-        while (ref == null) {
-            try {
-                Thread.currentThread().sleep(1000);
-            } catch (InterruptedException ex) {
-                java.util.logging.Logger.getLogger(PlayerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        Runnable waitJob = new Runnable() {
+
+            @Override
+            public void run() {
+                ServiceReference ref = null;
+
+                while (ref == null) {
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException ex) {
+                        java.util.logging.Logger.getLogger(PlayerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    ref = cx.getServiceReference(IPlayerEngine.class.getName());
+                    Util.sendMessage(Component.PLAYER, "waiting for a player engine...");
+                }
+                playerEngine = (IPlayerEngine) cx.getService(ref);
             }
-            ref = cx.getServiceReference(IPlayerEngine.class.getName());
-            Util.sendMessage(Component.PLAYER, "waiting for a player engine...");
-        }
-        playerEngine = (IPlayerEngine) cx.getService(ref);
+        };
+        new Thread(waitJob).start();
     }
 }

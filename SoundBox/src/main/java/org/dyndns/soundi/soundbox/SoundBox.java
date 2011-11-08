@@ -7,7 +7,6 @@ package org.dyndns.soundi.soundbox;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.utils.Util;
@@ -30,8 +29,7 @@ public class SoundBox {
     }
 
     void init() {
-       
-        
+
         new Thread() {
 
             @Override
@@ -44,13 +42,7 @@ public class SoundBox {
                     System.out.println("Sorry, no event admin installed. No EventAdmin, no communication, no SoundBox.");
                     System.exit(-1);
                 }
-                Map crap = new Hashtable(); //only neccessary because there's no constructor like Event(String topic, null); :/
-                final Event reportGeneratedEvent = new Event(CommunicationAction.SETBROWSERVISIBLE.toString(), crap);
-                try {
-                    Thread.currentThread().sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
                 //now get the browser interface
                 ref = context.getServiceReference(IBrowserGui.class.getName());
                 while (ref == null) {
@@ -63,6 +55,8 @@ public class SoundBox {
                     Util.sendMessage(Component.CORE, "waiting for the gui registration...");
                 }
                 //last but not least, send it
+                Map crap = new Hashtable(); //only neccessary because there's no constructor like Event(String topic, null); :/
+                final Event reportGeneratedEvent = new Event(CommunicationAction.SETBROWSERVISIBLE.toString(), crap);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
         }.start();

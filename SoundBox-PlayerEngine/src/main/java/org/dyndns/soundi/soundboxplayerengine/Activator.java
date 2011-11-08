@@ -23,7 +23,7 @@ public class Activator implements BundleActivator {
 
         Dictionary props = new Hashtable();
         props.put(EventConstants.EVENT_TOPIC, topics);
-        context.registerService(IPlayerEngine.class.getName(), engine, props);
+        context.registerService(new String[]{EventHandler.class.getName(), IPlayerEngine.class.getName()}, engine, props);
         Util.sendMessage(Component.PLAYERENGINE, "Default player engine registered!");
     }
 

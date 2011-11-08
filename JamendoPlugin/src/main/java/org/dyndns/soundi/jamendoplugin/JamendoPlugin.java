@@ -24,7 +24,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.dyndns.soundi.portals.interfaces.*;
 import org.dyndns.soundi.utils.Util;
-import org.dyndns.soundi.utils.Util.Component;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

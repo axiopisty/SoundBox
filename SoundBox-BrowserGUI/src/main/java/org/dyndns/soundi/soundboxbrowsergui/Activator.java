@@ -28,7 +28,7 @@ public class Activator implements BundleActivator {
         Dictionary props = new Hashtable();
         props.put(EventConstants.EVENT_TOPIC, topics);
         //last but not least register the class in the osgi environment
-        context.registerService(IBrowserGui.class.getName(), gui, props);
+        context.registerService(new String[]{EventHandler.class.getName(), IBrowserGui.class.getName()}, gui, props);
         Util.sendMessage(Component.BROWSER, "Standard Gui (Browser) registered.");
     }
 

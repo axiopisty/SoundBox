@@ -26,7 +26,7 @@ public class Activator implements BundleActivator {
         Dictionary props = new Hashtable();
         props.put(EventConstants.EVENT_TOPIC, topics);
         //uncomment the next line to activate the plugin, disabled for testing
-        context.registerService(IPortal.class.getName(), plugin, props);
+        context.registerService(EventHandler.class.getName(), plugin, props);
     }
 
     @Override

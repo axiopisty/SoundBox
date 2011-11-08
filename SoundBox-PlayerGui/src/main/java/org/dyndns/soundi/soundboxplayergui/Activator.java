@@ -4,7 +4,6 @@ package org.dyndns.soundi.soundboxplayergui;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
-import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.soundbox.core.gui.PlayerFrame;
 import org.dyndns.soundi.utils.Util;
@@ -12,13 +11,13 @@ import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
 
-        IPlayerEngine playerEngine = null;
         IPlayerGui gui = (IPlayerGui) new PlayerFrame(context);
 
         Util.sendMessage(Component.PLAYER, "Standard Gui (Player) registered.");
@@ -30,7 +29,7 @@ public class Activator implements BundleActivator {
 
         Dictionary props = new Hashtable();
         props.put(EventConstants.EVENT_TOPIC, topics);
-        context.registerService(IPlayerGui.class.getName(), gui, props);
+        context.registerService(new String[]{EventHandler.class.getName(), IPlayerGui.class.getName()}, gui, props);
     }
 
     @Override

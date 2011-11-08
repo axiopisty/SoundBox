@@ -131,7 +131,10 @@ public class JamendoPlugin extends IPortal {
         } else if (event.getTopic().equals(CommunicationAction.SEARCHARTISTFORBROWSER.toString())) {
             searchArtist(event.getProperty("artistName").toString());
         } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONG.toString())) {
-            getStreamFromSong((JamendoSong) event.getProperty("song"));
+            Object song = event.getProperty("song");
+            if (song instanceof JamendoSong) {
+                getStreamFromSong((JamendoSong) song);
+            }
         }
     }
 

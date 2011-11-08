@@ -16,6 +16,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
 import org.dyndns.soundi.gui.interfaces.PlayerEngine;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -48,26 +49,50 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jButton1.setText("jButton1");
+
+        jTable1.setAutoCreateRowSorter(true);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Songname", "Artist", "Album", "Length", "RawSong"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
-        jButton1.setText("jButton1");
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setDoubleBuffered(true);
+        jTable1.setMaximumSize(new java.awt.Dimension(375, 32));
+        jTable1.setMinimumSize(new java.awt.Dimension(375, 32));
+        jTable1.setOpaque(false);
+        jTable1.setShowHorizontalLines(false);
+        jTable1.setShowVerticalLines(false);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -76,33 +101,58 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
+                        .addGap(89, 89, 89))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(100, 100, 100))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+
+         if (evt.getClickCount() >= 2) {             Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());              if (ref != null) {                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);                 Dictionary properties = new Hashtable();                 properties.put("song", s);                 Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);                 eventAdmin.sendEvent(reportGeneratedEvent);             }         }     }//GEN-LAST:event_jTable1MouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
+    private void addSongToTable(Song s) {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int minutes = 0, seconds = 0;
+        String duration;
+        minutes = s.getTimeInSeconds() / 60;
+        seconds = s.getTimeInSeconds() % 60;
+        duration = "" + minutes + ":";
+        if (seconds < 9) {
+            duration += "0";
+        }
+        duration += "" + seconds + " minutes";
+
+        model.addRow(new Object[]{s.getSongName(), s.getArtist().getArtistName(), s.getAlbumName(), duration, s});
+        model.fireTableDataChanged();
+    }
+    
     @Override
     public void handleEvent(Event event) {
 
         if (event.getTopic().equals(CommunicationAction.STARTPLAYERFROMSONG.toString())) {
             Song s = (Song) event.getProperty("song");
+            addSongToTable(s);
             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
 
             if (ref != null) {

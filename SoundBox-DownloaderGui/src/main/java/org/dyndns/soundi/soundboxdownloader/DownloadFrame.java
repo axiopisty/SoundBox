@@ -10,12 +10,9 @@
  */
 package org.dyndns.soundi.soundboxdownloader;
 
+import java.awt.Point;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import javax.swing.JProgressBar;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
@@ -35,6 +32,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
     /** Creates new form DownloadFrame */
     public DownloadFrame(BundleContext cx) {
         initComponents();
+        this.cx = cx;
         setVisible(true);
     }
 
@@ -66,6 +64,11 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         });
 
         jTable1.setModel(new DownloadTableModel());
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
         jTable1.setDefaultRenderer(DownloadTableProgressBar.class, new DownloadTableProgressBar());
         jTable1.setDefaultRenderer(DownloadTableControl.class, new DownloadTableControl());
@@ -119,10 +122,18 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
                 Song s = (Song) jTable1.getValueAt(i, 4);
                 properties.put("song", s);
             }
-            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
+            Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONG.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        Point click = new Point(evt.getX(), evt.getY());
+        int column = jTable1.columnAtPoint(click);
+        int row = jTable1.rowAtPoint(click);
+        System.out.println("Retrieved click on X: " + evt.getX() + " Y: " + evt.getY());
+    }//GEN-LAST:event_jTable1MouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -140,7 +151,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         final Object[] rowData = {song.getSongName(), song.getArtist().getArtistName(),
             song.getAlbumName(), song.getTimeInSeconds(), song,
             new DownloadTableProgressBar(), new DownloadTableControl()};
-        
+
         model.insertRow(model.getRowCount(), rowData);
     }
 

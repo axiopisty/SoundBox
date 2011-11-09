@@ -140,6 +140,9 @@
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable1MouseClicked"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="jTable1.setDefaultRenderer(DownloadTableProgressBar.class, new DownloadTableProgressBar());&#xd;&#xa;jTable1.setDefaultRenderer(DownloadTableControl.class, new DownloadTableControl());"/>
           </AuxValues>

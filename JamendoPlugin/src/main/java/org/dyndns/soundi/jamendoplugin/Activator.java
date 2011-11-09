@@ -20,7 +20,7 @@ public class Activator implements BundleActivator {
         // now add it to the notification list if someone enters something in the browser, as we want to retrieve events 
         // regarding to portal plugins
         String[] topics = new String[]{
-            CommunicationAction.SEARCHSONGFORBROWSER.toString(), CommunicationAction.GETSTREAMFROMSONG.toString()
+            CommunicationAction.SEARCHSONGFORBROWSER.toString(), CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString(), CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER.toString()
         };
 
         Dictionary props = new Hashtable();

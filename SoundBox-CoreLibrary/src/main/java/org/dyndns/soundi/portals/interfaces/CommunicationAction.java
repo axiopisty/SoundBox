@@ -98,7 +98,7 @@ public enum CommunicationAction {
      * specific song is requests. The song must be in the payload.
      * (TODO: document the event api and its payloads).
      */
-    GETSTREAMFROMSONG {
+    GETSTREAMFROMSONGFORPLAYER {
 
         @Override
         public String toString() {
@@ -106,15 +106,34 @@ public enum CommunicationAction {
         }
     },
     /**
-     * This is a response for GETSTREAMFROMSONG. It includes the InputStream in
+     * This is a response for GETSTREAMFROMSONGFORPLAYER. It includes the InputStream in
      * its payload.
      * (TODO: document the event api and its payloads).
      */
-    STREAMFROMSONG {
+    STREAMFROMSONGFORPLAYER {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/portals/STREAMFROMSONG";
+            return "org/dyndns/soundi/soundbox/portals/STREAMFROMSONGFORPLAYER";
+        }
+    },
+    GETSTREAMFROMSONGFORDOWNLOADER {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/downloader/GETSTREAMFROMSONGFORDOWNLOADER";
+        }
+    },
+    /**
+     * This is a response for GETSTREAMFROMSONGFORDOWNLOADER. It includes the InputStream in
+     * its payload.
+     * (TODO: document the event api and its payloads).
+     */
+    STREAMFROMSONGFORDOWNLOADER {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/portals/STREAMFROMSONGFORDOWNLOADER";
         }
     },
     /**
@@ -200,12 +219,14 @@ public enum CommunicationAction {
         }
     },
     PLAYSONGFROMBROWSER {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/gui/browser/PLAYSONG";
         }
     },
     PLAYSONGFROMPLAYER {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/gui/player/PLAYSONG";
@@ -213,6 +234,7 @@ public enum CommunicationAction {
     },
     //must be from the player
     PAUSESONG {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/gui/player/PAUSESONG";
@@ -220,9 +242,32 @@ public enum CommunicationAction {
     },
     //must be from the player
     STOPSONG {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/gui/player/STOPSONG";
         }
+    },
+    //no matter where it comes from, just download it ...
+    DOWNLOADSONG {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/DOWNLOADSONG";
+        }
+    },
+    //if something is transfered, error occured etc.
+    DOWNLOADSTATECHANGED {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/DOWNLOADSTATECHANGED";
+        }
+    },
+    //if the song has been finished
+    DOWNLOADSONGFINISHED {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/DOWNLOADSONG";
+        }
     }
+    
 }

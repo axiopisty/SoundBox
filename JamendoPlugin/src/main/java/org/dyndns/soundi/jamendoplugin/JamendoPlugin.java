@@ -129,10 +129,15 @@ public class JamendoPlugin extends IPortal {
             searchAlbum(event.getProperty("albumTitle").toString());
         } else if (event.getTopic().equals(CommunicationAction.SEARCHARTISTFORBROWSER.toString())) {
             searchArtist(event.getProperty("artistName").toString());
-        } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONG.toString())) {
+        } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString())) {
             Object song = event.getProperty("song");
             if (song instanceof JamendoSong) {
-                getStreamFromSong((JamendoSong) song);
+                getStreamFromSong((JamendoSong) song, CommunicationAction.GETSTREAMFROMSONGFORPLAYER);
+            }
+        } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER.toString())) {
+            Object song = event.getProperty("song");
+            if (song instanceof JamendoSong) {
+                getStreamFromSong((JamendoSong) song, CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER);
             }
         }
     }
@@ -159,7 +164,7 @@ public class JamendoPlugin extends IPortal {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private void getStreamFromSong(JamendoSong jamendoSong) {
+    private void getStreamFromSong(JamendoSong jamendoSong, CommunicationAction reciever) {
         URL streamLink = null;
         try {
             streamLink = new URL("http://api.jamendo.com/get2/stream/track/redirect/?id=" + jamendoSong.getId() + "&streamencoding=mp31");
@@ -173,10 +178,16 @@ public class JamendoPlugin extends IPortal {
             Dictionary properties = new Hashtable();
             try {
                 properties.put("stream", streamLink.openStream());
+                properties.put("song", jamendoSong);
             } catch (IOException ex) {
                 Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Event reportGeneratedEvent = new Event(CommunicationAction.STREAMFROMSONG.toString(), properties);
+            Event reportGeneratedEvent = null;
+            if (reciever == CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER) {
+                reportGeneratedEvent = new Event(CommunicationAction.STREAMFROMSONGFORDOWNLOADER.toString(), properties);
+            } else if (reciever == CommunicationAction.GETSTREAMFROMSONGFORPLAYER) {
+                reportGeneratedEvent = new Event(CommunicationAction.STREAMFROMSONGFORPLAYER.toString(), properties);
+            }
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }

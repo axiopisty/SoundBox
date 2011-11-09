@@ -209,6 +209,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                     Util.sendMessage(Component.PLAYER, "waiting for a player engine...");
                 }
                 playerEngine = (IPlayerEngine) cx.getService(ref);
+                Util.sendMessage(Component.PLAYER, "registered a player engine");
             }
         };
         new Thread(waitJob).start();

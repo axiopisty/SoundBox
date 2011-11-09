@@ -62,7 +62,9 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
 
     private void rawDownload(Song song) {
         try {
-            FileOutputStream fos = new FileOutputStream(new File(song.getSongName()+".mp3"));
+            File dir = new File(song.getArtist().getArtistName() + System.getProperty("line.seperator") + song.getAlbumName() + System.getProperty("line.seperator"));
+            dir.mkdirs();
+            FileOutputStream fos = new FileOutputStream(new File(dir.getAbsolutePath() + song.getSongName()+".mp3"));
             InputStream is = songList.get(song);
             byte b[] = new byte[4096];
             while(is.read(b) != -1)

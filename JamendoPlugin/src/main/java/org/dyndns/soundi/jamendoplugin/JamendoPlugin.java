@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
@@ -177,7 +178,9 @@ public class JamendoPlugin extends IPortal {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             try {
-                properties.put("stream", streamLink.openStream());
+                URLConnection con = streamLink.openConnection();
+                jamendoSong.setContentLength(con.getContentLength());
+                properties.put("stream", con.getInputStream());               
                 properties.put("song", jamendoSong);
             } catch (IOException ex) {
                 Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);

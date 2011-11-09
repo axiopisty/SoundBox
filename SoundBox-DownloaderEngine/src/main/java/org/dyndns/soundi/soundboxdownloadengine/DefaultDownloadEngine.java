@@ -4,8 +4,8 @@
  */
 package org.dyndns.soundi.soundboxdownloadengine;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Dictionary;
@@ -42,8 +42,8 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
             songList.put(s, null);
             download(s);
         } else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONGFORDOWNLOADER.toString())) {
-            songList.put((Song)event.getProperty("song"), (InputStream)event.getProperty("stream"));
-            rawDownload((Song)event.getProperty("song"));
+            songList.put((Song) event.getProperty("song"), (InputStream) event.getProperty("stream"));
+            rawDownload((Song) event.getProperty("song"));
         }
     }
 
@@ -62,17 +62,34 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
 
     private void rawDownload(Song song) {
         try {
-            File dir = new File(song.getArtist().getArtistName() + System.getProperty("line.seperator") + song.getAlbumName() + System.getProperty("line.seperator"));
+            File dir = new File(song.getArtist().getArtistName() + System.getProperty("file.separator") + song.getAlbumName() + System.getProperty("file.separator"));
             dir.mkdirs();
-            FileOutputStream fos = new FileOutputStream(new File(dir.getAbsolutePath() + song.getSongName()+".mp3"));
+            FileOutputStream fos = new FileOutputStream(new File(dir.getAbsolutePath() + System.getProperty("file.separator") + song.getSongName() + ".mp3"));
             InputStream is = songList.get(song);
-            byte b[] = new byte[4096];
-            while(is.read(b) != -1)
-                fos.write(b);
+            byte b[] = new byte[8096];
+            ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+            EventAdmin eventAdmin = null;
+            Dictionary properties = new Hashtable();
+            properties.put("song", song);
+            if (ref != null) {
+                eventAdmin = (EventAdmin) cx.getService(ref);
+            }
+            long bytesRead = 0;
+            int tmp = 0;
+            while ((tmp = is.read(b)) != -1) {
+                fos.write(b, 0, tmp);
+                bytesRead += tmp;      
+                properties.put("writtenBytes", bytesRead);
+                Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSTATECHANGED.toString(), properties);
+                eventAdmin.sendEvent(reportGeneratedEvent);
+            }
+            //Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONGFINISHED.toString(), properties);
+            //eventAdmin.sendEvent(reportGeneratedEvent);
             fos.flush();
             fos.close();
-            if(is.available() != 0)
+            if (is.available() != 0) {
                 is.close();
+            }
         } catch (Exception ex) {
             Logger.getLogger(DefaultDownloadEngine.class.getName()).log(Level.SEVERE, null, ex);
         }

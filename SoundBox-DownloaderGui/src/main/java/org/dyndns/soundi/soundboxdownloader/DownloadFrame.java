@@ -13,9 +13,12 @@ package org.dyndns.soundi.soundboxdownloader;
 import java.awt.Point;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import javax.swing.SwingUtilities;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
+import org.dyndns.soundi.utils.Util;
+import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
@@ -114,6 +117,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        //todo: maybe this could be threaded...
         ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
@@ -160,6 +164,25 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         if (event.getTopic().equals(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString())) {
             Song l = (Song) event.getProperty("song");
             addSong(l);
+        } else if (event.getTopic().equals(CommunicationAction.DOWNLOADSTATECHANGED.toString())) {
+            Song l = (Song) event.getProperty("song");
+            int rowContainingThisSong = -1;
+            for(int i = 0; i < jTable1.getRowCount(); i++)
+            {
+                if(jTable1.getValueAt(i, 4).equals(l))
+                {
+                    rowContainingThisSong = i;
+                    break;
+                }
+            }
+            Long bytesWritten = (Long) event.getProperty("writtenBytes");
+            if (l.getContentLength() == 0) {
+                Util.sendMessage(Component.DOWNLOADER, "Sorry, did not get a content length field for that song...");
+                return;
+            }
+            final int percent = (int) (bytesWritten * 100 / l.getContentLength());
+            
+            SwingUtilities.invokeLater(new ProgressbarThread(rowContainingThisSong, percent, jTable1));
         }
     }
 }

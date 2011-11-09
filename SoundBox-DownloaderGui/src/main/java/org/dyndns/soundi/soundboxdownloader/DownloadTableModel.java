@@ -65,11 +65,11 @@ public class DownloadTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-        if (column == 6) {
-            DownloadTableProgressBar bar = (DownloadTableProgressBar) ((Vector) dataVector.get(row)).get(column);
-            Double d = (Double) value;
-            bar.setValue(d.intValue());
-        } else if(column == 7) {
+        if (column == 5) {
+            DownloadTableProgressBar bar = (DownloadTableProgressBar) ((Vector) dataVector.get(row)).get(column);    
+            Integer i = (Integer) value;
+            bar.setValue(i);
+        } else if(column == 6) {
             DownloadTableControl ctrl = (DownloadTableControl) value;
             
         }else {

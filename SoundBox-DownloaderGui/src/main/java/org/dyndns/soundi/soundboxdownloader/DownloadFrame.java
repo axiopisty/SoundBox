@@ -14,6 +14,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -48,13 +49,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new JTable(){
-            @Override
-            public TableCellRenderer getCellRenderer( int row, int column ) {
-                return new DownloadTableProgressBar();
-            }
-        };
-        ;
+        jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -70,31 +65,10 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Songname", "Artist", "Album", "Length", "RawSong", "State", "Control"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        jTable1.setModel(new DownloadTableModel());
         jScrollPane2.setViewportView(jTable1);
-        jTable1.setDefaultRenderer(JProgressBar.class, new DownloadTableProgressBar());
+        jTable1.setDefaultRenderer(DownloadTableProgressBar.class, new DownloadTableProgressBar());
+        jTable1.setDefaultRenderer(DownloadTableControl.class, new DownloadTableControl());
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -125,7 +99,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jLabel1))
@@ -166,7 +140,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         final Object[] rowData = {song.getSongName(), song.getArtist().getArtistName(),
             song.getAlbumName(), song.getTimeInSeconds(), song,
             new DownloadTableProgressBar(), new DownloadTableControl()};
-
+        
         model.insertRow(model.getRowCount(), rowData);
     }
 

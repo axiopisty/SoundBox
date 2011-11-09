@@ -14,16 +14,16 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author oli
  */
-public class DownloadTableControl  extends JPanel implements TableCellRenderer {
+public class DownloadTableControl extends JPanel implements TableCellRenderer {
 
     public DownloadTableControl() {
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        this.add(new JButton("a"));
-        this.add(new JButton("b"));
-        this.add(new JButton("c"));
+        add(new JButton("a"));
+        add(new JButton("b"));
+        add(new JButton("c"));
         return this;
     }
     

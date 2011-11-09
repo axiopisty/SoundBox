@@ -379,7 +379,8 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                 Dictionary properties = new Hashtable();
                 properties.put("song", s);
-                Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);
+                Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
+                //Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
         }

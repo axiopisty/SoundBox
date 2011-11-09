@@ -12,6 +12,7 @@ import org.osgi.service.event.EventHandler;
 
 public class Activator implements BundleActivator {
 
+    @Override
     public void start(BundleContext context) throws Exception {
         
         IDownloaderGui frame = new DownloadFrame(context);
@@ -23,12 +24,10 @@ public class Activator implements BundleActivator {
 
         Dictionary props = new Hashtable();
         props.put(EventConstants.EVENT_TOPIC, topics);
-        context.registerService(EventHandler.class.getName(), frame, props);
-        //last but not least register it as service so we know that its given
-        //as osgi bundle
-        context.registerService(IDownloaderGui.class.getName(), frame, null);
+        context.registerService(new String[]{EventHandler.class.getName(), IDownloaderGui.class.getName()}, frame, props);   
     }
 
+    @Override
     public void stop(BundleContext context) throws Exception {
         // TODO add deactivation code here
     }

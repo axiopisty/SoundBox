@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
  */
 public class JamendoSong extends Song {
 
-    JamendoSong(JSONObject obj) {
+    public JamendoSong(JSONObject obj) {
         this._id = obj.get("id").toString();
         String artistName = obj.get("artist_name").toString();
         this._artist = new Artist(artistName);
@@ -23,10 +23,12 @@ public class JamendoSong extends Song {
         this._albumName = obj.get("album_name").toString();
         this._timeInSeconds = Integer.parseInt(obj.get("duration").toString());
     }
-
-    @Override
-    public String getAlbumID() {
-        return "";
+    public JamendoSong(String id, Artist artist, String songName, String albumName, String timeInSeconds)
+    {
+        this._id = id;
+        this._artist = artist;
+        this._songName = songName;
+        this._albumName = albumName;
+        this._timeInSeconds = Integer.parseInt(timeInSeconds);
     }
-    
 }

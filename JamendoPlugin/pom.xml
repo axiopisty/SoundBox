@@ -88,7 +88,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.dyndns.soundi.jamendoplugin.Activator</Bundle-Activator>
-                        <Export-Package></Export-Package>
+                        <Export-Package>org.dyndns.soundi.jamendoplugin</Export-Package>
                         <Private-Package>org.dyndns.soundi.jamendoplugin.*</Private-Package>
                     </instructions>
                 </configuration>

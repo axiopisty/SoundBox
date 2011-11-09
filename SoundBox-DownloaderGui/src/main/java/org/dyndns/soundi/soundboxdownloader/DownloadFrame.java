@@ -12,6 +12,9 @@ package org.dyndns.soundi.soundboxdownloader;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import javax.swing.JProgressBar;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
@@ -31,6 +34,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
     /** Creates new form DownloadFrame */
     public DownloadFrame(BundleContext cx) {
         initComponents();
+        setVisible(true);
     }
 
     /** This method is called from within the constructor to
@@ -44,7 +48,13 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = new JTable(){
+            @Override
+            public TableCellRenderer getCellRenderer( int row, int column ) {
+                return new DownloadTableProgressBar();
+            }
+        };
+        ;
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -65,14 +75,14 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
 
             },
             new String [] {
-                "Songname", "Artist", "Album", "Length", "RawSong"
+                "Songname", "Artist", "Album", "Length", "RawSong", "State", "Control"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -84,6 +94,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
             }
         });
         jScrollPane2.setViewportView(jTable1);
+        jTable1.setDefaultRenderer(JProgressBar.class, new DownloadTableProgressBar());
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -148,7 +159,22 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
+    private void addSong(final Song song) {
+
+        final DownloadTableModel model = (DownloadTableModel) jTable1.getModel();
+
+        final Object[] rowData = {song.getSongName(), song.getArtist().getArtistName(),
+            song.getAlbumName(), song.getTimeInSeconds(), song,
+            new DownloadTableProgressBar(), new DownloadTableControl()};
+
+        model.insertRow(model.getRowCount(), rowData);
+    }
+
+    @Override
     public void handleEvent(Event event) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (event.getTopic().equals(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString())) {
+            Song l = (Song) event.getProperty("song");
+            addSong(l);
+        }
     }
 }

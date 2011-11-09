@@ -158,7 +158,7 @@ public abstract class Song implements Serializable {
      * 
      * @return
      */
-    public abstract String getAlbumID();
+    //public abstract String getAlbumID();
 
     
     //TODO i dont know if there could be a reference problem in the browser/player/downloader

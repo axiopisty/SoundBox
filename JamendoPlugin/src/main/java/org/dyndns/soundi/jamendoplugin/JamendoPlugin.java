@@ -60,7 +60,7 @@ public class JamendoPlugin extends IPortal {
 
         URI link = null;
         try {
-            link = new URI("http://api.jamendo.com/get2/id+name+album_name+artist_name+duration/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString);
+            link = new URI("http://api.jamendo.com/get2/id+name+album_name+artist_name+duration/track/json/track_album+album_artist?order=searchweight_desc&n=all&searchquery=" + searchString.replaceAll(" ", "%20"));
         } catch (URISyntaxException ex) {
             Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }

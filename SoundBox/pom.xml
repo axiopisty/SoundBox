@@ -106,6 +106,7 @@
                                             <entry key="felix.log.level" value="0"/>
                                             <entry key="org.apache.felix.eventadmin.Timeout" value="0"/>
                                             <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
+                                            <entry key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.NoOpLog"/>
                                         </propertyfile>
                                         <copy file="${maven.dependency.org.apache.felix.org.apache.felix.main.jar.path}" tofile="${project.build.directory}/felix.jar"/>
                                     </target>
@@ -172,6 +173,7 @@
                                     <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                     <entry key="org.osgi.framework.storage" value="${project.build.directory}${file.separator}felix-cache"/>
                                     <entry key="org.osgi.framework.bootdelegation" value="*"/>
+                                    <entry key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.NoOpLog"/>
                                     
                                 </propertyfile>
                                 <makeurl property="run.properties.url" file="${project.build.directory}/run.properties"/>

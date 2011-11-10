@@ -11,8 +11,11 @@
 package org.dyndns.soundi.soundboxdownloader;
 
 import java.awt.Point;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -117,18 +120,24 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        //todo: maybe this could be threaded...
-        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
-        if (ref != null) {
-            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-            Dictionary properties = new Hashtable();
-            for (int i = 0; i < jTable1.getRowCount(); i++) {
-                Song s = (Song) jTable1.getValueAt(i, 4);
-                properties.put("song", s);
+        new Thread() {
+
+            @Override
+            public void run() {
+                ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+                if (ref != null) {
+                    EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+                    Dictionary properties = new Hashtable();
+                    for (int i = 0; i < jTable1.getRowCount(); i++) {
+                        Song s = (Song) jTable1.getValueAt(i, 4);
+                        properties.put("song", s);
+                    }
+                    Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONG.toString(), properties);
+                    eventAdmin.sendEvent(reportGeneratedEvent);
+                }
             }
-            Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONG.toString(), properties);
-            eventAdmin.sendEvent(reportGeneratedEvent);
-        }
+        }.start();
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -167,10 +176,8 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         } else if (event.getTopic().equals(CommunicationAction.DOWNLOADSTATECHANGED.toString())) {
             Song l = (Song) event.getProperty("song");
             int rowContainingThisSong = -1;
-            for(int i = 0; i < jTable1.getRowCount(); i++)
-            {
-                if(jTable1.getValueAt(i, 4).equals(l))
-                {
+            for (int i = 0; i < jTable1.getRowCount(); i++) {
+                if (jTable1.getValueAt(i, 4).equals(l)) {
                     rowContainingThisSong = i;
                     break;
                 }
@@ -181,8 +188,9 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
                 return;
             }
             final int percent = (int) (bytesWritten * 100 / l.getContentLength());
-            
-            SwingUtilities.invokeLater(new ProgressbarThread(rowContainingThisSong, percent, jTable1));
+            final int tmpRowContainingThisSong = rowContainingThisSong;
+            ProgressbarThread progressbarThread = new ProgressbarThread(tmpRowContainingThisSong, percent, jTable1);
+            SwingUtilities.invokeLater(progressbarThread);
         }
     }
 }

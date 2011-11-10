@@ -4,7 +4,6 @@
  */
 package org.dyndns.soundi.soundboxdownloadengine;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;

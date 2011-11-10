@@ -11,11 +11,8 @@
 package org.dyndns.soundi.soundboxdownloader;
 
 import java.awt.Point;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -131,9 +128,9 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
                     for (int i = 0; i < jTable1.getRowCount(); i++) {
                         Song s = (Song) jTable1.getValueAt(i, 4);
                         properties.put("song", s);
+                        Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONG.toString(), properties);
+                        eventAdmin.sendEvent(reportGeneratedEvent);
                     }
-                    Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONG.toString(), properties);
-                    eventAdmin.sendEvent(reportGeneratedEvent);
                 }
             }
         }.start();

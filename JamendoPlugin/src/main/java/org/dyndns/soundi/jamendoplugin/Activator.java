@@ -3,7 +3,6 @@ package org.dyndns.soundi.jamendoplugin;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
-import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;

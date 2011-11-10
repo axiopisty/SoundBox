@@ -1,10 +1,7 @@
 package org.dyndns.soundi.soundbox;
 
-import org.dyndns.soundi.portals.interfaces.PortalRegistry;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-//import org.osgi.framework.ServiceReference;
-//import org.osgi.service.log.LogReaderService;
 
 /**
  * This is the main class which must be the first one that gets called - as osgi
@@ -16,59 +13,16 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator implements BundleActivator {
 
-    private PortalRegistry portalRegistry;
-
     @Override
-    public void start(final BundleContext context) throws Exception {
+    public final void start(final BundleContext context) {
 
-        //DefaultHttpClient client = new DefaultHttpClient();
-
-        
-        SoundBox box = new SoundBox(context);
+        final SoundBox box = new SoundBox(context);
         box.init();
         box.start();
-
-
-
-        /*new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.currentThread().sleep(1000);
-                } catch (InterruptedException ex) {
-                    java.util.logging.Logger.getLogger(Activator.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("sleeping");
-            }
-        }.start();
-*/
-
-        //ServiceReference ref = context.getServiceReference(LogReaderService.class.getName());
-        //if (ref != null) {
-        //    LogReaderService reader = (LogReaderService) context.getService(ref);
-        //    reader.addLogListener(new Logger());
-        //}
-
-        //todo: call the updater ... but at least code it :>
-
-
-
-        //get the logger, thats where the debugging infos will go to...
-        /*
-         * ServiceTracker logServiceTracker = new ServiceTracker(context,
-         * org.osgi.service.log.LogService.class.getName(), null);
-         * logServiceTracker.open(); LogService logservice = (LogService)
-         * logServiceTracker.getService();
-         *
-         * if (logservice != null) { logservice.log(LogService.LOG_INFO, "hey, I
-         * logged that!"); System.out.println("sent a log");
-        }
-         */
     }
 
     @Override
-    public void stop(BundleContext context) throws Exception {
+    public void stop(final BundleContext context) {
         // maybe there should be an CommunicationAction.MAINAPPCLOSED message
         // so that a nice "close" of the application can be made...
     }

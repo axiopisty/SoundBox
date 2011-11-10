@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -53,7 +55,12 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
     public BrowserFrame(final BundleContext cx) {
         this.cx = cx;
         portals = new HashSet<IPortal>();
-        Bundle[] bundles = cx.getBundles();
+        try {
+            UIManager.setLookAndFeel(
+                    UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            Logger.getLogger(BrowserFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         if (!initialized) {
             initComponents();
@@ -204,6 +211,8 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Keyword");
 
@@ -366,6 +375,8 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Util.sendMessage(Component.BROWSER, "Searching for `" + jTextField1.getText() + "`");
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
         searchSong(jTextField1.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -421,7 +432,6 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         // TODO add your handling code here:
         jTextField1.setText("");
     }//GEN-LAST:event_jTextField1MouseClicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu configurationMenu;
     private javax.swing.JButton jButton1;
@@ -518,9 +528,6 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
                 @Override
                 public void run() {
-                    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                    model.setRowCount(0);
-
                     ArrayList<Song> l = (ArrayList) event.getProperty("songList");
                     for (Song s : l) {
                         addSongToTable(s);

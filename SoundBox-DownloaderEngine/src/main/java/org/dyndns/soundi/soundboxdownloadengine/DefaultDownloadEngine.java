@@ -60,10 +60,20 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
     }
 
     private void rawDownload(Song song) {
+
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean isWin = os.indexOf("win") >= 0;
+        String destDir = song.getArtist().getArtistName() + System.getProperty("file.separator") + song.getAlbumName() + System.getProperty("file.separator");
+        String songName = song.getSongName();
+        if (isWin) {
+            destDir = destDir.replaceAll("[?*/\\:<>\"]", "");
+            songName = songName.replaceAll("[?*/\\:<>\"]", "");
+        }
         try {
-            File dir = new File(song.getArtist().getArtistName() + System.getProperty("file.separator") + song.getAlbumName() + System.getProperty("file.separator"));
-            dir.mkdirs();
-            FileOutputStream fos = new FileOutputStream(new File(dir.getAbsolutePath() + System.getProperty("file.separator") + song.getSongName() + ".mp3"));
+            FileOutputStream fos;
+            new File(destDir).mkdirs();
+            fos = new FileOutputStream(destDir + System.getProperty("file.separator") + songName + ".mp3");
+
             InputStream is = songList.get(song);
             byte b[] = new byte[8096];
             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
@@ -77,7 +87,7 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
             int tmp = 0;
             while ((tmp = is.read(b)) != -1) {
                 fos.write(b, 0, tmp);
-                bytesRead += tmp;      
+                bytesRead += tmp;
                 properties.put("writtenBytes", bytesRead);
                 Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSTATECHANGED.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);

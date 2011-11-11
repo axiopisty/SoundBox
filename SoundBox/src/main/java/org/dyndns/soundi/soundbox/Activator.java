@@ -1,3 +1,8 @@
+/**
+ * This is the default activator for the main application SoundBox OSGi.
+ *
+ * @since 1.0
+ */
 package org.dyndns.soundi.soundbox;
 
 import org.osgi.framework.BundleActivator;
@@ -18,7 +23,6 @@ public class Activator implements BundleActivator {
 
         final SoundBox box = new SoundBox(context);
         box.init();
-        box.start();
     }
 
     @Override

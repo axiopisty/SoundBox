@@ -23,7 +23,7 @@ public enum CommunicationAction {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHSONG";
+            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHSONGFORBROWSER";
         }
     },
     /**
@@ -34,7 +34,7 @@ public enum CommunicationAction {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHALBUM";
+            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHALBUMFORBROWSER";
         }
     },
     /**
@@ -45,7 +45,7 @@ public enum CommunicationAction {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHARTIST";
+            return "org/dyndns/soundi/soundbox/gui/browser/SEARCHARTISTFORBROWSER";
         }
     },
     /**
@@ -102,7 +102,7 @@ public enum CommunicationAction {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/gui/player/GETSTREAMFROMSONG";
+            return "org/dyndns/soundi/soundbox/gui/player/GETSTREAMFROMSONGFORPLAYER";
         }
     },
     /**
@@ -222,14 +222,14 @@ public enum CommunicationAction {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/gui/browser/PLAYSONG";
+            return "org/dyndns/soundi/soundbox/gui/browser/PLAYSONGFROMBROWSER";
         }
     },
     PLAYSONGFROMPLAYER {
 
         @Override
         public String toString() {
-            return "org/dyndns/soundi/soundbox/gui/player/PLAYSONG";
+            return "org/dyndns/soundi/soundbox/gui/player/PLAYSONGFROMPLAYER";
         }
     },
     //must be from the player

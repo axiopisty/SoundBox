@@ -24,7 +24,8 @@ public class Activator implements BundleActivator {
         // now add it to the notification list if something found a song, as we want to retrieve events 
         // regarding to portal plugins
         String[] topics = new String[]{
-            CommunicationAction.STARTPLAYERFROMSONG.toString()
+            CommunicationAction.STARTPLAYERFROMSONG.toString(), CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString(),
+            CommunicationAction.STREAMFROMSONGFORPLAYER.toString()
         };
 
         Dictionary props = new Hashtable();

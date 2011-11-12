@@ -60,6 +60,11 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("play");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -137,8 +142,11 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-
          if (evt.getClickCount() >= 2) {             Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());              if (ref != null) {                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);                 Dictionary properties = new Hashtable();                 properties.put("song", s);                 Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);                 eventAdmin.sendEvent(reportGeneratedEvent);             }         }     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
+    }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -166,6 +174,8 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     @Override
     public void handleEvent(Event event) {
 
+
+        System.out.println("retrieved event: " + event.getTopic());
         if (event.getTopic().equals(CommunicationAction.STARTPLAYERFROMSONG.toString())) {
             Song s = (Song) event.getProperty("song");
             addSongToTable(s);
@@ -175,12 +185,27 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                 Dictionary properties = new Hashtable();
                 properties.put("song", s);
-                Event reportGeneratedEvent = new Event(CommunicationAction.GETSTREAMFROMSONG.toString(), properties);
+                Event reportGeneratedEvent = new Event(CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
-        } else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONG.toString())) {
+        } else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONGFORPLAYER.toString())) {
             InputStream is = (InputStream) event.getProperty("stream");
-            play(is);
+            Song song = (Song) event.getProperty("song");
+            play(is, song);
+        } else if (event.getTopic().equals(CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString())) {
+            
+            Song song = (Song) event.getProperty("song");
+            addSongToTable(song);
+            ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+            //remove that, only for testing purposes!
+            
+            if (ref != null) {
+                EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+                Dictionary properties = new Hashtable();
+                properties.put("song", song);
+                Event reportGeneratedEvent = new Event(CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString(), properties);
+                eventAdmin.sendEvent(reportGeneratedEvent);
+            }
         }
     }
 
@@ -188,8 +213,8 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
      * This method sends the stream to the PlayerEngine for playback.
      * @param is The InputStream from the song that should be played.
      */
-    private void play(InputStream is) {
-        playerEngine.play(is);
+    private void play(InputStream is, Song song) {
+        playerEngine.play(is, song);
     }
 
     private void initPlayerEngine() {

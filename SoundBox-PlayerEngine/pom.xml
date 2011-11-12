@@ -26,6 +26,11 @@
             <version>1.0-SNAPSHOT</version>
             <type>bundle</type>
         </dependency>
+        <dependency>
+            <groupId>org.dyndns.soundbox</groupId>
+            <artifactId>Mp3Wrapper</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -4,6 +4,7 @@
  */
 package org.dyndns.soundi.jamendoplugin;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -124,6 +125,8 @@ public class JamendoPlugin extends IPortal {
     @Override
     public void handleEvent(Event event) {
 
+        System.out.println("(plugin): retrieved: " + event.getTopic());
+        
         if (event.getTopic().equals(CommunicationAction.SEARCHSONGFORBROWSER.toString())) {
             searchSong(event.getProperty("songTitle").toString());
         } else if (event.getTopic().equals(CommunicationAction.SEARCHALBUMFORBROWSER.toString())) {
@@ -131,12 +134,12 @@ public class JamendoPlugin extends IPortal {
         } else if (event.getTopic().equals(CommunicationAction.SEARCHARTISTFORBROWSER.toString())) {
             searchArtist(event.getProperty("artistName").toString());
         } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString())) {
-            Object song = event.getProperty("song");
+            Object song = event.getProperty("song"); 
             if (song instanceof JamendoSong) {
                 getStreamFromSong((JamendoSong) song, CommunicationAction.GETSTREAMFROMSONGFORPLAYER);
             }
         } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER.toString())) {
-            Object song = event.getProperty("song");
+            Object song = event.getProperty("song"); 
             if (song instanceof JamendoSong) {
                 getStreamFromSong((JamendoSong) song, CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER);
             }
@@ -180,7 +183,7 @@ public class JamendoPlugin extends IPortal {
             try {
                 URLConnection con = streamLink.openConnection();
                 jamendoSong.setContentLength(con.getContentLength());
-                properties.put("stream", con.getInputStream());               
+                properties.put("stream", new BufferedInputStream(con.getInputStream()));               
                 properties.put("song", jamendoSong);
             } catch (IOException ex) {
                 Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);

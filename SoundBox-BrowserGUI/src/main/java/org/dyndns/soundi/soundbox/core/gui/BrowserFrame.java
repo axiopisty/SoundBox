@@ -17,7 +17,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
@@ -26,7 +25,6 @@ import org.dyndns.soundi.portals.interfaces.Song;
 import org.dyndns.soundi.soundboxbrowsergui.Activator;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -283,6 +281,11 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         });
 
         jButton3.setText("Add to Player");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -390,9 +393,10 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                 Dictionary properties = new Hashtable();
                 properties.put("song", s);
-                Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
-                //Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties);
+                Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties); //add the song to the downloader
+                //Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties); //add the song to the player
                 eventAdmin.sendEvent(reportGeneratedEvent);
+                System.out.println("send STARTPLAYERFROMSONG");
             }
         }
     }//GEN-LAST:event_jTable1MouseClicked
@@ -432,6 +436,20 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         // TODO add your handling code here:
         jTextField1.setText("");
     }//GEN-LAST:event_jTextField1MouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+            properties.put("song", s);
+            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu configurationMenu;
     private javax.swing.JButton jButton1;

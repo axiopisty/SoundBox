@@ -1,6 +1,7 @@
 package org.dyndns.soundi.gui.interfaces;
 
 import java.io.InputStream;
+import org.dyndns.soundi.portals.interfaces.Song;
 import org.osgi.service.event.EventHandler;
 
 /**
@@ -15,7 +16,7 @@ public interface IPlayerEngine extends EventHandler {
      * This method gets executed when a song should be played.
      * @param song The song that should be played. 
      */
-    void play(InputStream is);
+    void play(InputStream is, Song song);
     
     void pause();
     

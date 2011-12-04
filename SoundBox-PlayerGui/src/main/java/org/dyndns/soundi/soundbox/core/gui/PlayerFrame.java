@@ -57,7 +57,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jButton1.setText("play");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -146,7 +146,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -194,12 +194,12 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             Song song = (Song) event.getProperty("song");
             play(is, song);
         } else if (event.getTopic().equals(CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString())) {
-            
+
             Song song = (Song) event.getProperty("song");
             addSongToTable(song);
             ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
             //remove that, only for testing purposes!
-            
+
             if (ref != null) {
                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                 Dictionary properties = new Hashtable();
@@ -207,6 +207,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 Event reportGeneratedEvent = new Event(CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
+        } else if (event.getTopic().equals(CommunicationAction.SETPLAYERINVISIBLE.toString())) {
+            this.setVisible(false);
+        } else if (event.getTopic().equals(CommunicationAction.SETPLAYERVISIBLE.toString())) {
+            this.setVisible(true);
         }
     }
 

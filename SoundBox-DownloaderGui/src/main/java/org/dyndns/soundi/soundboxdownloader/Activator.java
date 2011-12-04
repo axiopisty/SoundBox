@@ -19,7 +19,8 @@ public class Activator implements BundleActivator {
         
         //register the downloader gui to all important events 
         String[] topics = new String[]{
-            CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), CommunicationAction.DOWNLOADSTATECHANGED.toString()
+            CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), CommunicationAction.DOWNLOADSTATECHANGED.toString(),
+            CommunicationAction.SETDOWNLOADERINVISIBLE.toString(), CommunicationAction.SETDOWNLOADERVISIBLE.toString()
         };
 
         Dictionary props = new Hashtable();

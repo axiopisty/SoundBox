@@ -55,7 +55,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("jLabel1");
 
@@ -188,6 +188,11 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
             final int tmpRowContainingThisSong = rowContainingThisSong;
             ProgressbarThread progressbarThread = new ProgressbarThread(tmpRowContainingThisSong, percent, jTable1);
             SwingUtilities.invokeLater(progressbarThread);
+        } else if (event.getTopic().equals(CommunicationAction.SETDOWNLOADERINVISIBLE.toString())) {
+            this.setVisible(false);
+        } else if (event.getTopic().equals(CommunicationAction.SETDOWNLOADERVISIBLE.toString())) {
+            this.setVisible(true);
         }
+
     }
 }

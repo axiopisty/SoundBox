@@ -36,7 +36,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
     public DownloadFrame(BundleContext cx) {
         initComponents();
         this.cx = cx;
-        setVisible(true);
+        //setVisible(true);
     }
 
     /** This method is called from within the constructor to

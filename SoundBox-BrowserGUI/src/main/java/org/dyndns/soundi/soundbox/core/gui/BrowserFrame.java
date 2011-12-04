@@ -211,6 +211,8 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("general"); // NOI18N
+        setTitle(bundle.getString("bundle.name")); // NOI18N
 
         jLabel1.setText("Keyword");
 
@@ -489,6 +491,9 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             initComponents();
             initialized = true;
         }
+        
+        //this.setTitle(Properties.);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
         System.out.println("display set to visible!");
     }

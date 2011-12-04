@@ -4,6 +4,7 @@
  */
 package org.dyndns.soundi.soundboxplayerengine;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -17,6 +18,8 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.osgi.framework.BundleContext;
@@ -36,29 +39,31 @@ public class DefaultPlayerEngine implements IPlayerEngine {
 
     @Override
     public void play(InputStream is, Song song) {
-        Type[] audioFileTypes = AudioSystem.getAudioFileTypes();
-        for(Type a : audioFileTypes)
-        {
-            System.out.println(a.getExtension()); 
-        }
-        AudioInputStream m_audioInputStream = null;
         try {
-            m_audioInputStream = AudioSystem.getAudioInputStream(is);
-        } catch (UnsupportedAudioFileException ex) {
-            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            AudioInputStream m_audioInputStream = null;
+            try {
+                m_audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
+            } catch (UnsupportedAudioFileException ex) {
+                Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            AudioFormat baseFormat = m_audioInputStream.getFormat();
+            AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                                baseFormat.getSampleRate(),
+                                16,
+                                baseFormat.getChannels(),
+                                baseFormat.getChannels() * 2,
+                                baseFormat.getSampleRate(),
+                                false);
+            AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, m_audioInputStream);
+            rawplay(decodedFormat, din, song);
+            //rawplay2(is, song);
+            //Player p = new Player(is);
+            //p.play();
+        } catch (Exception ex) {
             Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
         }
-        AudioFormat baseFormat = m_audioInputStream.getFormat();
-        AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                            baseFormat.getSampleRate(),
-                            16,
-                            baseFormat.getChannels(),
-                            baseFormat.getChannels() * 2,
-                            baseFormat.getSampleRate(),
-                            false);
-        AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, m_audioInputStream);
-        rawplay(decodedFormat, din, song);
     }
 
     @Override
@@ -69,10 +74,26 @@ public class DefaultPlayerEngine implements IPlayerEngine {
     public void stop() {
     }
 
+    //TODO: use the eventadmin and not the play() method inside playergui
     @Override
     public void handleEvent(Event event) {
     }
 
+    private void rawplay2(InputStream is, Song song)
+    {
+        Player p = null;
+        try {
+            p = new Player(is);
+        } catch (JavaLayerException ex) {
+            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            p.play();
+        } catch (JavaLayerException ex) {
+            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void rawplay(AudioFormat decodedFormat, AudioInputStream din, Song song) {
         byte[] data = new byte[4096];
 

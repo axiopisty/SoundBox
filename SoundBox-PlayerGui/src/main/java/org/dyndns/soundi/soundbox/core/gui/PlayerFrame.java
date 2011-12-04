@@ -39,7 +39,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     public PlayerFrame(BundleContext cx) {
         this.cx = cx;
         initComponents();
-        setVisible(true);
+        //setVisible(true);
         initPlayerEngine();
     }
 
@@ -146,6 +146,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

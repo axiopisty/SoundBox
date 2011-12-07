@@ -268,6 +268,15 @@ public enum CommunicationAction {
         public String toString() {
             return "org/dyndns/soundi/soundbox/DOWNLOADSONG";
         }
-    }
+    },
+    /**
+     * If the playback state has changed (every frame..)
+     */
+    PLAYBACKSTATECHANGED {
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/defaultplayerengine/PLAYBACKSTATECHANGED";
+        }
+    },
     
 }

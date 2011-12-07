@@ -56,6 +56,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -107,6 +108,8 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
         jButton3.setText("stop");
 
+        jLabel1.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,8 +124,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                         .addGap(93, 93, 93)
                         .addComponent(jButton3)
                         .addGap(392, 392, 392))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE))
                         .addGap(89, 89, 89))))
         );
         layout.setVerticalGroup(
@@ -130,12 +135,18 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addContainerGap())))
         );
 
         pack();
@@ -152,6 +163,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
@@ -174,7 +186,6 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
     @Override
     public void handleEvent(Event event) {
-
 
         System.out.println("retrieved event: " + event.getTopic());
         if (event.getTopic().equals(CommunicationAction.STARTPLAYERFROMSONG.toString())) {
@@ -211,6 +222,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             this.setVisible(false);
         } else if (event.getTopic().equals(CommunicationAction.SETPLAYERVISIBLE.toString())) {
             this.setVisible(true);
+        } else if (event.getTopic().equals(CommunicationAction.PLAYBACKSTATECHANGED.toString())) {
+            Song song = (Song) event.getProperty("song");
+            int position = (Integer) event.getProperty("position");
+            jLabel1.setText(""+position);
         }
     }
 

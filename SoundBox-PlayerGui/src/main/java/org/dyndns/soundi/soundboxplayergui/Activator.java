@@ -25,7 +25,8 @@ public class Activator implements BundleActivator {
         // regarding to portal plugins
         String[] topics = new String[]{
             CommunicationAction.STARTPLAYERFROMSONG.toString(), CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString(),
-            CommunicationAction.STREAMFROMSONGFORPLAYER.toString(), CommunicationAction.SETPLAYERINVISIBLE.toString(), CommunicationAction.SETPLAYERVISIBLE.toString()
+            CommunicationAction.STREAMFROMSONGFORPLAYER.toString(), CommunicationAction.SETPLAYERINVISIBLE.toString(), CommunicationAction.SETPLAYERVISIBLE.toString(),
+            CommunicationAction.PLAYBACKSTATECHANGED.toString()
         };
 
         Dictionary props = new Hashtable();

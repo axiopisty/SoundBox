@@ -18,7 +18,8 @@ public class Activator implements BundleActivator {
         IPlayerEngine engine = new DefaultPlayerEngine(context);
             
         String[] topics = new String[]{
-            CommunicationAction.PLAYSONGFROMBROWSER.toString(), CommunicationAction.PLAYSONGFROMPLAYER.toString()
+            CommunicationAction.PLAYSONGFROMBROWSER.toString(), CommunicationAction.PLAYSONGFROMPLAYER.toString(), 
+            CommunicationAction.STOPPLAYBACKFROMPLAYER.toString()
         };
 
         Dictionary props = new Hashtable();

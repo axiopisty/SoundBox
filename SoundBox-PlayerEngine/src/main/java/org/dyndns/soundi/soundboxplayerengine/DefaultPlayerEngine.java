@@ -4,8 +4,6 @@
  */
 package org.dyndns.soundi.soundboxplayerengine;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -15,19 +13,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioFileFormat.Type;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
-import javazoom.jl.player.advanced.AdvancedPlayer;
-import javazoom.jl.player.advanced.PlaybackEvent;
-import javazoom.jl.player.advanced.PlaybackListener;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
@@ -45,6 +38,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
     private BundleContext cx;
     private boolean stopped = false;
     private final Lock lock = new ReentrantLock();
+    Player p;
 
     DefaultPlayerEngine(BundleContext cx) {
         this.cx = cx;
@@ -80,7 +74,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                 @Override
                 public void run() {
                     try {
-                        Player p = new Player(is) {
+                        p = new Player(is) {
 
                             @Override
                             public void play() throws JavaLayerException {
@@ -90,7 +84,8 @@ public class DefaultPlayerEngine implements IPlayerEngine {
 
                                             @Override
                                             public void run() {
-                                                while (!isComplete()) {
+                                                while (!isComplete() ) {
+                                                     
                                                     EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                                                     Dictionary properties = new Hashtable();
                                                     properties.put("song", song);
@@ -180,6 +175,8 @@ public class DefaultPlayerEngine implements IPlayerEngine {
     //TODO: use the eventadmin and not the play() method inside playergui
     @Override
     public void handleEvent(Event event) {
+        if(event.getTopic().equals(CommunicationAction.STOPPLAYBACKFROMPLAYER.toString())) 
+            p.close();
     }
 
     private void rawplay2(InputStream is, Song song) {

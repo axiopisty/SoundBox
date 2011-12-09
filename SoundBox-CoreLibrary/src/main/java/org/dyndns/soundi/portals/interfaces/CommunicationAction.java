@@ -250,6 +250,7 @@ public enum CommunicationAction {
     },
     //no matter where it comes from, just download it ...
     DOWNLOADSONG {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/DOWNLOADSONG";
@@ -257,6 +258,7 @@ public enum CommunicationAction {
     },
     //if something is transfered, error occured etc.
     DOWNLOADSTATECHANGED {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/DOWNLOADSTATECHANGED";
@@ -264,6 +266,7 @@ public enum CommunicationAction {
     },
     //if the song has been finished
     DOWNLOADSONGFINISHED {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/DOWNLOADSONG";
@@ -273,10 +276,20 @@ public enum CommunicationAction {
      * If the playback state has changed (every frame..)
      */
     PLAYBACKSTATECHANGED {
+
         @Override
         public String toString() {
             return "org/dyndns/soundi/soundbox/defaultplayerengine/PLAYBACKSTATECHANGED";
         }
-    },
-    
+    }, 
+    /**
+     * This method is send from the Player GUI when the user stops the song
+     */
+    STOPPLAYBACKFROMPLAYER {
+
+        @Override
+        public String toString() {
+            return "org/dyndns/soundi/soundbox/gui/player/STOPPLAYBACKFROMPLAYER";
+        }
+    }
 }

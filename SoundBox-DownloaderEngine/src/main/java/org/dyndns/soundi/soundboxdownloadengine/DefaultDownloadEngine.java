@@ -37,7 +37,7 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
     @Override
     public void handleEvent(Event event) {
         if (event.getTopic().equals(CommunicationAction.DOWNLOADSONG.toString())) {
-            Song s = (Song) event.getProperty("song");
+            Song s = (Song) event.getProperty("song"); 
             songList.put(s, null);
             download(s);
         } else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONGFORDOWNLOADER.toString())) {

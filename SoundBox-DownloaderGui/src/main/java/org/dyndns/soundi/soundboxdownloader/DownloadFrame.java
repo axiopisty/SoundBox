@@ -171,7 +171,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
             Song l = (Song) event.getProperty("song");
             addSong(l);
         } else if (event.getTopic().equals(CommunicationAction.DOWNLOADSTATECHANGED.toString())) {
-            Song l = (Song) event.getProperty("song");
+            Song l = (Song) event.getProperty("song"); 
             int rowContainingThisSong = -1;
             for (int i = 0; i < jTable1.getRowCount(); i++) {
                 if (jTable1.getValueAt(i, 4).equals(l)) {
@@ -180,7 +180,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
                 }
             }
             Long bytesWritten = (Long) event.getProperty("writtenBytes");
-            if (l.getContentLength() == 0) {
+            if (l.getContentLength() == 0 || l.getContentLength() == -1) {
                 Util.sendMessage(Component.DOWNLOADER, "Sorry, did not get a content length field for that song...");
                 return;
             }

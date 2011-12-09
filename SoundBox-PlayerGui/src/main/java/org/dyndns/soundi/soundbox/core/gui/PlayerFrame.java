@@ -107,6 +107,11 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         jButton2.setText("pause");
 
         jButton3.setText("stop");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("jLabel1");
 
@@ -159,6 +164,18 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+
+            Event reportGeneratedEvent = new Event(CommunicationAction.STOPPLAYBACKFROMPLAYER.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -225,7 +242,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         } else if (event.getTopic().equals(CommunicationAction.PLAYBACKSTATECHANGED.toString())) {
             Song song = (Song) event.getProperty("song");
             int position = (Integer) event.getProperty("position");
-            jLabel1.setText(""+position);
+            jLabel1.setText("" + position);
         }
     }
 

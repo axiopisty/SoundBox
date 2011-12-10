@@ -13,21 +13,16 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.*;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import static org.dyndns.soundi.communicationaction.player.Requests.*;
 
 /**
  *
@@ -90,7 +85,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                                                     Dictionary properties = new Hashtable();
                                                     properties.put("song", song);
                                                     properties.put("position", getPosition());
-                                                    Event reportGeneratedEvent = new Event(CommunicationAction.PLAYBACKSTATECHANGED.toString(), properties);
+                                                    Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), properties);
                                                     eventAdmin.sendEvent(reportGeneratedEvent);
                                                     try {
                                                         Thread.currentThread().sleep(1000);
@@ -175,7 +170,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
     //TODO: use the eventadmin and not the play() method inside playergui
     @Override
     public void handleEvent(Event event) {
-        if(event.getTopic().equals(CommunicationAction.STOPPLAYBACKFROMPLAYER.toString())) 
+        if(event.getTopic().equals(STOPPLAYBACKFROMPLAYER.toString())) 
             p.close();
     }
 

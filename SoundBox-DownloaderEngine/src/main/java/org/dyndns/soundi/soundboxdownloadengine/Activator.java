@@ -2,8 +2,9 @@ package org.dyndns.soundi.soundboxdownloadengine;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import static org.dyndns.soundi.communicationaction.downloader.Requests.DOWNLOADSONG;
+import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORDOWNLOADER;
 import org.dyndns.soundi.gui.interfaces.IDownloaderEngine;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;
@@ -17,7 +18,7 @@ public class Activator implements BundleActivator {
         
         //register the downloader gui to all important events 
         String[] topics = new String[]{
-            CommunicationAction.DOWNLOADSONG.toString(), CommunicationAction.STREAMFROMSONGFORDOWNLOADER.toString()
+            DOWNLOADSONG.toString(), STREAMFROMSONGFORDOWNLOADER.toString()
         };
 
         Dictionary props = new Hashtable();

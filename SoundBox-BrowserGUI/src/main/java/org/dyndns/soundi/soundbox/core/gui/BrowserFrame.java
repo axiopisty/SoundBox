@@ -4,24 +4,15 @@ import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.dyndns.soundi.portals.interfaces.Song;
+import org.dyndns.soundi.portals.interfaces.State;
 import org.dyndns.soundi.soundboxbrowsergui.Activator;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
@@ -31,6 +22,9 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
+import static org.dyndns.soundi.communicationaction.browser.Requests.*;
+import static org.dyndns.soundi.communicationaction.core.Requests.*;
+import static org.dyndns.soundi.communicationaction.portals.Responses.*;
 /**
  *
  * @author oli
@@ -75,21 +69,22 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
 
         final JCheckBoxMenuItem item;
         item = new JCheckBoxMenuItem(portal.getState().toString(),
-                portal.getState().toString().equals(org.dyndns.soundi.portals.interfaces.State.ACTIVATED.toString()) ? true : false);
-
+                portal.getState().toString().equals(State.ACTIVATED.toString()) ? true : false);
+        
         item.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                
                 switch (portal.getState()) {
                     case ACTIVATED:
-                        portal.setState(org.dyndns.soundi.portals.interfaces.State.DEACTIVATED);
+                        portal.setState(State.DEACTIVATED);
                         break;
                     case DEACTIVATED:
-                        portal.setState(org.dyndns.soundi.portals.interfaces.State.ACTIVATED);
+                        portal.setState(State.ACTIVATED);
                         break;
                     default:
-                        portal.setState(org.dyndns.soundi.portals.interfaces.State.DEACTIVATED);
+                        portal.setState(State.DEACTIVATED);
                         break;
                 }
                 item.setText(portal.getState().toString());
@@ -418,7 +413,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
                 EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                 Dictionary properties = new Hashtable();
                 properties.put("song", s);
-                Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties); //add the song to the downloader
+                Event reportGeneratedEvent = new Event(ADDSONGTODOWNLOADQUEUE.toString(), properties); //add the song to the downloader
                 //Event reportGeneratedEvent = new Event(CommunicationAction.STARTPLAYERFROMSONG.toString(), properties); //add the song to the player
                 eventAdmin.sendEvent(reportGeneratedEvent);
                 System.out.println("send STARTPLAYERFROMSONG");
@@ -434,7 +429,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("song", s);
-            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString(), properties);
+            Event reportGeneratedEvent = new Event(ADDSONGTODOWNLOADQUEUE.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -470,7 +465,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("song", s);
-            Event reportGeneratedEvent = new Event(CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString(), properties);
+            Event reportGeneratedEvent = new Event(ADDSONGSTOPLAYERQUEUE.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -481,7 +476,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable(); 
-            Event reportGeneratedEvent = new Event(CommunicationAction.SETPLAYERVISIBLE.toString(), properties);
+            Event reportGeneratedEvent = new Event(SETPLAYERVISIBLE.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
@@ -492,7 +487,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable(); 
-            Event reportGeneratedEvent = new Event(CommunicationAction.SETDOWNLOADERVISIBLE.toString(), properties);
+            Event reportGeneratedEvent = new Event(SETDOWNLOADERVISIBLE.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
@@ -554,7 +549,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("artistName", artist);
-            Event reportGeneratedEvent = new Event(CommunicationAction.SEARCHARTISTFORBROWSER.toString(), properties);
+            Event reportGeneratedEvent = new Event(SEARCHARTISTFORBROWSER.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
@@ -567,7 +562,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("songTitle", song);
-            Event reportGeneratedEvent = new Event(CommunicationAction.SEARCHSONGFORBROWSER.toString(), properties);
+            Event reportGeneratedEvent = new Event(SEARCHSONGFORBROWSER.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
@@ -580,7 +575,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("albumTitle", album);
-            Event reportGeneratedEvent = new Event(CommunicationAction.SEARCHALBUMFORBROWSER.toString(), properties);
+            Event reportGeneratedEvent = new Event(SEARCHALBUMFORBROWSER.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
@@ -592,9 +587,9 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
     @Override
     public void handleEvent(final Event event) {
 
-        if (event.getTopic().equals(CommunicationAction.SETBROWSERVISIBLE.toString())) {
+        if (event.getTopic().equals(SETBROWSERVISIBLE.toString())) {
             setVisible(true);
-        } else if (event.getTopic().equals(CommunicationAction.FOUNDSONG.toString())) {
+        } else if (event.getTopic().equals(FOUNDSONG.toString())) {
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override

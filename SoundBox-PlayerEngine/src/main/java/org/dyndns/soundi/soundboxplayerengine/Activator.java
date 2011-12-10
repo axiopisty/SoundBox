@@ -3,13 +3,14 @@ package org.dyndns.soundi.soundboxplayerengine;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+import static org.dyndns.soundi.communicationaction.player.Requests.*;
+import static org.dyndns.soundi.communicationaction.browser.Requests.*;
 
 public class Activator implements BundleActivator {
 
@@ -18,8 +19,8 @@ public class Activator implements BundleActivator {
         IPlayerEngine engine = new DefaultPlayerEngine(context);
             
         String[] topics = new String[]{
-            CommunicationAction.PLAYSONGFROMBROWSER.toString(), CommunicationAction.PLAYSONGFROMPLAYER.toString(), 
-            CommunicationAction.STOPPLAYBACKFROMPLAYER.toString()
+            PLAYSONGFROMBROWSER.toString(), PLAYSONGFROMPLAYER.toString(), 
+            STOPPLAYBACKFROMPLAYER.toString()
         };
 
         Dictionary props = new Hashtable();

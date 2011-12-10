@@ -14,8 +14,12 @@ import java.awt.Point;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import javax.swing.SwingUtilities;
+import static org.dyndns.soundi.communicationaction.browser.Requests.ADDSONGTODOWNLOADQUEUE;
+import static org.dyndns.soundi.communicationaction.core.Requests.SETDOWNLOADERINVISIBLE;
+import static org.dyndns.soundi.communicationaction.core.Requests.SETDOWNLOADERVISIBLE;
+import static org.dyndns.soundi.communicationaction.downloader.Requests.DOWNLOADSONG;
+import static org.dyndns.soundi.communicationaction.downloader.Requests.DOWNLOADSTATECHANGED;
 import org.dyndns.soundi.gui.interfaces.IDownloaderGui;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
@@ -128,7 +132,7 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
                     for (int i = 0; i < jTable1.getRowCount(); i++) {
                         Song s = (Song) jTable1.getValueAt(i, 4);
                         properties.put("song", s);
-                        Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONG.toString(), properties);
+                        Event reportGeneratedEvent = new Event(DOWNLOADSONG.toString(), properties);
                         eventAdmin.sendEvent(reportGeneratedEvent);
                     }
                 }
@@ -167,10 +171,10 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
 
     @Override
     public void handleEvent(Event event) {
-        if (event.getTopic().equals(CommunicationAction.ADDSONGTODOWNLOADQUEUE.toString())) {
+        if (event.getTopic().equals(ADDSONGTODOWNLOADQUEUE.toString())) {
             Song l = (Song) event.getProperty("song");
             addSong(l);
-        } else if (event.getTopic().equals(CommunicationAction.DOWNLOADSTATECHANGED.toString())) {
+        } else if (event.getTopic().equals(DOWNLOADSTATECHANGED.toString())) {
             Song l = (Song) event.getProperty("song"); 
             int rowContainingThisSong = -1;
             for (int i = 0; i < jTable1.getRowCount(); i++) {
@@ -188,9 +192,9 @@ public class DownloadFrame extends javax.swing.JFrame implements IDownloaderGui 
             final int tmpRowContainingThisSong = rowContainingThisSong;
             ProgressbarThread progressbarThread = new ProgressbarThread(tmpRowContainingThisSong, percent, jTable1);
             SwingUtilities.invokeLater(progressbarThread);
-        } else if (event.getTopic().equals(CommunicationAction.SETDOWNLOADERINVISIBLE.toString())) {
+        } else if (event.getTopic().equals(SETDOWNLOADERINVISIBLE.toString())) {
             this.setVisible(false);
-        } else if (event.getTopic().equals(CommunicationAction.SETDOWNLOADERVISIBLE.toString())) {
+        } else if (event.getTopic().equals(SETDOWNLOADERVISIBLE.toString())) {
             this.setVisible(true);
         }
 

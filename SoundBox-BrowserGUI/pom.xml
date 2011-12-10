@@ -24,7 +24,7 @@
             <groupId>org.dyndns.soundi</groupId>
             <artifactId>SoundBox-CoreLibrary</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <type>bundle</type>
+            <type>jar</type>
             <exclusions>
                 <exclusion>
                     <artifactId>apache.felix.logger</artifactId>

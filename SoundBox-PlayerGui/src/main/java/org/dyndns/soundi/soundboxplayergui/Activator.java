@@ -3,8 +3,13 @@ package org.dyndns.soundi.soundboxplayergui;
 //~--- non-JDK imports --------------------------------------------------------
 import java.util.Dictionary;
 import java.util.Hashtable;
+import static org.dyndns.soundi.communicationaction.browser.Requests.ADDSONGSTOPLAYERQUEUE;
+import static org.dyndns.soundi.communicationaction.browser.Requests.STARTPLAYERFROMSONG;
+import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERINVISIBLE;
+import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERVISIBLE;
+import static org.dyndns.soundi.communicationaction.player.Requests.PLAYBACKSTATECHANGED;
+import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORPLAYER;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.soundbox.core.gui.PlayerFrame;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
@@ -12,6 +17,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
+
 
 public class Activator implements BundleActivator {
 
@@ -24,9 +30,9 @@ public class Activator implements BundleActivator {
         // now add it to the notification list if something found a song, as we want to retrieve events 
         // regarding to portal plugins
         String[] topics = new String[]{
-            CommunicationAction.STARTPLAYERFROMSONG.toString(), CommunicationAction.ADDSONGSTOPLAYERQUEUE.toString(),
-            CommunicationAction.STREAMFROMSONGFORPLAYER.toString(), CommunicationAction.SETPLAYERINVISIBLE.toString(), CommunicationAction.SETPLAYERVISIBLE.toString(),
-            CommunicationAction.PLAYBACKSTATECHANGED.toString()
+            STARTPLAYERFROMSONG.toString(), ADDSONGSTOPLAYERQUEUE.toString(),
+            STREAMFROMSONGFORPLAYER.toString(), SETPLAYERINVISIBLE.toString(), SETPLAYERVISIBLE.toString(),
+            PLAYBACKSTATECHANGED.toString()
         };
 
         Dictionary props = new Hashtable();

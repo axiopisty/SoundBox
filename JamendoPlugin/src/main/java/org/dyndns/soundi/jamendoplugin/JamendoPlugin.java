@@ -6,17 +6,8 @@ package org.dyndns.soundi.jamendoplugin;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Iterator;
-
+import java.net.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpEntity;
@@ -24,7 +15,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.dyndns.soundi.portals.interfaces.*;
+import static org.dyndns.soundi.communicationaction.browser.Requests.*;
+import static org.dyndns.soundi.communicationaction.downloader.Requests.GETSTREAMFROMSONGFORDOWNLOADER;
+import static org.dyndns.soundi.communicationaction.player.Requests.GETSTREAMFROMSONGFORPLAYER;
+import static org.dyndns.soundi.communicationaction.portals.Responses.*;
+import org.dyndns.soundi.portals.interfaces.Author;
+import org.dyndns.soundi.portals.interfaces.IPortal;
+import org.dyndns.soundi.portals.interfaces.License;
+import org.dyndns.soundi.portals.interfaces.PluginInformation;
 import org.dyndns.soundi.utils.Util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -104,7 +102,7 @@ public class JamendoPlugin extends IPortal {
         ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-            Event reportGeneratedEvent = new Event(CommunicationAction.FOUNDSONG.toString(), l);
+            Event reportGeneratedEvent = new Event(FOUNDSONG.toString(), l);
 
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
@@ -126,22 +124,22 @@ public class JamendoPlugin extends IPortal {
     public void handleEvent(Event event) {
 
         System.out.println("(plugin): retrieved: " + event.getTopic());
-        
-        if (event.getTopic().equals(CommunicationAction.SEARCHSONGFORBROWSER.toString())) {
+
+        if (event.getTopic().equals(SEARCHSONGFORBROWSER.toString())) {
             searchSong(event.getProperty("songTitle").toString());
-        } else if (event.getTopic().equals(CommunicationAction.SEARCHALBUMFORBROWSER.toString())) {
+        } else if (event.getTopic().equals(SEARCHALBUMFORBROWSER.toString())) {
             searchAlbum(event.getProperty("albumTitle").toString());
-        } else if (event.getTopic().equals(CommunicationAction.SEARCHARTISTFORBROWSER.toString())) {
+        } else if (event.getTopic().equals(SEARCHARTISTFORBROWSER.toString())) {
             searchArtist(event.getProperty("artistName").toString());
-        } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString())) {
-            Object song = event.getProperty("song"); 
+        } else if (event.getTopic().equals(GETSTREAMFROMSONGFORPLAYER.toString())) {
+            Object song = event.getProperty("song");
             if (song instanceof JamendoSong) {
-                getStreamFromSong((JamendoSong) song, CommunicationAction.GETSTREAMFROMSONGFORPLAYER);
+                getStreamFromSong((JamendoSong) song, GETSTREAMFROMSONGFORPLAYER);
             }
-        } else if (event.getTopic().equals(CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER.toString())) {
-            Object song = event.getProperty("song"); 
+        } else if (event.getTopic().equals(GETSTREAMFROMSONGFORDOWNLOADER.toString())) {
+            Object song = event.getProperty("song");
             if (song instanceof JamendoSong) {
-                getStreamFromSong((JamendoSong) song, CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER);
+                getStreamFromSong((JamendoSong) song, GETSTREAMFROMSONGFORDOWNLOADER);
             }
         }
     }
@@ -168,7 +166,7 @@ public class JamendoPlugin extends IPortal {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private void getStreamFromSong(JamendoSong jamendoSong, CommunicationAction reciever) {
+    private void getStreamFromSong(JamendoSong jamendoSong, Enum reciever) {
         URL streamLink = null;
         try {
             streamLink = new URL("http://api.jamendo.com/get2/stream/track/redirect/?id=" + jamendoSong.getId() + "&streamencoding=mp31");
@@ -183,16 +181,16 @@ public class JamendoPlugin extends IPortal {
             try {
                 URLConnection con = streamLink.openConnection();
                 jamendoSong.setContentLength(con.getContentLength());
-                properties.put("stream", new BufferedInputStream(con.getInputStream()));               
+                properties.put("stream", new BufferedInputStream(con.getInputStream()));
                 properties.put("song", jamendoSong);
             } catch (IOException ex) {
                 Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
             }
             Event reportGeneratedEvent = null;
-            if (reciever == CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER) {
-                reportGeneratedEvent = new Event(CommunicationAction.STREAMFROMSONGFORDOWNLOADER.toString(), properties);
-            } else if (reciever == CommunicationAction.GETSTREAMFROMSONGFORPLAYER) {
-                reportGeneratedEvent = new Event(CommunicationAction.STREAMFROMSONGFORPLAYER.toString(), properties);
+            if (reciever == GETSTREAMFROMSONGFORDOWNLOADER) {
+                reportGeneratedEvent = new Event(STREAMFROMSONGFORDOWNLOADER.toString(), properties);
+            } else if (reciever == GETSTREAMFROMSONGFORPLAYER) {
+                reportGeneratedEvent = new Event(STREAMFROMSONGFORPLAYER.toString(), properties);
             }
             eventAdmin.sendEvent(reportGeneratedEvent);
         }

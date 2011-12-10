@@ -7,13 +7,13 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.utils.Util;
-import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.dyndns.soundi.utils.Util.Component;
+import static org.dyndns.soundi.communicationaction.core.Requests.SETBROWSERVISIBLE;
 
 /**
  * This is the main class of SoundBox Core. SoundBox Core starts the UI and
@@ -79,7 +79,7 @@ public class SoundBox {
                 //last but not least, send it
                 final Map crap = new Hashtable();
                 final Event event = new Event(
-                        CommunicationAction.SETBROWSERVISIBLE.toString(), crap);
+                        SETBROWSERVISIBLE.toString(), crap);
                 eventAdmin.sendEvent(event);
             }
         }.start();

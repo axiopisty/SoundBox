@@ -2,13 +2,16 @@ package org.dyndns.soundi.jamendoplugin;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
+import static org.dyndns.soundi.communicationaction.browser.Requests.SEARCHSONGFORBROWSER;
+import static org.dyndns.soundi.communicationaction.downloader.Requests.GETSTREAMFROMSONGFORDOWNLOADER;
+import static org.dyndns.soundi.communicationaction.player.Requests.GETSTREAMFROMSONGFORPLAYER;
 import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-
+        
+        
 public class Activator implements BundleActivator {
 
     @Override
@@ -20,7 +23,8 @@ public class Activator implements BundleActivator {
         // now add it to the notification list if someone enters something in the browser, as we want to retrieve events 
         // regarding to portal plugins
         String[] topics = new String[]{
-            CommunicationAction.SEARCHSONGFORBROWSER.toString(), CommunicationAction.GETSTREAMFROMSONGFORPLAYER.toString(), CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER.toString()
+          
+            SEARCHSONGFORBROWSER.toString(), GETSTREAMFROMSONGFORPLAYER.toString(), GETSTREAMFROMSONGFORDOWNLOADER.toString()
         };
 
         Dictionary props = new Hashtable();

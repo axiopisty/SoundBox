@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.dyndns.soundi.communicationaction.downloader.Requests.*;
+import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORDOWNLOADER;
 import org.dyndns.soundi.gui.interfaces.IDownloaderEngine;
-import org.dyndns.soundi.portals.interfaces.CommunicationAction;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -36,11 +37,11 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
 
     @Override
     public void handleEvent(Event event) {
-        if (event.getTopic().equals(CommunicationAction.DOWNLOADSONG.toString())) {
+        if (event.getTopic().equals(DOWNLOADSONG.toString())) {
             Song s = (Song) event.getProperty("song"); 
             songList.put(s, null);
             download(s);
-        } else if (event.getTopic().equals(CommunicationAction.STREAMFROMSONGFORDOWNLOADER.toString())) {
+        } else if (event.getTopic().equals(STREAMFROMSONGFORDOWNLOADER.toString())) {
             songList.put((Song) event.getProperty("song"), (InputStream) event.getProperty("stream"));
             rawDownload((Song) event.getProperty("song"));
         }
@@ -54,7 +55,7 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("song", song);
-            Event reportGeneratedEvent = new Event(CommunicationAction.GETSTREAMFROMSONGFORDOWNLOADER.toString(), properties);
+            Event reportGeneratedEvent = new Event(GETSTREAMFROMSONGFORDOWNLOADER.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
@@ -89,7 +90,7 @@ public class DefaultDownloadEngine implements IDownloaderEngine {
                 fos.write(b, 0, tmp);
                 bytesRead += tmp;
                 properties.put("writtenBytes", bytesRead);
-                Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSTATECHANGED.toString(), properties);
+                Event reportGeneratedEvent = new Event(DOWNLOADSTATECHANGED.toString(), properties);
                 eventAdmin.sendEvent(reportGeneratedEvent);
             }
             //Event reportGeneratedEvent = new Event(CommunicationAction.DOWNLOADSONGFINISHED.toString(), properties);

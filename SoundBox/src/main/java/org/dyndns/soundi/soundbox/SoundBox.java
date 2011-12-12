@@ -3,17 +3,22 @@
  */
 package org.dyndns.soundi.soundbox;
 
+import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.dyndns.soundi.communicationaction.core.Requests.SETBROWSERVISIBLE;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
+import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.dyndns.soundi.utils.Util;
+import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-import org.dyndns.soundi.utils.Util.Component;
-import static org.dyndns.soundi.communicationaction.core.Requests.SETBROWSERVISIBLE;
 
 /**
  * This is the main class of SoundBox Core. SoundBox Core starts the UI and
@@ -27,14 +32,15 @@ public class SoundBox {
      * Defines the polling intervall for checking if a UI is registered.
      */
     private static final int SLEEP_TIMEOUT = 1000;
-    
     /**
-     * 
+     *
      */
     private final transient BundleContext context;
+    private HashSet<IPortal> portals = new HashSet<IPortal>();
 
     /**
      * Default constructor for the SoundBox.
+     *
      * @param cont The OSGi BundleContext, mostly from the Activator.
      */
     SoundBox(final BundleContext cont) {
@@ -42,8 +48,8 @@ public class SoundBox {
     }
 
     /**
-     * This method initializes the SoundBox. In general it checks if the
-     * event admin is installed and tries to set up the UI.
+     * This method initializes the SoundBox. In general it checks if the event
+     * admin is installed and tries to set up the UI.
      */
     protected final void init() {
 
@@ -54,23 +60,21 @@ public class SoundBox {
                 //get the eventadmin and the event message
                 ServiceReference ref = context.getServiceReference(
                         EventAdmin.class.getName());
-                final EventAdmin eventAdmin = (EventAdmin)
-                        context.getService(ref);
-                if(eventAdmin == null) {
+                final EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
+                if (eventAdmin == null) {
                     Util.sendMessage(Component.CORE, "Sorry, no event admin "
                             + "installed. No EventAdmin, no communication, no "
                             + "SoundBox.");
                     System.exit(-1);
                 }
-                
+
                 //now get the browser interface
                 ref = context.getServiceReference(IBrowserGui.class.getName());
                 while (ref == null) {
                     try {
                         Thread.currentThread().sleep(SLEEP_TIMEOUT);
                     } catch (InterruptedException ex) {
-                        java.util.logging.Logger.getLogger(SoundBox.class.
-                                getName()).log(Level.SEVERE, null, ex);
+                        java.util.logging.Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     ref = context.getServiceReference(IBrowserGui.class.getName());
                     Util.sendMessage(Component.CORE,
@@ -78,10 +82,81 @@ public class SoundBox {
                 }
                 //last but not least, send it
                 final Map crap = new Hashtable();
+
+
                 final Event event = new Event(
-                        SETBROWSERVISIBLE.toString(), crap);
+                        SETBROWSERVISIBLE.toString(), (Dictionary) crap);
                 eventAdmin.sendEvent(event);
             }
         }.start();
+        pluginListener();
+
+    }
+
+    /**
+     * TODO: this method should be in the soundbox, not in the gui!!
+     */
+    private void pluginListener() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.currentThread().sleep(SLEEP_TIMEOUT);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    ServiceReference[] references = null;
+                    try {
+                        //fetch all portals
+                        references = context.getServiceReferences(IPortal.class.getName(), null);
+                    } catch (InvalidSyntaxException ex) {
+                        Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    //if we found at least one...
+                    if (references != null) {
+                        //loop through it/them
+                        for (ServiceReference reference : references) {
+                            //cast it to an instance so we can use it (fetch informations from it)
+                            final IPortal portal = (IPortal) context.getService(reference);
+                            //check if it is listed in our portals list
+                            if (!portals.contains(portal)) {
+                                //if not, call init() on the portals implemented interface
+                                System.out.println("Registered new portal (" + portal.getInfos().getPluginName() + ")!");
+                                if (portal.getState() == org.dyndns.soundi.portals.interfaces.State.ACTIVATED) {
+                                    portal.init();
+                                }
+                                addPortalToGui(portal);
+                                portals.add(portal);
+                            }
+                            //check if a portal has been removed 
+                            if (portals.size() != references.length) {
+                                //something changed... as we already registered every new portal, it must be a deletion 
+                                System.out.println("a plugin has been removed!");
+                            }
+                        }
+                    }
+
+                    if (references == null && portals.size() == 1) //there's still one portal registered, but it has been removed
+                    {
+                        IPortal portal = (IPortal) portals.iterator().next();
+                        removePortalFromGui(portal);
+                        System.out.println("Plugin " + portals.iterator().next());
+                        portals.clear();
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void removePortalFromGui(IPortal portal) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private void addPortalToGui(IPortal portal) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

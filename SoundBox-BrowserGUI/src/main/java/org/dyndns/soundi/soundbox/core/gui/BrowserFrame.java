@@ -4,27 +4,27 @@ import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import static org.dyndns.soundi.communicationaction.browser.Requests.*;
+import static org.dyndns.soundi.communicationaction.core.Requests.*;
+import static org.dyndns.soundi.communicationaction.portals.Responses.FOUNDSONG;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.dyndns.soundi.portals.interfaces.State;
-import org.dyndns.soundi.soundboxbrowsergui.Activator;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-
-import static org.dyndns.soundi.communicationaction.browser.Requests.*;
-import static org.dyndns.soundi.communicationaction.core.Requests.*;
-import static org.dyndns.soundi.communicationaction.portals.Responses.*;
 /**
  *
  * @author oli
@@ -46,7 +46,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
      */
     public BrowserFrame(final BundleContext cx) {
         this.cx = cx;
-        portals = new HashSet<IPortal>();
+        
         try {
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
@@ -58,10 +58,7 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
             initComponents();
             initialized = true;
         }
-
         display();
-        pluginListener();
-
     }
 
     private void addPortalToGui(final IPortal portal) {
@@ -111,69 +108,6 @@ public final class BrowserFrame extends JFrame implements IBrowserGui {
         submenu.add(aboutItem);
         submenu.add(item);
         configurationMenu.add(submenu);
-    }
-
-    /**
-     * TODO: this method should be in the soundbox, not in the gui!!
-     */
-    private void pluginListener() {
-        new Thread() {
-
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.currentThread().sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(BrowserFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    ServiceReference[] references = null;
-                    try {
-                        //fetch all portals
-                        references = cx.getServiceReferences(IPortal.class.getName(), null);
-                    } catch (InvalidSyntaxException ex) {
-                        Logger.getLogger(Activator.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    //if we found at least one...
-                    if (references != null) {
-                        //loop through it/them
-                        for (ServiceReference reference : references) {
-                            //cast it to an instance so we can use it (fetch informations from it)
-                            final IPortal portal = (IPortal) cx.getService(reference);
-                            //check if it is listed in our portals list
-                            if (!portals.contains(portal)) {
-                                //if not, call init() on the portals implemented interface
-                                System.out.println("Registered new portal (" + portal.getInfos().getPluginName() + ")!");
-                                if (portal.getState() == org.dyndns.soundi.portals.interfaces.State.ACTIVATED) {
-                                    portal.init();
-                                }
-                                addPortalToGui(portal);
-                                portals.add(portal);
-                            }
-                            //check if a portal has been removed 
-                            if (portals.size() != references.length) {
-                                //something changed... as we already registered every new portal, it must be a deletion 
-                                System.out.println("a plugin has been removed!");
-                            }
-                        }
-                    }
-
-                    if (references == null && portals.size() == 1) //there's still one portal registered, but it has been removed
-                    {
-                        IPortal portal = (IPortal) portals.iterator().next();
-                        removePortalFromGui(portal);
-                        System.out.println("Plugin " + portals.iterator().next());
-                        portals.clear();
-                    }
-                }
-            }
-        }.start();
-    }
-
-    private void removePortalFromGui(IPortal portal) {
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /**

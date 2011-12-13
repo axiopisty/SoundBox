@@ -4,6 +4,8 @@
  */
 package org.dyndns.soundi.soundboxplayerengine;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -42,117 +44,78 @@ public class DefaultPlayerEngine implements IPlayerEngine {
     @Override
     public void play(final InputStream is, final Song song) {
         try {
-            /*AudioInputStream m_audioInputStream = null;
+            AudioInputStream m_audioInputStream = null;
             try {
-            m_audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
+                m_audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
             } catch (UnsupportedAudioFileException ex) {
-            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
             }
             AudioFormat baseFormat = m_audioInputStream.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-            baseFormat.getSampleRate(),
-            16,
-            baseFormat.getChannels(),
-            baseFormat.getChannels() * 2,
-            baseFormat.getSampleRate(),
-            false);
-            AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, m_audioInputStream);*/
-            //rawplay(decodedFormat, din, song);
+                    baseFormat.getSampleRate(),
+                    16,
+                    baseFormat.getChannels(),
+                    baseFormat.getChannels() * 2,
+                    baseFormat.getSampleRate(),
+                    false);
+            AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, m_audioInputStream);
+            rawplay(decodedFormat, din, song);
             //rawplay2(is, song);
             //final AdvancedPlayer p = new AdvancedPlayer(is);
-            final ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
-
-            new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        p = new Player(is) {
-
-                            @Override
-                            public void play() throws JavaLayerException {
-                                try {
-                                    if (lock.tryLock(1, TimeUnit.MILLISECONDS)) {
-                                        new Thread() {
-
-                                            @Override
-                                            public void run() {
-                                                while (!isComplete() ) {
-                                                     
-                                                    EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-                                                    Dictionary properties = new Hashtable();
-                                                    properties.put("song", song);
-                                                    properties.put("position", getPosition());
-                                                    Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), properties);
-                                                    eventAdmin.sendEvent(reportGeneratedEvent);
-                                                    try {
-                                                        Thread.currentThread().sleep(1000);
-                                                    } catch (InterruptedException ex) {
-                                                        Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-                                                    }
-                                                }
-                                            }
-                                        }.start();
-                                    }
-                                } catch (Exception ex) {
-                                } finally {
-                                    super.play();
-                                    lock.unlock();
-                                }
-                            }
-                        };
-                        /*p.setPlayBackListener(new PlaybackListener() {
-                        
-                        @Override
-                        public void playbackFinished(PlaybackEvent pe) {
-                        super.playbackFinished(pe);
-                        stopped = true;
-                        }
-                        
-                        @Override
-                        public void playbackStarted(PlaybackEvent pe) {
-                        super.playbackStarted(pe);
-                        final ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
-                        
-                        if (ref != null) {
-                        stopped = false;
-                        while (!stopped) {
-                        try {
-                        Thread.currentThread().sleep(1000);
-                        } catch (InterruptedException ex) {
-                        Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        new Thread() {
-                        
-                        @Override
-                        public void run() {
-                        EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-                        Dictionary properties = new Hashtable();
-                        properties.put("song", song);
-                        // properties.put("seconds", p.)
-                        Event reportGeneratedEvent = new Event(CommunicationAction.PLAYBACKSTATECHANGED.toString(), properties);
-                        eventAdmin.sendEvent(reportGeneratedEvent);
-                        }
-                        }.start();
-                        try {
-                        Thread.currentThread().sleep(1000);
-                        } catch (InterruptedException ex) {
-                        Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        }
-                        }
-                        }
-                        });*/
-
-                        p.play();
-                    } catch (Exception ex) {
-                    }
-                }
+            /*
+             * final ServiceReference ref =
+             * cx.getServiceReference(EventAdmin.class.getName());
+             *
+             * new Thread() {
+             *
+             * @Override public void run() { try { p = new Player(is) {
+             *
+             * @Override public void play() throws JavaLayerException { try { if
+             * (lock.tryLock(1, TimeUnit.MILLISECONDS)) { new Thread() {
+             *
+             * @Override public void run() { while (!isComplete() ) {
+             *
+             * EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+             * Dictionary properties = new Hashtable(); properties.put("song",
+             * song); properties.put("position", getPosition()); Event
+             * reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(),
+             * properties); eventAdmin.sendEvent(reportGeneratedEvent); try {
+             * Thread.currentThread().sleep(1000); } catch (InterruptedException
+             * ex) {
+             * Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE,
+             * null, ex); } } } }.start(); } } catch (Exception ex) { } finally
+             * { super.play(); lock.unlock(); } } }; /*p.setPlayBackListener(new
+             * PlaybackListener() {
+             *
+             * @Override public void playbackFinished(PlaybackEvent pe) {
+             * super.playbackFinished(pe); stopped = true; }
+             *
+             * @Override public void playbackStarted(PlaybackEvent pe) {
+             * super.playbackStarted(pe); final ServiceReference ref =
+             * cx.getServiceReference(EventAdmin.class.getName());
+             *
+             * if (ref != null) { stopped = false; while (!stopped) { try {
+             * Thread.currentThread().sleep(1000); } catch (InterruptedException
+             * ex) {
+             * Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE,
+             * null, ex); } new Thread() {
+             *
+             * @Override public void run() { EventAdmin eventAdmin =
+             * (EventAdmin) cx.getService(ref); Dictionary properties = new
+             * Hashtable(); properties.put("song", song); //
+             * properties.put("seconds", p.) Event reportGeneratedEvent = new
+             * Event(CommunicationAction.PLAYBACKSTATECHANGED.toString(),
+             * properties); eventAdmin.sendEvent(reportGeneratedEvent); }
+             * }.start(); try { Thread.currentThread().sleep(1000); } catch
+             * (InterruptedException ex) {
+             * Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE,
+             * null, ex); } } } } });
+             *
+             * p.play(); } catch (Exception ex) { } }
             }.start();
-
-
+             */
 
         } catch (Exception ex) {
             Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,8 +133,9 @@ public class DefaultPlayerEngine implements IPlayerEngine {
     //TODO: use the eventadmin and not the play() method inside playergui
     @Override
     public void handleEvent(Event event) {
-        if(event.getTopic().equals(STOPPLAYBACKFROMPLAYER.toString())) 
+        if (event.getTopic().equals(STOPPLAYBACKFROMPLAYER.toString())) {
             p.close();
+        }
     }
 
     private void rawplay2(InputStream is, Song song) {

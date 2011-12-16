@@ -7,7 +7,7 @@ import static org.dyndns.soundi.communicationaction.browser.Requests.ADDSONGSTOP
 import static org.dyndns.soundi.communicationaction.browser.Requests.STARTPLAYERFROMSONG;
 import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERINVISIBLE;
 import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERVISIBLE;
-import static org.dyndns.soundi.communicationaction.player.Requests.PLAYBACKSTATECHANGED;
+import static org.dyndns.soundi.communicationaction.playerengine.Responses.PLAYBACKSTATECHANGED;
 import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORPLAYER;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
 import org.dyndns.soundi.soundbox.core.gui.PlayerFrame;

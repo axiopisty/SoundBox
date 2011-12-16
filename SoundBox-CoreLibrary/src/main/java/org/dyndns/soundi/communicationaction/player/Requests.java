@@ -46,16 +46,6 @@ public enum Requests {
         }
     },
     /**
-     * If the playback state has changed (every frame..)
-     */
-    PLAYBACKSTATECHANGED {
-
-        @Override
-        public String toString() {
-            return "org/dyndns/soundi/soundbox/defaultplayerengine/PLAYBACKSTATECHANGED";
-        }
-    },
-    /**
      * This method is send from the Player GUI when the user stops the song
      */
     STOPPLAYBACKFROMPLAYER {

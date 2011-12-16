@@ -5,26 +5,19 @@
 package org.dyndns.soundi.soundboxplayerengine;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.*;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
+import static org.dyndns.soundi.communicationaction.player.Requests.STOPPLAYBACKFROMPLAYER;
+import static org.dyndns.soundi.communicationaction.playerengine.Responses.PLAYBACKSTATECHANGED;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.portals.interfaces.Song;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-import static org.dyndns.soundi.communicationaction.player.Requests.*;
 
 /**
  *
@@ -33,9 +26,7 @@ import static org.dyndns.soundi.communicationaction.player.Requests.*;
 public class DefaultPlayerEngine implements IPlayerEngine {
 
     private BundleContext cx;
-    private boolean stopped = false;
-    private final Lock lock = new ReentrantLock();
-    Player p;
+    private boolean stop = false;
 
     DefaultPlayerEngine(BundleContext cx) {
         this.cx = cx;
@@ -72,19 +63,21 @@ public class DefaultPlayerEngine implements IPlayerEngine {
 
     @Override
     public void stop() {
+        stop = true;
     }
 
     //TODO: use the eventadmin and not the play() method inside playergui
     @Override
     public void handleEvent(Event event) {
         if (event.getTopic().equals(STOPPLAYBACKFROMPLAYER.toString())) {
-            p.close();
+            this.stop();
         }
     }
 
-    private static void rawplay(AudioFormat decodedFormat, AudioInputStream din, Song song) {
+    private void rawplay(AudioFormat decodedFormat, AudioInputStream din, Song song) {
         byte[] data = new byte[4096];
-
+//can be removed if it is correctly osgi'd as we probably make a singleton of this class
+        stop = false;
         try {
             SourceDataLine line = getLine(decodedFormat);
 
@@ -93,7 +86,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                 line.start();
                 int nBytesRead = 0;
 
-                while (nBytesRead != -1) {
+                while (nBytesRead != -1 && !stop) {
 
                     Map properties = ((javazoom.spi.PropertiesContainer) din).properties();
 
@@ -107,7 +100,17 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                     if (nBytesRead != -1) {
                         line.write(data, 0, nBytesRead);
                     }
-                    //send where i am (notification for the player gui)
+
+                    ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+                    if (ref != null) {
+                        EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+                        Dictionary props = new Hashtable();
+                        props.put("seconds", val);
+                        props.put("bytePosition", val2);
+                        props.put("song", song);
+                        Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
+                        eventAdmin.sendEvent(reportGeneratedEvent);
+                    }
                 }
 
                 // Stop

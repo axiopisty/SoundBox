@@ -13,14 +13,18 @@ package org.dyndns.soundi.soundbox.core.gui;
 import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import static org.dyndns.soundi.communicationaction.browser.Requests.ADDSONGSTOPLAYERQUEUE;
 import static org.dyndns.soundi.communicationaction.browser.Requests.STARTPLAYERFROMSONG;
 import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERINVISIBLE;
 import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERVISIBLE;
-import static org.dyndns.soundi.communicationaction.player.Requests.*;
+import static org.dyndns.soundi.communicationaction.player.Requests.GETSTREAMFROMSONGFORPLAYER;
+import static org.dyndns.soundi.communicationaction.player.Requests.STOPPLAYBACKFROMPLAYER;
 import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORPLAYER;
+import static org.dyndns.soundi.communicationaction.playerengine.Responses.PLAYBACKSTATECHANGED;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
 import org.dyndns.soundi.portals.interfaces.Song;
@@ -48,6 +52,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
         initComponents();
         //setVisible(true);
         initPlayerEngine();
+        setTitle("SoundBox Player");
     }
 
     /**
@@ -139,7 +144,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 682, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2))
                         .addGap(89, 89, 89))))
         );
         layout.setVerticalGroup(
@@ -149,16 +154,15 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton2)
-                            .addComponent(jButton3))
-                        .addContainerGap())
+                            .addComponent(jButton3)))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addContainerGap())))
+                        .addComponent(jLabel1)))
+                .addContainerGap())
         );
 
         pack();
@@ -205,6 +209,11 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
     private void addSongToTable(Song s) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (((Vector) model.getDataVector().elementAt(i)).elementAt(4).equals(s)) {
+                return;
+            }
+        }
         int minutes = 0, seconds = 0;
         String duration;
         minutes = s.getTimeInSeconds() / 60;
@@ -222,7 +231,6 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     @Override
     public void handleEvent(Event event) {
 
-        System.out.println("retrieved event: " + event.getTopic());
         if (event.getTopic().equals(STARTPLAYERFROMSONG.toString())) {
             Song s = (Song) event.getProperty("song");
             addSongToTable(s);
@@ -259,8 +267,10 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             this.setVisible(true);
         } else if (event.getTopic().equals(PLAYBACKSTATECHANGED.toString())) {
             Song song = (Song) event.getProperty("song");
-            int position = (Integer) event.getProperty("position");
-            jLabel1.setText("" + position);
+            long bytePosition = (Long) event.getProperty("bytePosition");
+            long seconds = (Long) event.getProperty("seconds");
+            //jLabel1.setText("" + seconds + " / " + bytePosition);
+            jLabel1.setText(secondsToNiceTime(seconds));
         }
     }
 
@@ -269,8 +279,19 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
      *
      * @param is The InputStream from the song that should be played.
      */
-    private void play(InputStream is, Song song) {
-        playerEngine.play(is, song);
+    private void play(final InputStream is, final Song song) {
+        if (playerEngine != null) {
+            playerEngine.stop();
+            new Thread("PlayerEngine") {
+
+                @Override
+                public void run() {
+                    playerEngine.play(is, song);
+
+                }
+            }.start();
+        }
+
     }
 
     private void initPlayerEngine() {
@@ -281,18 +302,31 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 ServiceReference ref = null;
 
                 while (ref == null) {
+
+                    ref = cx.getServiceReference(IPlayerEngine.class.getName());
+                    Util.sendMessage(Component.PLAYER, "waiting for a player engine...");
                     try {
                         Thread.currentThread().sleep(10000);
                     } catch (InterruptedException ex) {
                         java.util.logging.Logger.getLogger(PlayerFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    ref = cx.getServiceReference(IPlayerEngine.class.getName());
-                    Util.sendMessage(Component.PLAYER, "waiting for a player engine...");
                 }
                 playerEngine = (IPlayerEngine) cx.getService(ref);
                 Util.sendMessage(Component.PLAYER, "registered a player engine");
             }
         };
         new Thread(waitJob).start();
+    }
+
+    private String secondsToNiceTime(long s) {
+        String ret;
+        int minutes = (int) (s / 60);
+        int seconds = (int) (s % 60);
+        ret = "" + minutes + ":";
+        if (seconds < 10) {
+            ret += "0";
+        }
+        ret += "" + seconds;
+        return ret;
     }
 }

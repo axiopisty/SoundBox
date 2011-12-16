@@ -46,11 +46,9 @@ public class DefaultPlayerEngine implements IPlayerEngine {
         try {
             AudioInputStream m_audioInputStream = null;
             try {
-                m_audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
-            } catch (UnsupportedAudioFileException ex) {
-                Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+                m_audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is)); //-->> EXCEPTION, line 45
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
             AudioFormat baseFormat = m_audioInputStream.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
@@ -60,65 +58,11 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                     baseFormat.getChannels() * 2,
                     baseFormat.getSampleRate(),
                     false);
-            AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, m_audioInputStream);
+            AudioInputStream din =
+                    AudioSystem.getAudioInputStream(decodedFormat, m_audioInputStream);
             rawplay(decodedFormat, din, song);
-            //rawplay2(is, song);
-            //final AdvancedPlayer p = new AdvancedPlayer(is);
-            /*
-             * final ServiceReference ref =
-             * cx.getServiceReference(EventAdmin.class.getName());
-             *
-             * new Thread() {
-             *
-             * @Override public void run() { try { p = new Player(is) {
-             *
-             * @Override public void play() throws JavaLayerException { try { if
-             * (lock.tryLock(1, TimeUnit.MILLISECONDS)) { new Thread() {
-             *
-             * @Override public void run() { while (!isComplete() ) {
-             *
-             * EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-             * Dictionary properties = new Hashtable(); properties.put("song",
-             * song); properties.put("position", getPosition()); Event
-             * reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(),
-             * properties); eventAdmin.sendEvent(reportGeneratedEvent); try {
-             * Thread.currentThread().sleep(1000); } catch (InterruptedException
-             * ex) {
-             * Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE,
-             * null, ex); } } } }.start(); } } catch (Exception ex) { } finally
-             * { super.play(); lock.unlock(); } } }; /*p.setPlayBackListener(new
-             * PlaybackListener() {
-             *
-             * @Override public void playbackFinished(PlaybackEvent pe) {
-             * super.playbackFinished(pe); stopped = true; }
-             *
-             * @Override public void playbackStarted(PlaybackEvent pe) {
-             * super.playbackStarted(pe); final ServiceReference ref =
-             * cx.getServiceReference(EventAdmin.class.getName());
-             *
-             * if (ref != null) { stopped = false; while (!stopped) { try {
-             * Thread.currentThread().sleep(1000); } catch (InterruptedException
-             * ex) {
-             * Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE,
-             * null, ex); } new Thread() {
-             *
-             * @Override public void run() { EventAdmin eventAdmin =
-             * (EventAdmin) cx.getService(ref); Dictionary properties = new
-             * Hashtable(); properties.put("song", song); //
-             * properties.put("seconds", p.) Event reportGeneratedEvent = new
-             * Event(CommunicationAction.PLAYBACKSTATECHANGED.toString(),
-             * properties); eventAdmin.sendEvent(reportGeneratedEvent); }
-             * }.start(); try { Thread.currentThread().sleep(1000); } catch
-             * (InterruptedException ex) {
-             * Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE,
-             * null, ex); } } } } });
-             *
-             * p.play(); } catch (Exception ex) { } }
-            }.start();
-             */
-
         } catch (Exception ex) {
-            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -138,21 +82,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
         }
     }
 
-    private void rawplay2(InputStream is, Song song) {
-        Player p = null;
-        try {
-            p = new Player(is);
-        } catch (JavaLayerException ex) {
-            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            p.play();
-        } catch (JavaLayerException ex) {
-            Logger.getLogger(DefaultPlayerEngine.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void rawplay(AudioFormat decodedFormat, AudioInputStream din, Song song) {
+    private static void rawplay(AudioFormat decodedFormat, AudioInputStream din, Song song) {
         byte[] data = new byte[4096];
 
         try {
@@ -177,6 +107,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                     if (nBytesRead != -1) {
                         line.write(data, 0, nBytesRead);
                     }
+                    //send where i am (notification for the player gui)
                 }
 
                 // Stop
@@ -190,7 +121,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
         }
     }
 
-    private SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {
+    private static SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {
         SourceDataLine res = null;
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
         res = (SourceDataLine) AudioSystem.getLine(info);

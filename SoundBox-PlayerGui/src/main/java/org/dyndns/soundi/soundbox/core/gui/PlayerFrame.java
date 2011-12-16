@@ -282,7 +282,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
                 while (ref == null) {
                     try {
-                        Thread.currentThread().sleep(1000);
+                        Thread.currentThread().sleep(10000);
                     } catch (InterruptedException ex) {
                         java.util.logging.Logger.getLogger(PlayerFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }

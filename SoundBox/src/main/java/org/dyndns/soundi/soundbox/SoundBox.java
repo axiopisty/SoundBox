@@ -153,10 +153,10 @@ public class SoundBox {
     }
 
     private void removePortalFromGui(IPortal portal) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
     }
 
     private void addPortalToGui(IPortal portal) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
     }
 }

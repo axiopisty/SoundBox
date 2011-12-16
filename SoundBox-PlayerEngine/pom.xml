@@ -1,3 +1,4 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -54,7 +55,7 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
-            </plugin>
+            </plugin>           
         </plugins>
     </build>
 
@@ -118,7 +119,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
                         <version>2.2</version>
-                        <executions>
+                        <executions>                         
                             <execution>
                                 <id>create-executable-jar</id>
                                 <phase>package</phase>
@@ -130,9 +131,58 @@
                                         <descriptor>${basedir}/src/main/assembly/felix.xml</descriptor>
                                     </descriptors>
                                     <finalName>${project.build.finalName}</finalName>
+                                    <!-- <archive>
+                                        <manifest>
+                                            <manifestEntries>
+                                                <SPI-Consumer>javax.sound.sampled.AudioSystem#getAudioInputStream</SPI-Consumer>
+                                            </manifestEntries>
+                                        </manifest>
+                                    </archive>-->
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>                             
+                        <groupId>org.codehaus.mojo</groupId>                              
+                        <artifactId>exec-maven-plugin</artifactId>                              
+                        <version>1.1</version>                              
+                        <executions>                                  
+                            <execution>                                            
+                                <phase>verify</phase>                                          
+                                <goals>                                              
+                                    <goal>exec</goal>                                            
+                                </goals>                                          
+                            </execution>                                
+                        </executions>                               
+                        <configuration>                                    
+                            <executable>java</executable>                                  
+                            <workingDirectory>${project.build.dir}</workingDirectory>                                    
+                            <arguments>                                           
+                                <argument>-jar</argument>    
+                                <argument>org.apache.aries.spifly.static.tool-0.4-SNAPSHOT-jar-with-dependencies.jar</argument>
+                                <argument>target/${project.build.finalName}.jar</argument>                                                                          	         
+                            </arguments>                              
+                        </configuration>                             
+                    </plugin>  
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.2</version>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/target</directory>
+                                    <includes>
+                                        <include>${project.build.finalName}.jar</include>                                      
+                                    </includes>
+                                    <excludes>
+                                        <exclude>${project.build.finalName}-spifly.jar</exclude>                                      
+                                    </excludes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -177,21 +227,59 @@
                                     <jvmarg line="${vm.args}"/>
                                 </java>
                             </target>
+                            <!-- <archive>
+                                        <manifest>
+                                            <manifestEntries>
+                                                <SPI-Consumer>javax.sound.sampled.AudioSystem#getAudioInputStream</SPI-Consumer>
+                                            </manifestEntries>
+                                        </manifest>
+                                    </archive>-->
+                        </configuration>
+                    </plugin>
+                    <plugin>                             
+                        <groupId>org.codehaus.mojo</groupId>                              
+                        <artifactId>exec-maven-plugin</artifactId>                              
+                        <version>1.1</version>                              
+                        <executions>                                  
+                            <execution>                                            
+                                <phase>verify</phase>                                          
+                                <goals>                                              
+                                    <goal>exec</goal>                                            
+                                </goals>                                          
+                            </execution>                                
+                        </executions>                               
+                        <configuration>                                    
+                            <executable>java</executable>                                  
+                            <workingDirectory>${project.build.dir}</workingDirectory>                                    
+                            <arguments>                                           
+                                <argument>-jar</argument>    
+                                <argument>org.apache.aries.spifly.static.tool-0.4-SNAPSHOT-jar-with-dependencies.jar</argument>
+                                <argument>target/${project.build.finalName}.jar</argument>                                                                          	         
+                            </arguments>                              
+                        </configuration>                             
+                    </plugin>  
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.2</version>
+                        <configuration>
+                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/target</directory>
+                                    <includes>
+                                        <include>${project.build.finalName}.jar</include>                                      
+                                    </includes>
+                                    <excludes>
+                                        <exclude>${project.build.finalName}-spifly.jar</exclude>                                      
+                                    </excludes>
+                                    <followSymlinks>false</followSymlinks>
+                                </fileset>
+                            </filesets>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>config/sun_checks.xml</configLocation>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 </project>

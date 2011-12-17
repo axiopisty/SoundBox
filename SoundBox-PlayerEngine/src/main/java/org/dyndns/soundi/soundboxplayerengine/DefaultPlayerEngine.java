@@ -18,7 +18,7 @@ import org.dyndns.soundi.portals.interfaces.Song;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
+//import org.osgi.service.event.EventAdmin;
 
 /**
  *
@@ -79,7 +79,7 @@ public class DefaultPlayerEngine implements IPlayerEngine {
         byte[] data = new byte[4096];
         //can be removed if it is correctly osgi'd as we probably make a singleton of this class
         stop = false;
-        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+        //ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
         try {
             SourceDataLine line = getLine(decodedFormat);
 
@@ -87,14 +87,14 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                 // Start
                 line.start();
 
-                if (ref != null) {
+                /*if (ref != null) {
                     EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                     Dictionary props = new Hashtable();
                     props.put("song", song);
                     props.put("state", PlaybackState.STARTED);
                     Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
                     eventAdmin.sendEvent(reportGeneratedEvent);
-                }
+                }*/
 
                 int nBytesRead = 0;
 
@@ -103,8 +103,8 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                     Map properties = ((javazoom.spi.PropertiesContainer) din).properties();
 
                     String key = "mp3.position.microseconds";
-                    int val = (Integer) properties.get(key) / 1000000;
-                    int val2 = (Integer) properties.get("mp3.position.byte");
+                    Long val = (Long) properties.get(key) / 1000000;
+                    Long val2 = (Long) properties.get("mp3.position.byte");
 
 
                     nBytesRead = din.read(data, 0, data.length);
@@ -113,16 +113,16 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                         line.write(data, 0, nBytesRead);
                     }
 
-                    if (ref != null) {
+                    /*if (ref != null) {
                         EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                         Dictionary props = new Hashtable();
-                        props.put("seconds", val);
-                        props.put("bytePosition", val2);
+                        props.put("seconds", val.intValue());
+                        props.put("bytePosition", val2.intValue());
                         props.put("song", song);
                         props.put("state", PlaybackState.UPDATE);
                         Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
                         eventAdmin.sendEvent(reportGeneratedEvent);
-                    }
+                    }*/
                 }
 
                 // Stop
@@ -134,14 +134,14 @@ public class DefaultPlayerEngine implements IPlayerEngine {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if (ref != null) {
+        /*if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
             Dictionary props = new Hashtable();
             props.put("state", PlaybackState.STOPPED);
             props.put("song", song);
             Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
             eventAdmin.sendEvent(reportGeneratedEvent);
-        }
+        }*/
     }
 
     private static SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {

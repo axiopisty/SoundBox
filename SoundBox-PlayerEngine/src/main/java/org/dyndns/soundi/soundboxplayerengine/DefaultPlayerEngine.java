@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import javax.sound.sampled.*;
 import static org.dyndns.soundi.communicationaction.player.Requests.STOPPLAYBACKFROMPLAYER;
+import org.dyndns.soundi.communicationaction.playerengine.PlaybackState;
 import static org.dyndns.soundi.communicationaction.playerengine.Responses.PLAYBACKSTATECHANGED;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.portals.interfaces.Song;
@@ -76,14 +77,25 @@ public class DefaultPlayerEngine implements IPlayerEngine {
 
     private void rawplay(AudioFormat decodedFormat, AudioInputStream din, Song song) {
         byte[] data = new byte[4096];
-//can be removed if it is correctly osgi'd as we probably make a singleton of this class
+        //can be removed if it is correctly osgi'd as we probably make a singleton of this class
         stop = false;
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
         try {
             SourceDataLine line = getLine(decodedFormat);
 
             if (line != null) {
                 // Start
                 line.start();
+
+                if (ref != null) {
+                    EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+                    Dictionary props = new Hashtable();
+                    props.put("song", song);
+                    props.put("state", PlaybackState.STARTED);
+                    Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
+                    eventAdmin.sendEvent(reportGeneratedEvent);
+                }
+
                 int nBytesRead = 0;
 
                 while (nBytesRead != -1 && !stop) {
@@ -91,8 +103,8 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                     Map properties = ((javazoom.spi.PropertiesContainer) din).properties();
 
                     String key = "mp3.position.microseconds";
-                    long val = (Long) properties.get(key) / 1000000;
-                    long val2 = (Long) properties.get("mp3.position.byte");
+                    int val = (Integer) properties.get(key) / 1000000;
+                    int val2 = (Integer) properties.get("mp3.position.byte");
 
 
                     nBytesRead = din.read(data, 0, data.length);
@@ -101,13 +113,13 @@ public class DefaultPlayerEngine implements IPlayerEngine {
                         line.write(data, 0, nBytesRead);
                     }
 
-                    ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
                     if (ref != null) {
                         EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
                         Dictionary props = new Hashtable();
                         props.put("seconds", val);
                         props.put("bytePosition", val2);
                         props.put("song", song);
+                        props.put("state", PlaybackState.UPDATE);
                         Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
                         eventAdmin.sendEvent(reportGeneratedEvent);
                     }
@@ -121,6 +133,14 @@ public class DefaultPlayerEngine implements IPlayerEngine {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary props = new Hashtable();
+            props.put("state", PlaybackState.STOPPED);
+            props.put("song", song);
+            Event reportGeneratedEvent = new Event(PLAYBACKSTATECHANGED.toString(), props);
+            eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
 

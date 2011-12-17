@@ -23,6 +23,7 @@ import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERINVIS
 import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERVISIBLE;
 import static org.dyndns.soundi.communicationaction.player.Requests.GETSTREAMFROMSONGFORPLAYER;
 import static org.dyndns.soundi.communicationaction.player.Requests.STOPPLAYBACKFROMPLAYER;
+import org.dyndns.soundi.communicationaction.playerengine.PlaybackState;
 import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORPLAYER;
 import static org.dyndns.soundi.communicationaction.playerengine.Responses.PLAYBACKSTATECHANGED;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
@@ -50,7 +51,7 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     public PlayerFrame(BundleContext cx) {
         this.cx = cx;
         initComponents();
-        //setVisible(true);
+        setVisible(true);
         initPlayerEngine();
         setTitle("SoundBox Player");
     }
@@ -63,12 +64,14 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jSlider1 = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -127,6 +130,8 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
         jLabel1.setText("jLabel1");
 
+        jSlider1.setValue(0);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,33 +140,36 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(118, 118, 118)
-                        .addComponent(jButton2)
-                        .addGap(93, 93, 93)
-                        .addComponent(jButton3)
-                        .addGap(392, 392, 392))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
                             .addComponent(jScrollPane2))
-                        .addGap(89, 89, 89))))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addGap(271, 271, 271))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2)
-                            .addComponent(jButton3)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)))
+                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -170,21 +178,29 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (evt.getClickCount() >= 2) {
-            Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
-            ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
-            if (ref != null) {
-                EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
-                Dictionary properties = new Hashtable();
-                properties.put("song", s);
-                Event reportGeneratedEvent = new Event(STARTPLAYERFROMSONG.toString(), properties);
-                eventAdmin.sendEvent(reportGeneratedEvent);
-            }
+            playSelectedSong();
         }
 	}//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Song s = (Song) jTable1.getValueAt(jTable1.getSelectedRow(), 4);
+    private void playSelectedSong() {
+        int index = jTable1.getSelectedRow();
+        if (index == -1) {
+            Util.sendMessage(Component.PLAYER, "No Song selected to play!");
+            return;
+        }
+        Song s = (Song) jTable1.getValueAt(index, 4);
+        ServiceReference ref = cx.getServiceReference(EventAdmin.class.getName());
+        if (ref != null) {
+            EventAdmin eventAdmin = (EventAdmin) cx.getService(ref);
+            Dictionary properties = new Hashtable();
+            properties.put("song", s);
+            Event reportGeneratedEvent = new Event(STARTPLAYERFROMSONG.toString(), properties);
+            eventAdmin.sendEvent(reportGeneratedEvent);
+        }
+    }
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        playSelectedSong();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -203,7 +219,9 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSlider jSlider1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 
@@ -267,10 +285,18 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             this.setVisible(true);
         } else if (event.getTopic().equals(PLAYBACKSTATECHANGED.toString())) {
             Song song = (Song) event.getProperty("song");
-            long bytePosition = (Long) event.getProperty("bytePosition");
-            long seconds = (Long) event.getProperty("seconds");
-            //jLabel1.setText("" + seconds + " / " + bytePosition);
+            int bytePosition = (Integer) event.getProperty("bytePosition");
+            int seconds = (Integer) event.getProperty("seconds");
+            PlaybackState state = (PlaybackState) event.getProperty("state");
+            
+            switch(state)
+            {
+                
+            }
+            
+            //TODO: only update this every 500ms or so... produces too much traffic ^^
             jLabel1.setText(secondsToNiceTime(seconds));
+            jSlider1.setValue(bytePosition);
         }
     }
 

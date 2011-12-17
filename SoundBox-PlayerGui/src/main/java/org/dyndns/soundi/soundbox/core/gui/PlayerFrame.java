@@ -16,7 +16,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import static org.dyndns.soundi.communicationaction.browser.Requests.ADDSONGSTOPLAYERQUEUE;
 import static org.dyndns.soundi.communicationaction.browser.Requests.STARTPLAYERFROMSONG;
 import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERINVISIBLE;
@@ -24,8 +23,8 @@ import static org.dyndns.soundi.communicationaction.core.Requests.SETPLAYERVISIB
 import static org.dyndns.soundi.communicationaction.player.Requests.GETSTREAMFROMSONGFORPLAYER;
 import static org.dyndns.soundi.communicationaction.player.Requests.STOPPLAYBACKFROMPLAYER;
 import org.dyndns.soundi.communicationaction.playerengine.PlaybackState;
-import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORPLAYER;
 import static org.dyndns.soundi.communicationaction.playerengine.Responses.PLAYBACKSTATECHANGED;
+import static org.dyndns.soundi.communicationaction.portals.Responses.STREAMFROMSONGFORPLAYER;
 import org.dyndns.soundi.gui.interfaces.IPlayerEngine;
 import org.dyndns.soundi.gui.interfaces.IPlayerGui;
 import org.dyndns.soundi.portals.interfaces.Song;
@@ -288,15 +287,18 @@ public class PlayerFrame extends javax.swing.JFrame implements IPlayerGui {
             int bytePosition = (Integer) event.getProperty("bytePosition");
             int seconds = (Integer) event.getProperty("seconds");
             PlaybackState state = (PlaybackState) event.getProperty("state");
-            
-            switch(state)
-            {
-                
+
+            switch (state) {
+                case STARTED:
+                    jSlider1.setMaximum(((Long)song.getContentLength()).intValue());
+                    break;
+                case STOPPED:
+                    break;
+                case UPDATE:
+                    jLabel1.setText(secondsToNiceTime(seconds));
+                    jSlider1.setValue(bytePosition);
+                    break;
             }
-            
-            //TODO: only update this every 500ms or so... produces too much traffic ^^
-            jLabel1.setText(secondsToNiceTime(seconds));
-            jSlider1.setValue(bytePosition);
         }
     }
 

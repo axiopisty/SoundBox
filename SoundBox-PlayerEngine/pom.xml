@@ -130,14 +130,12 @@
                                     <descriptors>
                                         <descriptor>${basedir}/src/main/assembly/felix.xml</descriptor>
                                     </descriptors>
-                                    <finalName>${project.build.finalName}</finalName>
-                                    <!-- <archive>
-                                        <manifest>
-                                            <manifestEntries>
-                                                <SPI-Consumer>javax.sound.sampled.AudioSystem#getAudioInputStream</SPI-Consumer>
-                                            </manifestEntries>
-                                        </manifest>
-                                    </archive>-->
+                                    <finalName>${project.build.finalName}</finalName> 
+                                    <archive>                                       
+                                        <manifestEntries>
+                                            <SPI-Consumer>javax.sound.sampled.AudioSystem#getAudioInputStream</SPI-Consumer>
+                                        </manifestEntries>                                      
+                                    </archive>
                                 </configuration>
                             </execution>
                         </executions>

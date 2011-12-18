@@ -2,12 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.dyndns.soundbox</groupId>
-    <artifactId>Mp3Wrapper</artifactId>
+    <groupId>com.mycompany</groupId>
+    <artifactId>BeeMp3Plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>Mp3Wrapper OSGi Bundle</name>
+    <name>BeeMp3Plugin OSGi Bundle</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,39 +21,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javazoom</groupId>
-            <artifactId>mp3spi</artifactId>
-            <version>1.9.6</version>
+            <groupId>org.dyndns.soundi</groupId>
+            <artifactId>SoundBox-CoreLibrary</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>javazoom</groupId>
-            <artifactId>javazoom.jlayer</artifactId>
-            <version>1</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+            <version>4.1.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javazoom</groupId>
-            <artifactId>tritounous-share</artifactId>
-            <version>0.3.6</version>
-        </dependency>
-        <dependency>
-            <groupId>javazoom</groupId>
-            <artifactId>tritounus-mp3</artifactId>
-            <version>0.3.6</version>
-        </dependency>
-        <dependency>
-            <groupId>javazoom</groupId>
-            <artifactId>tritounous-remaining</artifactId>
-            <version>0.3.6</version>
-        </dependency>
-        <dependency>
-            <groupId>jorbis</groupId>
-            <artifactId>jorbis</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>jorbisspi</groupId>
-            <artifactId>jorbisspi</artifactId>
-            <version>0.0.17</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcomponents-core</artifactId>
+            <version>4.1.3</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -66,9 +49,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>org.dyndns.soundbox.mp3wrapper.Activator</Bundle-Activator>
-                        <Export-Package>com.jcraft.jogg,com.jcraft.jorbis,javazoom.jl.converter,javazoom.jl.decoder,javazoom.jl.player,javazoom.jl.player.advanced,javazoom.spi,javazoom.spi.mpeg.sampled.convert,javazoom.spi.mpeg.sampled.file,javazoom.spi.mpeg.sampled.file.tag,javazoom.spi.vorbis.sampled.convert,javazoom.spi.vorbis.sampled.file,org.dyndns.soundbox.mp3wrapper,org.tritonus.lowlevel.lame,org.tritonus.midi.file,org.tritonus.sampled.convert,org.tritonus.sampled.convert.javalayer,org.tritonus.sampled.convert.lame,org.tritonus.sampled.file,org.tritonus.sampled.file.mpeg,org.tritonus.share,org.tritonus.share.midi,org.tritonus.share.sampled,org.tritonus.share.sampled.convert,org.tritonus.share.sampled.file,org.tritonus.share.sampled.mixer</Export-Package>
-                        <Private-Package>org.dyndns.soundbox.mp3wrapper.*</Private-Package>
+                        <Bundle-Activator>com.mycompany.beemp3plugin.Activator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>

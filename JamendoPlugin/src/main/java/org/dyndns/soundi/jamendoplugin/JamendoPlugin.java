@@ -169,7 +169,7 @@ public class JamendoPlugin extends IPortal {
     private void getStreamFromSong(JamendoSong jamendoSong, Enum reciever) {
         URL streamLink = null;
         try {
-            streamLink = new URL("http://api.jamendo.com/get2/stream/track/redirect/?id=" + jamendoSong.getId() + "&streamencoding=mp31");
+            streamLink = new URL("http://api.jamendo.com/get2/stream/track/redirect/?id=" + jamendoSong.getId() + "&streamencoding=mpg31");
         } catch (MalformedURLException ex) {
             Logger.getLogger(JamendoPlugin.class.getName()).log(Level.SEVERE, null, ex);
         }

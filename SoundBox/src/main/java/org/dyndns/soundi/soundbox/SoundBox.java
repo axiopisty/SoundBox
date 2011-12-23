@@ -128,7 +128,7 @@ public class SoundBox {
                             if (!portals.contains(portal)) {
                                 //if not, call init() on the portals implemented interface
                                 PluginInformation infos = portal.getInfos();
-                                if (infos != null) {
+                                if (infos != null && infos.getPluginName() != null) {
                                     System.out.println("Registered new portal (" + infos.getPluginName() + ")!");
                                 }
                                 if (portal.getState() == ACTIVATED) {

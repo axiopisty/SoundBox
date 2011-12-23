@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import static org.dyndns.soundi.communicationaction.core.Requests.SETBROWSERVISIBLE;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.portals.interfaces.IPortal;
+import org.dyndns.soundi.portals.interfaces.PluginInformation;
+import static org.dyndns.soundi.portals.interfaces.State.ACTIVATED;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
@@ -125,8 +127,11 @@ public class SoundBox {
                             //check if it is listed in our portals list
                             if (!portals.contains(portal)) {
                                 //if not, call init() on the portals implemented interface
-                                System.out.println("Registered new portal (" + portal.getInfos().getPluginName() + ")!");
-                                if (portal.getState() == org.dyndns.soundi.portals.interfaces.State.ACTIVATED) {
+                                PluginInformation infos = portal.getInfos();
+                                if (infos != null) {
+                                    System.out.println("Registered new portal (" + infos.getPluginName() + ")!");
+                                }
+                                if (portal.getState() == ACTIVATED) {
                                     portal.init();
                                 }
                                 addPortalToGui(portal);
@@ -153,10 +158,8 @@ public class SoundBox {
     }
 
     private void removePortalFromGui(IPortal portal) {
-        
     }
 
     private void addPortalToGui(IPortal portal) {
-        
     }
 }

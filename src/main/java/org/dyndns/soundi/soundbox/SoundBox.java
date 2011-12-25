@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.dyndns.soundi.soundbox;
 
 import java.util.Dictionary;
@@ -38,6 +35,9 @@ public class SoundBox {
      *
      */
     private final transient BundleContext context;
+    /**
+     * Contains all registered Portals. This is the "model"-part.
+     */
     private HashSet<IPortal> portals = new HashSet<IPortal>();
 
     /**
@@ -59,30 +59,38 @@ public class SoundBox {
 
             @Override
             public void run() {
-                //get the eventadmin and the event message
+                /*
+                 * get the eventadmin and the event message
+                 */
                 ServiceReference ref = context.getServiceReference(
                         EventAdmin.class.getName());
                 final EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
                 if (eventAdmin == null) {
-                    Util.sendMessage(Component.CORE, "Sorry, no event admin "
+                    String msg = "Sorry, no event admin "
                             + "installed. No EventAdmin, no communication, no "
-                            + "SoundBox.");
-                    System.exit(-1);
+                            + "SoundBox.";
+                    Util.sendMessage(Component.CORE, msg);
+                    throw new RuntimeException(msg);
                 }
 
-                //now get the browser interface
+                /*
+                 * now get the browser interface
+                 */
                 ref = context.getServiceReference(IBrowserGui.class.getName());
                 while (ref == null) {
                     try {
                         Thread.currentThread().sleep(SLEEP_TIMEOUT);
                     } catch (InterruptedException ex) {
-                        java.util.logging.Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SoundBox.class.getName()).
+                                log(Level.SEVERE, null, ex);
                     }
                     ref = context.getServiceReference(IBrowserGui.class.getName());
                     Util.sendMessage(Component.CORE,
                             "waiting for the gui registration...");
                 }
-                //last but not least, send it
+                /*
+                 * last but not least, send it
+                 */
                 final Map crap = new Hashtable();
 
 
@@ -107,28 +115,44 @@ public class SoundBox {
                     try {
                         Thread.currentThread().sleep(SLEEP_TIMEOUT);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SoundBox.class.getName()).
+                                log(Level.SEVERE, null, ex);
                     }
 
                     ServiceReference[] references = null;
                     try {
-                        //fetch all portals
+                        /*
+                         * fetch all portals
+                         */
                         references = context.getServiceReferences(IPortal.class.getName(), null);
                     } catch (InvalidSyntaxException ex) {
-                        Logger.getLogger(SoundBox.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SoundBox.class.getName()).
+                                log(Level.SEVERE, null, ex);
                     }
 
-                    //if we found at least one...
+                    /*
+                     * if we found at least one...
+                     */
                     if (references != null) {
-                        //loop through it/them
+                        /*
+                         * loop through it/them
+                         */
                         for (ServiceReference reference : references) {
-                            //cast it to an instance so we can use it (fetch informations from it)
+                            /*
+                             * cast it to an instance so we can use it (fetch
+                             * informations from it)
+                             */
                             final IPortal portal = (IPortal) context.getService(reference);
-                            //check if it is listed in our portals list
+                            /*
+                             * check if it is listed in our portals list
+                             */
                             if (!portals.contains(portal)) {
-                                //if not, call init() on the portals implemented interface
+                                /*
+                                 * if not, call init() on the portals
+                                 * implemented interface
+                                 */
                                 PluginInformation infos = portal.getInfos();
-                                if (infos != null && infos.getPluginName() != null) {
+                                if (infos != null) {
                                     System.out.println("Registered new portal (" + infos.getPluginName() + ")!");
                                 }
                                 if (portal.getState() == ACTIVATED) {
@@ -137,16 +161,23 @@ public class SoundBox {
                                 addPortalToGui(portal);
                                 portals.add(portal);
                             }
-                            //check if a portal has been removed 
+                            /*
+                             * check if a portal has been removed
+                             */
                             if (portals.size() != references.length) {
-                                //something changed... as we already registered every new portal, it must be a deletion 
+                                /*
+                                 * something changed... as we already registered
+                                 * every new portal, it must be a deletion
+                                 */
                                 System.out.println("a plugin has been removed!");
                             }
                         }
                     }
 
-                    if (references == null && portals.size() == 1) //there's still one portal registered, but it has been removed
-                    {
+                    if (references == null && portals.size() == 1) /*
+                     * there's still one portal registered, but it has been
+                     * removed
+                     */ {
                         IPortal portal = (IPortal) portals.iterator().next();
                         removePortalFromGui(portal);
                         System.out.println("Plugin " + portals.iterator().next());
@@ -157,9 +188,24 @@ public class SoundBox {
         }.start();
     }
 
-    private void removePortalFromGui(IPortal portal) {
+    /**
+     * This method removes a portal from the internal list of portals. An event
+     * to all listeners will be send via EventAdmin. Further informations about
+     * the Event can be found in the communication API in
+     *
+     * @see org.dyndns.soundi.communicationaction This event is fired when a
+     * portal has been removed from the ./load directory.
+     * @param portal The portal that should be removed.
+     */
+    private void removePortalFromGui(final IPortal portal) {
     }
 
-    private void addPortalToGui(IPortal portal) {
+    /**
+     * This method is invoked when a Portal is registered via the load
+     * directory.
+     *
+     * @param portal The portal which has been found in ./load
+     */
+    private void addPortalToGui(final IPortal portal) {
     }
 }

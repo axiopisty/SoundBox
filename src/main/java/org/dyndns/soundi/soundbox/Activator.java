@@ -19,10 +19,14 @@ import org.osgi.framework.BundleContext;
 public class Activator implements BundleActivator {
 
     @Override
-    public final void start(final BundleContext context) {
-
-        final SoundBox box = new SoundBox(context);
-        box.init();
+    public final void start(final BundleContext context) {  
+        new Thread() {
+            @Override
+            public void run() {
+                final SoundBox box = new SoundBox(context);
+                box.init();
+            }
+        }.start();
     }
 
     @Override

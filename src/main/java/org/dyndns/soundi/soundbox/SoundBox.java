@@ -49,8 +49,23 @@ public class SoundBox {
         /*
          * get the eventadmin and the event message
          */
-        ServiceReference ref = context.getServiceReference(
-                EventAdmin.class.getName());
+        ServiceReference ref = null;
+
+        while (ref == null) {
+            ref = context.getServiceReference(
+                    EventAdmin.class.getName());
+            if (ref == null) {
+                Util.sendMessage(Component.CORE, 
+                        "Waiting for the event admin...");
+                try {
+                    Thread.currentThread().sleep(SLEEP_TIMEOUT);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(SoundBox.class.getName()).log(
+                            Level.SEVERE, null, ex);
+                }
+            }
+        }
+
         final EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
         if (eventAdmin == null) {
             String msg = "Sorry, no event admin "

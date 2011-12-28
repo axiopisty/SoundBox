@@ -14,7 +14,7 @@ import org.osgi.framework.BundleContext;
  * exit function of the application.
  *
  * @version 0.0.1
- * @author oli
+ * @author Oliver Zemann
  */
 public class Activator implements BundleActivator {
 

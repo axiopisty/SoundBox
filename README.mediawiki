@@ -1,5 +1,5 @@
 = IMPORTANT =
-Please use this site only for git clone and filing bugs/wishes. Also checkout [https://www.l33tbox.de the Blog] and the [https://www.l33tbox.de:8080 Jenkins instance] [https://www.l33tbox.de:9000 (click here to access sonar directly)].
+Please use this site only for git clone and filing bugs/wishes. Also checkout [http://www.l33tbox.de the Blog] and the [http://www.l33tbox.de:8080 Jenkins instance] [http://www.l33tbox.de:9000 (click here to access sonar directly)].
 
 = SoundBox =
 By Oliver Zemann, and (hopefuly soon) many awesome contributors!

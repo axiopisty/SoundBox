@@ -9,7 +9,7 @@ SoundBox is a simple to use media player for streaming sites like Jamendo, MyMus
 
 == Getting Started (as user) ==
 If you just want to download a binary release, checkout the [https://github.com/olze/SoundBox/downloads Download Page] from GitHub for regular releases. I hope i can release a preview soon.
-If you want to checkout the current development version, checkout [http://www.l33tbox.de:8080/jenkins/SoundBox-Distribution SoundBox Distribution artifacts] from the Jenkins server.
+If you want to checkout the current development version, checkout [http://www.l33tbox.de:8080/jenkins/job/SoundBox-Distribution/ SoundBox Distribution artifacts] from the Jenkins server.
 
 '''Requirements: '''
 

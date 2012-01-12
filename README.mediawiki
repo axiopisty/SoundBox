@@ -8,20 +8,18 @@ SoundBox is a simple to use media player for streaming sites like Jamendo, MyMus
 
 
 == Getting Started (as user) ==
-If you just want to download a binary release, checkout the [https://github.com/olze/SoundBox/downloads Download Page] from GitHub. I hope i can release a preview soon.
+If you just want to download a binary release, checkout the [https://github.com/olze/SoundBox/downloads Download Page] from GitHub for regular releases. I hope i can release a preview soon.
+If you want to checkout the current development version, checkout [http://www.l333tbox.de:8080/jenkins/SoundBox-Distribution SoundBox Distribution artifacts] from the Jenkins server.
 
 '''Requirements: '''
 
 * '''JRE 1.5 and above, available [http://www.oracle.com/technetwork/java/javase/downloads/index.html here].'''
 * '''An extraction tool like [http://7-zip.org/ 7zip].'''
 
-After downloading and extracting the archive, open a terminal (linux) or the commandline (windows) and enter these commands:
-
-cd $newly_created_directory<ref name="ftn0">Mostly felix-framework-4.0.2</ref>
-
-java -jar bin/felix.jar<ref name="ftn1">If you are on windows, please use \ instead of / </ref>
-
+After downloading and extracting the archive, open the newly created directory and double-click on the SoundBox-Starter.jar.
 The SoundBox should start right now.
+
+If not, please make sure you have associated .jar files with your JRE. You can test this if you open a terminal (like cmd.exe in windows or xterm in Linux), change to the newly created directory and execute: java -jar SoundBox-Starter.jar
 
 == Getting Started (as contributor) ==
 If you want to contribute to the project, please contact me. There are many tasks that can be done, even without knowing what Java is ;)

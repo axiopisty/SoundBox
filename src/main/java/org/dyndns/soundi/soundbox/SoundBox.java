@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.dyndns.soundi.communicationaction.core.Requests.SETBROWSERVISIBLE;
+import org.dyndns.soundi.communicationaction.core.Requests;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
@@ -18,16 +18,20 @@ import org.osgi.service.event.EventAdmin;
  * This is the main class of SoundBox Core. SoundBox Core starts the UI and
  * checks if the EventAdmin is registered in the OSGi environment.
  *
- * @author oli
+ * @author Oliver Zemann
  */
 public class SoundBox {
 
+    /**
+     * The Event Admin instance to communicate with other bundles.
+     */
+    private transient EventAdmin eventAdmin;
     /**
      * Defines the polling intervall for checking if a UI is registered.
      */
     private static final int SLEEP_TIMEOUT = 1000;
     /**
-     *
+     * The BundleContext, given by the Activator.
      */
     private final transient BundleContext context;
 
@@ -55,7 +59,7 @@ public class SoundBox {
             ref = context.getServiceReference(
                     EventAdmin.class.getName());
             if (ref == null) {
-                Util.sendMessage(Component.CORE, 
+                Util.sendMessage(Component.CORE,
                         "Waiting for the event admin...");
                 try {
                     Thread.currentThread().sleep(SLEEP_TIMEOUT);
@@ -66,9 +70,9 @@ public class SoundBox {
             }
         }
 
-        final EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
+        eventAdmin = (EventAdmin) context.getService(ref);
         if (eventAdmin == null) {
-            String msg = "Sorry, no event admin "
+            final String msg = "Sorry, no event admin "
                     + "installed. No EventAdmin, no communication, no "
                     + "SoundBox.";
             Util.sendMessage(Component.CORE, msg);
@@ -95,7 +99,7 @@ public class SoundBox {
          */
         final Map crap = new Hashtable();
         final Event event = new Event(
-                SETBROWSERVISIBLE.toString(), (Dictionary) crap);
+                Requests.SETBROWSERVISIBLE.toString(), (Dictionary) crap);
         eventAdmin.sendEvent(event);
         pluginListener();
 
@@ -105,8 +109,19 @@ public class SoundBox {
      * This method starts the listener thread which checks the ./load directory.
      */
     private void pluginListener() {
-        Thread listener = new Thread(new PluginListenerThread(context),
+        final Thread listener = new Thread(new PluginListenerThread(context),
                 "Plugin Listener");
         listener.start();
+    }
+
+    /**
+     * This method sends the CLOSE-event to all bundles that are registered to
+     * the shutdown hook.
+     */
+    protected final void close() {
+        final Map crap = new Hashtable();
+        final Event event = new Event(
+                Requests.CLOSE.toString(), (Dictionary) crap);
+        eventAdmin.sendEvent(event);
     }
 }

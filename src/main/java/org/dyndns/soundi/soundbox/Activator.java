@@ -18,20 +18,26 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator implements BundleActivator {
 
+    /**
+     * The SoundBox instance.
+     */
+    private transient SoundBox box;
+
     @Override
-    public final void start(final BundleContext context) {  
-        new Thread() {
+    public final void start(final BundleContext context) {
+        final Thread thread = new Thread() {
+
             @Override
             public void run() {
-                final SoundBox box = new SoundBox(context);
+                box = new SoundBox(context);
                 box.init();
             }
-        }.start();
+        };
+        thread.start();
     }
 
     @Override
     public void stop(final BundleContext context) {
-        // maybe there should be an CommunicationAction.MAINAPPCLOSED message
-        // so that a nice "close" of the application can be made...
+        box.close();
     }
 }

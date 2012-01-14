@@ -5,11 +5,10 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.dyndns.soundi.communicationaction.core.Requests;
 import org.dyndns.soundi.portals.interfaces.IPortal;
 import org.dyndns.soundi.portals.interfaces.PluginInformation;
 import static org.dyndns.soundi.portals.interfaces.State.ACTIVATED;
-import static org.dyndns.soundi.communicationaction.core.Requests.REGISTERPORTAL;
-import static org.dyndns.soundi.communicationaction.core.Requests.UNREGISTERPORTAL;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -32,11 +31,11 @@ public class PluginListenerThread implements Runnable {
      * If a plugin is unregistered, there will be also an event, informing all
      * listeners which plugin has been removed.
      *
-     * @param context
+     * @param cx The bundle context from the OSGi framework.
      */
-    PluginListenerThread(BundleContext context) {
-        this.context = context;
-        ref = context.getServiceReference(EventAdmin.class.getName());
+    PluginListenerThread(final BundleContext cx) {
+        this.context = cx;
+        ref = cx.getServiceReference(EventAdmin.class.getName());
     }
     /**
      * Defines the polling intervall for checking if a UI is registered.
@@ -57,10 +56,10 @@ public class PluginListenerThread implements Runnable {
     /**
      *
      */
-    ServiceReference[] refs = null;
+    private ServiceReference[] refs = null;
 
     @Override
-    public void run() {
+    public final void run() {
         while (true) {
 
             try {
@@ -144,14 +143,14 @@ public class PluginListenerThread implements Runnable {
      *
      * @param portal The portal which has been found in ./load
      */
-    private void addPortal(IPortal portal) {
+    private void addPortal(final IPortal portal) {
 
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("portal", portal);
-            Event reportGeneratedEvent = new Event(REGISTERPORTAL.toString(),
-                    properties);
+            Event reportGeneratedEvent = new Event(
+                    Requests.REGISTERPORTAL.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
@@ -165,14 +164,14 @@ public class PluginListenerThread implements Runnable {
      * portal has been removed from the ./load directory.
      * @param portal The portal that should be removed.
      */
-    private void removePortal(IPortal portal) {
+    private void removePortal(final IPortal portal) {
 
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("portal", portal);
-            Event reportGeneratedEvent = new Event(UNREGISTERPORTAL.toString(),
-                    properties);
+            Event reportGeneratedEvent = new Event(
+                    Requests.UNREGISTERPORTAL.toString(), properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }

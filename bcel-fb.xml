@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="2.0.0" sequence="0" timestamp="1325253361364" analysisTimestamp="1325253361376" release="">
+  <Project projectName="">
+    <Jar>/home/oli/Arbeitsfl&#228;che/soundbox/SoundBox/target/SoundBox-0.0.1-SNAPSHOT.jar</Jar>
+    <SrcDir>/home/oli/Arbeitsfl&#228;che/soundbox/SoundBox/src/main/java</SrcDir>
+  </Project>
+  <BugInstance type="SF_SWITCH_NO_DEFAULT" priority="2" abbrev="SF" category="STYLE">
+    <Class classname="org.dyndns.soundi.soundbox.core.gui.PlayerFrame">
+      <SourceLine classname="org.dyndns.soundi.soundbox.core.gui.PlayerFrame" start="42" end="358" sourcefile="PlayerFrame.java" sourcepath="org/dyndns/soundi/soundbox/core/gui/PlayerFrame.java"/>
+    </Class>
+    <Method classname="org.dyndns.soundi.soundbox.core.gui.PlayerFrame" name="handleEvent" signature="(Lorg/osgi/service/event/Event;)V" isStatic="false">
+      <SourceLine classname="org.dyndns.soundi.soundbox.core.gui.PlayerFrame" start="251" end="303" startBytecode="0" endBytecode="888" sourcefile="PlayerFrame.java" sourcepath="org/dyndns/soundi/soundbox/core/gui/PlayerFrame.java"/>
+    </Method>
+    <SourceLine classname="org.dyndns.soundi.soundbox.core.gui.PlayerFrame" start="291" end="299" startBytecode="392" endBytecode="464" sourcefile="PlayerFrame.java" sourcepath="org/dyndns/soundi/soundbox/core/gui/PlayerFrame.java"/>
+  </BugInstance>
+  <Errors errors="0" missingClasses="22">
+    <MissingClass>org.dyndns.soundi.communicationaction.browser.Requests</MissingClass>
+    <MissingClass>org.dyndns.soundi.communicationaction.core.Requests</MissingClass>
+    <MissingClass>org.dyndns.soundi.communicationaction.player.Requests</MissingClass>
+    <MissingClass>org.dyndns.soundi.communicationaction.playerengine.PlaybackState</MissingClass>
+    <MissingClass>org.dyndns.soundi.communicationaction.playerengine.Responses</MissingClass>
+    <MissingClass>org.dyndns.soundi.communicationaction.portals.Responses</MissingClass>
+    <MissingClass>org.dyndns.soundi.gui.interfaces.IBrowserGui</MissingClass>
+    <MissingClass>org.dyndns.soundi.gui.interfaces.IPlayerEngine</MissingClass>
+    <MissingClass>org.dyndns.soundi.gui.interfaces.IPlayerGui</MissingClass>
+    <MissingClass>org.dyndns.soundi.portals.interfaces.Artist</MissingClass>
+    <MissingClass>org.dyndns.soundi.portals.interfaces.IPortal</MissingClass>
+    <MissingClass>org.dyndns.soundi.portals.interfaces.PluginInformation</MissingClass>
+    <MissingClass>org.dyndns.soundi.portals.interfaces.Song</MissingClass>
+    <MissingClass>org.dyndns.soundi.portals.interfaces.State</MissingClass>
+    <MissingClass>org.dyndns.soundi.utils.Util</MissingClass>
+    <MissingClass>org.dyndns.soundi.utils.Util$Component</MissingClass>
+    <MissingClass>org.osgi.framework.BundleActivator</MissingClass>
+    <MissingClass>org.osgi.framework.BundleContext</MissingClass>
+    <MissingClass>org.osgi.framework.InvalidSyntaxException</MissingClass>
+    <MissingClass>org.osgi.framework.ServiceReference</MissingClass>
+    <MissingClass>org.osgi.service.event.Event</MissingClass>
+    <MissingClass>org.osgi.service.event.EventAdmin</MissingClass>
+  </Errors>
+  <FindBugsSummary timestamp="Fri, 30 Dec 2011 14:56:01 +0100" total_classes="27" referenced_classes="334" total_bugs="1" total_size="731" num_packages="2" vm_version="20.0-b11" cpu_seconds="19.17" clock_seconds="6.70" peak_mbytes="214.63" alloc_mbytes="878.25" gc_seconds="0.06" priority_2="1">
+    <PackageStats package="org.dyndns.soundi.soundbox" total_bugs="0" total_types="4" total_size="113">
+      <ClassStats class="org.dyndns.soundi.soundbox.Activator" sourceFile="Activator.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.Activator$1" sourceFile="Activator.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.PluginListenerThread" sourceFile="PluginListenerThread.java" interface="false" size="57" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.SoundBox" sourceFile="SoundBox.java" interface="false" size="39" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="org.dyndns.soundi.soundbox.core.gui" total_bugs="1" total_types="23" total_size="618" priority_2="1">
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame" sourceFile="BrowserFrame.java" interface="false" size="280" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$1" sourceFile="BrowserFrame.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$10" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$11" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$12" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$13" sourceFile="BrowserFrame.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$14" sourceFile="BrowserFrame.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$2" sourceFile="BrowserFrame.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$3" sourceFile="BrowserFrame.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$4" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$5" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$6" sourceFile="BrowserFrame.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$7" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$8" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.BrowserFrame$9" sourceFile="BrowserFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame" sourceFile="PlayerFrame.java" interface="false" size="163" bugs="1" priority_2="1"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$1" sourceFile="PlayerFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$2" sourceFile="PlayerFrame.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$3" sourceFile="PlayerFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$4" sourceFile="PlayerFrame.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$5" sourceFile="PlayerFrame.java" interface="false" size="9" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$6" sourceFile="PlayerFrame.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="org.dyndns.soundi.soundbox.core.gui.PlayerFrame$7" sourceFile="PlayerFrame.java" interface="false" size="4" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="834" invocations="334" avgMicrosecondsPerInvocation="2498" maxMicrosecondsPerInvocation="69230" standardDeviationMircosecondsPerInvocation="6585"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="814" invocations="1493" avgMicrosecondsPerInvocation="545" maxMicrosecondsPerInvocation="23633" standardDeviationMircosecondsPerInvocation="1425"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ExplicitSerialization" totalMilliseconds="773" invocations="334" avgMicrosecondsPerInvocation="2314" maxMicrosecondsPerInvocation="56544" standardDeviationMircosecondsPerInvocation="6241"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="385" invocations="334" avgMicrosecondsPerInvocation="1154" maxMicrosecondsPerInvocation="28242" standardDeviationMircosecondsPerInvocation="3151"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="262" invocations="856" avgMicrosecondsPerInvocation="306" maxMicrosecondsPerInvocation="4814" standardDeviationMircosecondsPerInvocation="465"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="214" invocations="334" avgMicrosecondsPerInvocation="643" maxMicrosecondsPerInvocation="14402" standardDeviationMircosecondsPerInvocation="1593"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="155" invocations="100" avgMicrosecondsPerInvocation="1550" maxMicrosecondsPerInvocation="33988" standardDeviationMircosecondsPerInvocation="3700"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="146" invocations="408" avgMicrosecondsPerInvocation="359" maxMicrosecondsPerInvocation="12373" standardDeviationMircosecondsPerInvocation="920"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="145" invocations="105" avgMicrosecondsPerInvocation="1388" maxMicrosecondsPerInvocation="26648" standardDeviationMircosecondsPerInvocation="3869"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="143" invocations="334" avgMicrosecondsPerInvocation="429" maxMicrosecondsPerInvocation="12853" standardDeviationMircosecondsPerInvocation="1187"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="141" invocations="100" avgMicrosecondsPerInvocation="1414" maxMicrosecondsPerInvocation="22526" standardDeviationMircosecondsPerInvocation="3280"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="140" invocations="100" avgMicrosecondsPerInvocation="1403" maxMicrosecondsPerInvocation="37927" standardDeviationMircosecondsPerInvocation="4021"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.ReflectiveClasses" totalMilliseconds="138" invocations="334" avgMicrosecondsPerInvocation="414" maxMicrosecondsPerInvocation="7488" standardDeviationMircosecondsPerInvocation="1007"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="134" invocations="334" avgMicrosecondsPerInvocation="402" maxMicrosecondsPerInvocation="8622" standardDeviationMircosecondsPerInvocation="1041"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

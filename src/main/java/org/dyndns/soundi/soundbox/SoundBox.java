@@ -70,6 +70,9 @@ public class SoundBox {
             }
         }
 
+        Util.getInstance(context).sendMessage(Component.CORE, 
+                "Registering context in Util class.");
+        
         eventAdmin = (EventAdmin) context.getService(ref);
         if (eventAdmin == null) {
             final String msg = "Sorry, no event admin "

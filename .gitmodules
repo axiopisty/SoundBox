@@ -1,3 +1,6 @@
 [submodule "CoreLibrary"]
-	path = CoreLibrary
-	url = C:/Users/oli/Documents/NetBeansProjects/SoundBox-CoreLibrary
+	path = submodules/SoundBox-CoreLibrary
+	url = https://github.com/olze/SoundBox-CoreLibrary.git
+[submodule "SoundBox-BrowserGUI"]
+	path = submodules/SoundBox-BrowserGUI
+	url = https://github.com/olze/SoundBox-BrowserGUI.git

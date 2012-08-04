@@ -4,3 +4,9 @@
 [submodule "SoundBox-BrowserGUI"]
 	path = submodules/SoundBox-BrowserGUI
 	url = https://github.com/olze/SoundBox-BrowserGUI.git
+[submodule "submodules/SoundBox-BrowserGUI"]
+	path = submodules/SoundBox-BrowserGUI
+	url = https://github.com/olze/SoundBox-BrowserGUI.git
+[submodule "submodules/SoundBox-CoreLibrary"]
+	path = submodules/SoundBox-CoreLibrary
+	url = https://github.com/olze/SoundBox-CoreLibrary.git

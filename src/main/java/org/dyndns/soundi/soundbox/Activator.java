@@ -7,6 +7,8 @@ package org.dyndns.soundi.soundbox;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the main class which must be the first one that gets called - as osgi
@@ -18,6 +20,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator implements BundleActivator {
 
+    static final Logger logger = LoggerFactory.getLogger(Activator.class);
     /**
      * The SoundBox instance.
      */
@@ -25,8 +28,11 @@ public class Activator implements BundleActivator {
 
     @Override
     public final void start(final BundleContext context) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("start(" + context + ")");
+        }
+        logger.info("Starting JOHOO");
         final Thread thread = new Thread() {
-
             @Override
             public void run() {
                 box = new SoundBox(context);

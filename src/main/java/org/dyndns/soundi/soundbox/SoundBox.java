@@ -3,8 +3,6 @@ package org.dyndns.soundi.soundbox;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.dyndns.soundi.communicationaction.core.Requests;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.utils.Util;
@@ -13,6 +11,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the main class of SoundBox Core. SoundBox Core starts the UI and
@@ -22,6 +21,8 @@ import org.osgi.service.event.EventAdmin;
  */
 public class SoundBox {
 
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(Activator.class);
+    
     /**
      * The Event Admin instance to communicate with other bundles.
      */
@@ -64,8 +65,7 @@ public class SoundBox {
                 try {
                     Thread.currentThread().sleep(SLEEP_TIMEOUT);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(SoundBox.class.getName()).log(
-                            Level.SEVERE, null, ex);
+                    logger.error(ex.getLocalizedMessage());
                 }
             }
         }
@@ -90,8 +90,7 @@ public class SoundBox {
             try {
                 Thread.currentThread().sleep(SLEEP_TIMEOUT);
             } catch (InterruptedException ex) {
-                Logger.getLogger(SoundBox.class.getName()).
-                        log(Level.SEVERE, null, ex);
+                logger.error(ex.getLocalizedMessage());
             }
             ref = context.getServiceReference(IBrowserGui.class.getName());
             Util.sendMessage(Component.CORE,

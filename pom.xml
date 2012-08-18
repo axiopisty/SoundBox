@@ -72,27 +72,28 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>JamendoPlugin</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.ops4j.pax</groupId>
+            <artifactId>logging</artifactId>
+            <version>1.6.9</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <groupId>ch.qos.logback</groupId>
-            <type>jar</type>
             <version>1.0.6</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <groupId>ch.qos.logback</groupId>
-            <type>jar</type>
             <version>1.0.6</version>
-             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <artifactId>slf4j-api</artifactId>
-            <groupId>org.slf4j</groupId>
-            <type>jar</type>
-            <version>1.6.6</version>
-             <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -106,8 +107,11 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.dyndns.soundi.soundbox.Activator</Bundle-Activator>
-                        <Export-Package></Export-Package>
-                        <Private-Package>org.dyndns.soundi.soundbox.*</Private-Package>
+                        <Export-Package>org.dyndns.soundi.soundbox</Export-Package>
+                        <Private-Package>org.dyndns.soundi.soundbox.*</Private-Package>    
+                        <Bundle-ClassPath>commons-logging-osgi-20081214.jar</Bundle-ClassPath>                   
+                        <!--<Bundle-SymbolicName>Log4JProperties</Bundle-SymbolicName>
+                        <Fragment-Host>org.apache.log4j</Fragment-Host> -->
                     </instructions>
                 </configuration>
             </plugin>
@@ -177,6 +181,7 @@
                                             <entry key="org.apache.felix.eventadmin.Timeout" value="0"/>
                                             <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                             <entry key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.NoOpLog"/>
+                                            <entry key="logback.configurationFile" value="C:/Users/oli/Documents/NetBeansProjects/SoundBox/bundle/logback.xml" />
                                         </propertyfile>
                                         <copy file="${maven.dependency.org.apache.felix.org.apache.felix.main.jar.path}" tofile="${project.build.directory}/felix.jar"/>
                                     </target>
@@ -243,13 +248,11 @@
                                     <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                     <entry key="org.osgi.framework.storage" value="${project.build.directory}${file.separator}felix-cache"/>
                                     <entry key="org.osgi.framework.bootdelegation" value="*"/>
-                                    <entry key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.NoOpLog"/>
-                                    
                                 </propertyfile>
                                 <makeurl property="run.properties.url" file="${project.build.directory}/run.properties"/>
                                 <java fork="true" jar="${maven.dependency.org.apache.felix.org.apache.felix.main.jar.path}">
                                     <sysproperty key="felix.config.properties" value="${run.properties.url}"/>
-                                    <jvmarg line="${vm.args}"/>
+                                    <jvmarg line="${vm.args} -Dlogback.configurationFile=c:\\logback.xml"/>
                                 </java>
                             </target>
                         </configuration>

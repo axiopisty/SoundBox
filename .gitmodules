@@ -22,3 +22,6 @@
 [submodule "submodules/SoundBox-Mp3Wrapper"]
 	path = submodules/SoundBox-Mp3Wrapper
 	url = https://github.com/olze/SoundBox-Mp3Wrapper.git
+[submodule "submodules/SoundBox-CoreLibrary"]
+	path = submodules/SoundBox-CoreLibrary
+	url = https://github.com/olze/SoundBox-CoreLibrary

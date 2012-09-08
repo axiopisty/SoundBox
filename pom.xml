@@ -86,8 +86,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
@@ -143,7 +143,7 @@
                                         <propertyfile file="${project.build.directory}/config.properties">
                                             <entry key="felix.auto.start" value="${bundles} file:modules/${project.build.finalName}.jar"/>
                                             <entry key="org.osgi.framework.bootdelegation" value="*"/>
-                                            <entry key="felix.log.level" value="4"/>
+                                            <entry key="felix.log.level" value="0"/>
                                             <entry key="org.apache.felix.eventadmin.Timeout" value="0"/>
                                             <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                             <entry key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.NoOpLog"/>

@@ -5,6 +5,8 @@
  */
 package org.dyndns.soundi.soundbox;
 
+import java.util.logging.Level;
+import org.dyndns.soundi.utils.Util;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
@@ -31,6 +33,12 @@ public class Activator implements BundleActivator {
         if (logger.isTraceEnabled()) {
             logger.trace("start(" + context + ")");
         }
+        try {
+            Util.getProxy();
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(Activator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         logger.info("Started the SoundBox :) - visit me on www.l33tbox.de");
         final Thread thread = new Thread() {
             @Override

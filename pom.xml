@@ -64,10 +64,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>org.dyndns.soundi.soundbox.Activator</Bundle-Activator>
-                        <Export-Package>org.dyndns.soundi.soundbox</Export-Package>                                    
-                        <!--<Bundle-SymbolicName>Log4JProperties</Bundle-SymbolicName>
-                        <Fragment-Host>org.apache.log4j</Fragment-Host> -->
+                        <Bundle-Activator>org.dyndns.soundi.soundbox.Activator</Bundle-Activator>                       
                     </instructions>
                 </configuration>
             </plugin>

@@ -34,7 +34,7 @@ public class Activator implements BundleActivator {
             logger.trace("start(" + context + ")");
         }
         try {
-            Util.getProxy();
+            Util.getProxyList();
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(Activator.class.getName()).log(Level.SEVERE, null, ex);
         }

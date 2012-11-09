@@ -16,6 +16,8 @@ git clone https://github.com/olze/SoundBox.git
 
 git clone https://github.com/olze/SoundBox-CoreLibrary.git
 
+git clone https://github.com/olze/SoundBox-Downloader.git
+
 git clone https://github.com/olze/SoundBox-DownloaderEngine.git
 
 git clone https://github.com/olze/SoundBox-BrowserGUI.git

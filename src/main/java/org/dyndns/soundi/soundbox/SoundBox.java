@@ -30,7 +30,7 @@ public class SoundBox {
     /**
      * Defines the polling intervall for checking if a UI is registered.
      */
-    private static final int SLEEP_TIMEOUT = 1000;
+    private static final int SLEEP_TIMEOUT = 1_000;
     /**
      * The BundleContext, given by the Activator.
      */
@@ -49,7 +49,7 @@ public class SoundBox {
      * This method initializes the SoundBox. In general it checks if the event
      * admin is installed and tries to set up the UI.
      */
-    protected final void init() {
+    protected void init() {
 
         /*
          * get the eventadmin and the event message
@@ -63,14 +63,14 @@ public class SoundBox {
                 Util.sendMessage(Component.CORE,
                         "Waiting for the event admin...");
                 try {
-                    Thread.currentThread().sleep(SLEEP_TIMEOUT);
+                    Thread.sleep(SLEEP_TIMEOUT);
                 } catch (InterruptedException ex) {
                     logger.error(ex.getLocalizedMessage());
                 }
             }
         }
 
-        Util.getInstance(context).sendMessage(Component.CORE, 
+        Util.sendMessage(Component.CORE, 
                 "Registering context in Util class.");
         
         eventAdmin = (EventAdmin) context.getService(ref);
@@ -88,7 +88,7 @@ public class SoundBox {
         ref = context.getServiceReference(IBrowserGui.class.getName());
         while (ref == null) {
             try {
-                Thread.currentThread().sleep(SLEEP_TIMEOUT);
+                Thread.sleep(SLEEP_TIMEOUT);
             } catch (InterruptedException ex) {
                 logger.error(ex.getLocalizedMessage());
             }
@@ -120,7 +120,7 @@ public class SoundBox {
      * This method sends the CLOSE-event to all bundles that are registered to
      * the shutdown hook.
      */
-    protected final void close() {
+    protected void close() {
         final Map crap = new Hashtable();
         final Event event = new Event(
                 Requests.CLOSE.toString(), (Dictionary) crap);

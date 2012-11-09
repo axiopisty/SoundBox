@@ -40,7 +40,7 @@ public class PluginListenerThread implements Runnable {
     /**
      * Defines the polling intervall for checking if a UI is registered.
      */
-    private static final int SLEEP_TIMEOUT = 1000;
+    private static final int SLEEP_TIMEOUT = 1_000;
     /**
      * The main context from the osgi framework.
      */
@@ -48,7 +48,7 @@ public class PluginListenerThread implements Runnable {
     /**
      * Contains all registered Portals. This is the "model"-part.
      */
-    private HashSet<IPortal> portals = new HashSet<IPortal>();
+    private HashSet<IPortal> portals = new HashSet<>();
     /**
      *
      */
@@ -59,7 +59,7 @@ public class PluginListenerThread implements Runnable {
     private ServiceReference[] refs = null;
 
     @Override
-    public final void run() {
+    public void run() {
         while (true) {
 
             try {
@@ -97,8 +97,6 @@ public class PluginListenerThread implements Runnable {
                          */
                         PluginInformation infos = portal.getInfos();
                         if (infos != null) {
-                            System.out.println("Registered new portal ("
-                                    + infos.getPluginName() + ")!");
                         }
                         if (portal.getState() == ACTIVATED) {
                             portal.init();
@@ -110,11 +108,6 @@ public class PluginListenerThread implements Runnable {
                      * check if a portal has been removed
                      */
                     if (portals.size() != refs.length) {
-                        /*
-                         * something changed... as we already registered every
-                         * new portal, it must be a deletion
-                         */
-                        System.out.println("a plugin has been removed!");
                     }
                 }
             }
@@ -124,12 +117,11 @@ public class PluginListenerThread implements Runnable {
              */ {
                 IPortal portal = (IPortal) portals.iterator().next();
                 removePortal(portal);
-                System.out.println("Plugin " + portals.iterator().next());
                 portals.clear();
             }
 
             try {
-                Thread.currentThread().sleep(SLEEP_TIMEOUT);
+                Thread.sleep(SLEEP_TIMEOUT);
             } catch (InterruptedException ex) {
                 Logger.getLogger(SoundBox.class.getName()).
                         log(Level.SEVERE, null, ex);

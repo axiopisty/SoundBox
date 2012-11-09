@@ -5,10 +5,6 @@
  */
 package org.dyndns.soundi.soundbox;
 
-import java.util.List;
-import java.util.logging.Level;
-import org.dyndns.soundi.utils.Proxy;
-import org.dyndns.soundi.utils.Util;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
@@ -31,7 +27,7 @@ public class Activator implements BundleActivator {
     private transient SoundBox box;
 
     @Override
-    public final void start(final BundleContext context) {
+    public void start(final BundleContext context) {
         if (logger.isTraceEnabled()) {
             logger.trace("start(" + context + ")");
         } 

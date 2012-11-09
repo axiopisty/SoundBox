@@ -24,11 +24,11 @@ git clone https://github.com/olze/SoundBox-Player.git
 
 git clone https://github.com/olze/SoundBox-PlayerEngine.git
 
-git clone https://github.com/olze/SoundBox-Starter
+git clone https://github.com/olze/SoundBox-Starter.git
 
-git clone https://github.com/olze/SoundBox-Mp3Wrapper
+git clone https://github.com/olze/SoundBox-Mp3Wrapper.git
 
-git clone https://github.com/olze/SoundBox-JamendoPlugin
+git clone https://github.com/olze/SoundBox-JamendoPlugin.git
 
 '''Requirements: '''
 

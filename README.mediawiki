@@ -13,13 +13,21 @@ If you want to checkout the current development version, checkout [http://www.l3
 
 To checkout all modules:
 git clone https://github.com/olze/SoundBox.git
+
 git clone https://github.com/olze/SoundBox-CoreLibrary.git
+
 git clone https://github.com/olze/SoundBox-DownloaderEngine.git
+
 git clone https://github.com/olze/SoundBox-BrowserGUI.git
+
 git clone https://github.com/olze/SoundBox-Player.git
+
 git clone https://github.com/olze/SoundBox-PlayerEngine.git
+
 git clone https://github.com/olze/SoundBox-Starter
+
 git clone https://github.com/olze/SoundBox-Mp3Wrapper
+
 git clone https://github.com/olze/SoundBox-JamendoPlugin
 
 '''Requirements: '''

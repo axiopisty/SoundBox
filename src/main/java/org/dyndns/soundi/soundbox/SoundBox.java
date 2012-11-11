@@ -1,16 +1,20 @@
 package org.dyndns.soundi.soundbox;
 
+import java.io.File;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
 import org.dyndns.soundi.communicationaction.core.Requests;
+import org.dyndns.soundi.communicationaction.core.Responses;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
+import org.dyndns.soundi.utils.Configuration;
 import org.dyndns.soundi.utils.Util;
 import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -19,10 +23,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Oliver Zemann
  */
-public class SoundBox {
+public class SoundBox implements EventHandler {
 
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(Activator.class);
-    
     /**
      * The Event Admin instance to communicate with other bundles.
      */
@@ -70,9 +73,9 @@ public class SoundBox {
             }
         }
 
-        Util.sendMessage(Component.CORE, 
+        Util.sendMessage(Component.CORE,
                 "Registering context in Util class.");
-        
+
         eventAdmin = (EventAdmin) context.getService(ref);
         if (eventAdmin == null) {
             final String msg = "Sorry, no event admin "
@@ -125,5 +128,17 @@ public class SoundBox {
         final Event event = new Event(
                 Requests.CLOSE.toString(), (Dictionary) crap);
         eventAdmin.sendEvent(event);
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        if (event.getTopic().equals(Requests.GETGLOBALCONFIG)) {
+            Configuration config = new Configuration(new File("~/.soundbox/config.properties"));
+            final Map crap = new Hashtable();
+            crap.put("config", config);
+            final Event event1 = new Event(
+                    Responses.GLOBALCONFIG.toString(), (Dictionary) crap);
+            eventAdmin.sendEvent(event1);
+        }
     }
 }

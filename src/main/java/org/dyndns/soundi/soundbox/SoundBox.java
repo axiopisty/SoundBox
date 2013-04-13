@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SoundBox implements EventHandler {
 
-    static final org.slf4j.Logger logger = LoggerFactory.getLogger(Activator.class);
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(SoundBox.class);
     /**
      * The Event Admin instance to communicate with other bundles.
      */

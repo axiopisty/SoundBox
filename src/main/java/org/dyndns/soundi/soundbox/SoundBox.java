@@ -8,8 +8,6 @@ import org.dyndns.soundi.communicationaction.core.Requests;
 import org.dyndns.soundi.communicationaction.core.Responses;
 import org.dyndns.soundi.gui.interfaces.IBrowserGui;
 import org.dyndns.soundi.utils.Configuration;
-import org.dyndns.soundi.utils.Util;
-import org.dyndns.soundi.utils.Util.Component;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
@@ -63,8 +61,7 @@ public class SoundBox implements EventHandler {
             ref = context.getServiceReference(
                     EventAdmin.class.getName());
             if (ref == null) {
-                Util.sendMessage(Component.CORE,
-                        "Waiting for the event admin...");
+                logger.warn("Waiting for the event admin...");
                 try {
                     Thread.sleep(SLEEP_TIMEOUT);
                 } catch (InterruptedException ex) {
@@ -73,15 +70,14 @@ public class SoundBox implements EventHandler {
             }
         }
 
-        Util.sendMessage(Component.CORE,
-                "Registering context in Util class.");
+        logger.warn("Registering context in Util class.");
 
         eventAdmin = (EventAdmin) context.getService(ref);
         if (eventAdmin == null) {
             final String msg = "Sorry, no event admin "
                     + "installed. No EventAdmin, no communication, no "
                     + "SoundBox.";
-            Util.sendMessage(Component.CORE, msg);
+            logger.warn(msg);
             throw new RuntimeException(msg);
         }
 
@@ -96,8 +92,7 @@ public class SoundBox implements EventHandler {
                 logger.error(ex.getLocalizedMessage());
             }
             ref = context.getServiceReference(IBrowserGui.class.getName());
-            Util.sendMessage(Component.CORE,
-                    "waiting for the gui registration...");
+            logger.warn( "waiting for the gui registration...");
         }
         /*
          * last but not least, send it

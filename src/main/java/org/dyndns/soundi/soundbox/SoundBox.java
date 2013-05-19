@@ -92,7 +92,7 @@ public class SoundBox implements EventHandler {
                 logger.error(ex.getLocalizedMessage());
             }
             ref = context.getServiceReference(IBrowserGui.class.getName());
-            logger.warn( "waiting for the gui registration...");
+            logger.info( "waiting for an UI registration...");
         }
         /*
          * last but not least, send it
@@ -127,13 +127,14 @@ public class SoundBox implements EventHandler {
 
     @Override
     public void handleEvent(Event event) {
-        if (event.getTopic().equals(Requests.GETGLOBALCONFIG)) {
-            Configuration config = new Configuration(new File("~/.soundbox/config.properties"));
+        if (event.getTopic().equals(Requests.GETGLOBALCONFIG.toString())) {
+            Configuration config = new Configuration(new File(System.getProperty("user.home") + "/soundbox/config.properties"));
             final Map crap = new Hashtable();
             crap.put("config", config);
             final Event event1 = new Event(
                     Responses.GLOBALCONFIG.toString(), (Dictionary) crap);
             eventAdmin.sendEvent(event1);
+        } else {
         }
     }
 }

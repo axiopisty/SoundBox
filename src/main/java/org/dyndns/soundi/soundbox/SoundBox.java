@@ -92,7 +92,7 @@ public class SoundBox implements EventHandler {
                 logger.error(ex.getLocalizedMessage());
             }
             ref = context.getServiceReference(IBrowserGui.class.getName());
-            logger.warn( "waiting for the gui registration...");
+            logger.warn("waiting for the gui registration...");
         }
         /*
          * last but not least, send it

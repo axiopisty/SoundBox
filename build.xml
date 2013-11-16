@@ -13,8 +13,8 @@
             <sourcePath path="${basedir}/src/main/java" />
             <class location="${basedir}/target/SoundBox-0.0.1-SNAPSHOT.jar" />
             <!--<fileset dir="${basedir}/src/main/java">
-                <include name="**/*"/>
-        </fileset>-->
+                    <include name="**/*"/>
+            </fileset>-->
         </findbugs>
         
     </target>

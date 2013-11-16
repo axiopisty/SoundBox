@@ -30,8 +30,8 @@ public class Activator implements BundleActivator {
     public void start(final BundleContext context) {
         if (logger.isTraceEnabled()) {
             logger.trace("start(" + context + ")");
-        } 
-        
+        }
+
         logger.info("Started the SoundBox :) - visit me on www.l33tbox.de");
         final Thread thread = new Thread() {
             @Override

@@ -85,8 +85,8 @@ public class PluginListenerThread implements Runnable {
                      * cast it to an instance so we can use it (fetch
                      * informations from it)
                      */
-                    final IPortal portal =
-                            (IPortal) context.getService(reference);
+                    final IPortal portal
+                            = (IPortal) context.getService(reference);
                     /*
                      * check if it is listed in our portals list
                      */

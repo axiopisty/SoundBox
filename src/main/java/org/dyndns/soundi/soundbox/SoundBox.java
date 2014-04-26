@@ -1,13 +1,9 @@
 package org.dyndns.soundi.soundbox;
 
-import java.io.File;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Map;
-import de.trustserv.soundbox.communicationaction.core.Requests;
-import de.trustserv.soundbox.communicationaction.core.Responses;
-import de.trustserv.soundbox.gui.interfaces.IBrowserGui;
-import de.trustserv.soundbox.utils.Configuration;
+import ch.trustserv.soundbox.abstr.communication.message.IMsgIdentifier;
+import ch.trustserv.soundbox.abstr.communication.message.MsgCloseSoundBox;
+import ch.trustserv.soundbox.abstr.communication.message.MsgSendGlobalConfig;
+import ch.trustserv.soundbox.abstr.communication.message.MsgSetMainWindowVisible;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
@@ -97,10 +93,7 @@ public class SoundBox implements EventHandler {
         /*
          * last but not least, send it
          */
-        final Map crap = new Hashtable();
-        final Event event = new Event(
-                Requests.SETBROWSERVISIBLE.toString(), (Dictionary) crap);
-        eventAdmin.sendEvent(event);
+        new MsgSetMainWindowVisible().send(eventAdmin);
         pluginListener();
 
     }
@@ -119,21 +112,13 @@ public class SoundBox implements EventHandler {
      * the shutdown hook.
      */
     protected void close() {
-        final Map crap = new Hashtable();
-        final Event event = new Event(
-                Requests.CLOSE.toString(), (Dictionary) crap);
-        eventAdmin.sendEvent(event);
+        new MsgCloseSoundBox().send(eventAdmin);
     }
 
     @Override
     public void handleEvent(Event event) {
-        if (event.getTopic().equals(Requests.GETGLOBALCONFIG)) {
-            Configuration config = new Configuration(new File("~/.soundbox/config.properties"));
-            final Map crap = new Hashtable();
-            crap.put("config", config);
-            final Event event1 = new Event(
-                    Responses.GLOBALCONFIG.toString(), (Dictionary) crap);
-            eventAdmin.sendEvent(event1);
+        if (event.getTopic().equals(IMsgIdentifier.GETGLOBCONFIG)) {
+            new MsgSendGlobalConfig().send(eventAdmin);
         }
     }
 }

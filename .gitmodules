@@ -1,27 +1,3 @@
-[submodule "submodules/SoundBox-BrowserGUI"]
-	path = submodules/SoundBox-BrowserGUI
-	url = https://github.com/olze/SoundBox-BrowserGUI.git
-[submodule "submodules/SoundBox-Downloader"]
-	path = submodules/SoundBox-Downloader
-	url = https://github.com/olze/SoundBox-Downloader.git
-[submodule "submodules/SoundBox-Player"]
-	path = submodules/SoundBox-Player
-	url = https://github.com/olze/SoundBox-Player.git
-[submodule "submodules/SoundBox-JamendoPlugin"]
-	path = submodules/SoundBox-JamendoPlugin
-	url = https://github.com/olze/SoundBox-JamendoPlugin.git
-[submodule "submodules/SoundBox-PlayerEngine"]
-	path = submodules/SoundBox-PlayerEngine
-	url = https://github.com/olze/SoundBox-PlayerEngine.git
-[submodule "submodules/SoundBox-DownloaderEngine"]
-	path = submodules/SoundBox-DownloaderEngine
-	url = https://github.com/olze/SoundBox-DownloaderEngine.git
-[submodule "submodules/SoundBox-Starter"]
-	path = submodules/SoundBox-Starter
-	url = https://github.com/olze/SoundBox-Starter.git
-[submodule "submodules/SoundBox-Mp3Wrapper"]
-	path = submodules/SoundBox-Mp3Wrapper
-	url = https://github.com/olze/SoundBox-Mp3Wrapper.git
 [submodule "submodules/SoundBox-CoreLibrary"]
 	path = submodules/SoundBox-CoreLibrary
 	url = https://github.com/olze/SoundBox-CoreLibrary

@@ -1,14 +1,14 @@
 package org.dyndns.soundi.soundbox;
 
+import de.trustserv.soundbox.communicationaction.core.Requests;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import de.trustserv.soundbox.communicationaction.core.Requests;
-import de.trustserv.soundbox.portals.interfaces.IPortal;
-import de.trustserv.soundbox.portals.interfaces.PluginInformation;
-import static de.trustserv.soundbox.portals.interfaces.State.ACTIVATED;
+import org.dyndns.soundi.portals.interfaces.IPortal;
+import org.dyndns.soundi.portals.interfaces.PluginInformation;
+import static org.dyndns.soundi.portals.interfaces.State.ACTIVATED;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -63,14 +63,10 @@ public class PluginListenerThread implements Runnable {
         while (true) {
 
             try {
-                /*
-                 * fetch all portals
-                 */
                 refs = context.getServiceReferences(IPortal.class.getName(),
                         null);
             } catch (InvalidSyntaxException ex) {
-                Logger.getLogger(SoundBox.class.getName()).
-                        log(Level.SEVERE, null, ex);
+                Logger.getLogger(PluginListenerThread.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             /*
@@ -115,8 +111,9 @@ public class PluginListenerThread implements Runnable {
             if (refs == null && portals.size() == 1) /*
              * there's still one portal registered, but it has been removed
              */ {
-                IPortal portal = (IPortal) portals.iterator().next();
-                removePortal(portal);
+                for(IPortal portal : portals)
+                    removePortal(portal);
+               
                 portals.clear();
             }
 

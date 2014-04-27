@@ -4,7 +4,7 @@ import ch.trustserv.soundbox.abstr.communication.message.IMsgIdentifier;
 import ch.trustserv.soundbox.abstr.communication.message.MsgCloseSoundBox;
 import ch.trustserv.soundbox.abstr.communication.message.MsgSendGlobalConfig;
 import ch.trustserv.soundbox.abstr.communication.message.MsgSetMainWindowVisible;
-import org.dyndns.soundi.gui.interfaces.IBrowserGui;
+import ch.trustserv.soundbox.interfaces.gui.IBrowserGui;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;

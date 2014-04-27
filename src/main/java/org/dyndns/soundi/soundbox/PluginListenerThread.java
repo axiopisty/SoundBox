@@ -1,14 +1,14 @@
 package org.dyndns.soundi.soundbox;
 
+import ch.trustserv.soundbox.interfaces.portal.IPortal;
+import ch.trustserv.soundbox.interfaces.portal.PluginInformation;
+import static ch.trustserv.soundbox.interfaces.portal.State.ACTIVATED;
 import de.trustserv.soundbox.communicationaction.core.Requests;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.dyndns.soundi.portals.interfaces.IPortal;
-import org.dyndns.soundi.portals.interfaces.PluginInformation;
-import static org.dyndns.soundi.portals.interfaces.State.ACTIVATED;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;

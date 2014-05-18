@@ -3,7 +3,7 @@
  *
  * @since 1.0
  */
-package org.dyndns.soundi.soundbox;
+package ch.trustserv.soundbox.core;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

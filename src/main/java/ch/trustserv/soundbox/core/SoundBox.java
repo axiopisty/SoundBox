@@ -1,4 +1,4 @@
-package org.dyndns.soundi.soundbox;
+package ch.trustserv.soundbox.core;
 
 import ch.trustserv.soundbox.abstr.communication.message.IMsgIdentifier;
 import ch.trustserv.soundbox.abstr.communication.message.MsgCloseSoundBox;

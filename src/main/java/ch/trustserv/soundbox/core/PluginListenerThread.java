@@ -1,9 +1,10 @@
-package org.dyndns.soundi.soundbox;
+package ch.trustserv.soundbox.core;
 
-import ch.trustserv.soundbox.interfaces.portal.IPortal;
+import static ch.trustserv.soundbox.abstr.communication.message.IMsgIdentifier.REGISTERPORTAL;
+import static ch.trustserv.soundbox.abstr.communication.message.IMsgIdentifier.UNREGISTERPORTAL;
+import ch.trustserv.soundbox.interfaces.portal.AbstractPortal;
 import ch.trustserv.soundbox.interfaces.portal.PluginInformation;
 import static ch.trustserv.soundbox.interfaces.portal.State.ACTIVATED;
-import de.trustserv.soundbox.communicationaction.core.Requests;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -48,7 +49,7 @@ public class PluginListenerThread implements Runnable {
     /**
      * Contains all registered Portals. This is the "model"-part.
      */
-    private HashSet<IPortal> portals = new HashSet<>();
+    private final HashSet<AbstractPortal> portals = new HashSet<>();
     /**
      *
      */
@@ -63,7 +64,7 @@ public class PluginListenerThread implements Runnable {
         while (true) {
 
             try {
-                refs = context.getServiceReferences(IPortal.class.getName(),
+                refs = context.getServiceReferences(AbstractPortal.class.getName(),
                         null);
             } catch (InvalidSyntaxException ex) {
                 Logger.getLogger(PluginListenerThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,12 +82,12 @@ public class PluginListenerThread implements Runnable {
                      * cast it to an instance so we can use it (fetch
                      * informations from it)
                      */
-                    final IPortal portal
-                            = (IPortal) context.getService(reference);
+                    final AbstractPortal portal
+                            = (AbstractPortal) context.getService(reference);
                     /*
                      * check if it is listed in our portals list
                      */
-                    if (!portals.contains(portal)) {
+                    if (!portals.contains(portal) && portal != null) {
                         /*
                          * if not, call init() on the portals implemented
                          * interface
@@ -94,7 +95,7 @@ public class PluginListenerThread implements Runnable {
                         PluginInformation infos = portal.getInfos();
                         if (infos != null) {
                         }
-                        if (portal.getState() == ACTIVATED) {
+                        if (ACTIVATED == portal.getState()) {
                             portal.init();
                         }
                         addPortal(portal);
@@ -111,7 +112,7 @@ public class PluginListenerThread implements Runnable {
             if (refs == null && portals.size() == 1) /*
              * there's still one portal registered, but it has been removed
              */ {
-                for(IPortal portal : portals)
+                for(AbstractPortal portal : portals)
                     removePortal(portal);
                
                 portals.clear();
@@ -132,14 +133,14 @@ public class PluginListenerThread implements Runnable {
      *
      * @param portal The portal which has been found in ./load
      */
-    private void addPortal(final IPortal portal) {
+    private void addPortal(final AbstractPortal portal) {
 
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("portal", portal);
             Event reportGeneratedEvent = new Event(
-                    Requests.REGISTERPORTAL.toString(), properties);
+                    REGISTERPORTAL, properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }
@@ -153,14 +154,14 @@ public class PluginListenerThread implements Runnable {
      * portal has been removed from the ./load directory.
      * @param portal The portal that should be removed.
      */
-    private void removePortal(final IPortal portal) {
+    private void removePortal(final AbstractPortal portal) {
 
         if (ref != null) {
             EventAdmin eventAdmin = (EventAdmin) context.getService(ref);
             Dictionary properties = new Hashtable();
             properties.put("portal", portal);
             Event reportGeneratedEvent = new Event(
-                    Requests.UNREGISTERPORTAL.toString(), properties);
+                    UNREGISTERPORTAL, properties);
             eventAdmin.sendEvent(reportGeneratedEvent);
         }
     }

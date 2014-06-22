@@ -112,8 +112,9 @@ public class PluginListenerThread implements Runnable {
             if (refs == null && portals.size() == 1) /*
              * there's still one portal registered, but it has been removed
              */ {
-                for(AbstractPortal portal : portals)
+                portals.stream().forEach((portal) -> {
                     removePortal(portal);
+                });
                
                 portals.clear();
             }

@@ -115,7 +115,7 @@ public class PluginListenerThread implements Runnable {
                 portals.stream().forEach((portal) -> {
                     removePortal(portal);
                 });
-               
+
                 portals.clear();
             }
 

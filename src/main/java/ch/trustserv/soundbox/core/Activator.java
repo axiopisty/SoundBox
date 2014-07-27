@@ -44,7 +44,7 @@ public class Activator implements BundleActivator {
     }
 
     @Override
-    public void stop( final BundleContext context) {
+    public void stop(final BundleContext context) {
         box.close();
     }
 }

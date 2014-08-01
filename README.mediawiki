@@ -12,25 +12,26 @@ If you just want to download a binary release, checkout the [https://github.com/
 If you want to checkout the current development version, checkout [http://www.l33tbox.de:8080/jenkins/job/SoundBox-Distribution/ SoundBox Distribution artifacts] from the Jenkins server.
 
 To checkout all modules:
-git clone https://github.com/olze/SoundBox.git
 
-git clone https://github.com/olze/SoundBox-CoreLibrary.git
+git clone -b develop https://github.com/olze/SoundBox.git
 
-git clone https://github.com/olze/SoundBox-Downloader.git
+git clone -b develop https://github.com/olze/SoundBox-CoreLibrary.git
 
-git clone https://github.com/olze/SoundBox-DownloaderEngine.git
+git clone -b develop https://github.com/olze/SoundBox-Downloader.git
 
-git clone https://github.com/olze/SoundBox-BrowserGUI.git
+git clone -b develop https://github.com/olze/SoundBox-DownloaderEngine.git
 
-git clone https://github.com/olze/SoundBox-Player.git
+git clone -b develop https://github.com/olze/SoundBox-BrowserGUI.git
 
-git clone https://github.com/olze/SoundBox-PlayerEngine.git
+git clone -b develop https://github.com/olze/SoundBox-Player.git
 
-git clone https://github.com/olze/SoundBox-Starter.git
+git clone -b develop https://github.com/olze/SoundBox-PlayerEngine.git
 
-git clone https://github.com/olze/SoundBox-Mp3Wrapper.git
+git clone -b develop https://github.com/olze/SoundBox-Starter.git
 
-git clone https://github.com/olze/SoundBox-JamendoPlugin.git
+git clone -b develop https://github.com/olze/SoundBox-Mp3Wrapper.git
+
+git clone -b develop https://github.com/olze/SoundBox-JamendoPlugin.git
 
 '''Requirements: '''
 

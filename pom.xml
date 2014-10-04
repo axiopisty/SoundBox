@@ -21,12 +21,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.ops4j.pax.logging</groupId>
             <artifactId>pax-logging-api</artifactId>
             <version>1.7.4</version>
@@ -225,7 +219,7 @@
                                 <propertyfile file="${project.build.directory}/run.properties">
                                     <entry key="felix.auto.start" value="${urls}"/>
                                     <entry key="felix.auto.deploy.action" value="install,start"/>
-                                    <entry key="felix.log.level" value="0"/>
+                                    <entry key="felix.log.level" value="4"/>
                                     <entry key="org.apache.felix.eventadmin.Timeout" value="0"/>
                                     <entry key="org.osgi.framework.storage.clean" value="onFirstInit"/>
                                     <entry key="org.osgi.framework.storage" value="${project.build.directory}${file.separator}felix-cache"/>
